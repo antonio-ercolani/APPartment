@@ -1,6 +1,7 @@
 \documentclass[]{article}
 
 \usepackage{graphicx}
+\usepackage[a4paper,top=2.5cm,bottom=2cm,left=2cm,right=2cm]{geometry}
 \usepackage{subcaption}
 
 %opening
@@ -25,11 +26,14 @@
 	
 	\newpage
 	
-	\section{Main goal}
+	\section{Document purpose}
+	This document contain a brief description of the application showing the main concepts, we haven't gone in a deep application design yet so something could change during the development.
+	
+	\section{Main goal TODO}
 	
 	Help apartment mates to deal with the daily domestic problems such as payments, failures, timetables etc...
 	
-	\section{Application functions}
+	\section{Application functions TODO}
 	
 		\subsection{Basic functionality}
 		\begin{itemize}
@@ -40,7 +44,7 @@
 			\item Missing stuff
 		\end{itemize}
 
-		\subsection{Application functions}
+		\subsection{Other functionality}
 		
 		\begin{itemize}
 			\item Report the apartment presence periods 
@@ -49,31 +53,32 @@
 
 	\section{User interface}
 	
+	Follows a list of all the possible screens.
+	
 	\begin{itemize}
-		\item Login/sign up screen
-		\item Join/create apartment screen
-		\item Main screen with "tab" navigation. 
-		\\Tab screens: 
+		\item \textbf{Login/sign up screen};
+		\item \textbf{Join/create apartment screen -} in which the user can join an apartment 
+		or can create a new one.
+		\item \textbf{Main screen -} made by a "tab" navigation, follows a list of each tab content:  
 		\begin{itemize}
-			\item List of all the notifications (chronologically ordered) 
-			, differently labeled according to the type 
-			- divided in "active" and "archived"
-			\item "New Action" screen in which you can choose between the different actions
-			\begin{itemize}
-				\item Here there will be a specific screen depends on the action 
-			\end{itemize} 
-			\item Master calendar
-			\item Profile screen
+			\item \textbf{Notifications tab} - in which are listed all the notifications, 
+			differently labeled according to the their type;
+			\item \textbf{New action tab} - where the user can handle all the functionalities
+			the application offer, selecting one of those. Selecting one action a new specific screen
+			will be show to the user;
+			\item \textbf{Calendar tab} - shows a "monthly" calendar where are marked different types of events;
+			\item \textbf{Profile tab -} shows profile, apartment and settings information.
 		\end{itemize}
 			
 	\end{itemize}
 
-	\section{Mockups}
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=4.5cm]{screen1.png}
-		\caption{Main screen mockup}
-		\label{fig:boat1}
-	\end{figure}
+	\section{Development framework}
+	We have decided to adopt \textbf{React Native} for the application development.
+
+	\section{Server connection}
+	
+	The application will have a connection to an external server which main function is storing users data.
+	Probably we are going to exploit one of many cloud services such as Firebase. 
+
 
 \end{document}
