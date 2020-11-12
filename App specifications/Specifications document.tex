@@ -7,11 +7,11 @@
 %opening
 \title{ APP TITLE? \\
 	\begin{large} 
-		Design and Implementation of Mobile Application Project
+		Design and Implementation of Mobile Application Project @ Polimi
 	\end{large}}
 
 \author{Antonio Ercolani - 10621728\\Riccardo Nannini - 10626268}
-\date{Prof Luciano Baresi - Anno Accademico 2020/2021}
+\date{Prof Luciano Baresi - Academic year 2020/2021}
 
 
 \begin{document}
@@ -24,32 +24,27 @@
 	
 	\tableofcontents
 	
-	\newpage
 	
 	\section{Document purpose}
 	This document contain a brief description of the application showing the main concepts, we haven't gone in a deep application design yet so something could change during the development.
 	
-	\section{Main goal TODO}
+	\section{Main goal}
 	
-	Help apartment mates to deal with the daily domestic problems such as payments, failures, timetables etc...
+	The focus of the application is to help people sharing a house or an apparment cope regular problems that dividing a residence often creates. \newline The application goal is to \textbf{define}, \textbf{organize}, \textbf{assign} and \textbf{keep track} of every \textit{\textbf{task}} that is required in order to keep the living place in a good condition. \newline The idea of the application comes from real life problems that we students have faced during our first years of university when sharing our apartment together.
 	
-	\section{Application functions TODO}
+	\section{Application functions}
 	
-		\subsection{Basic functionality}
+
 		\begin{itemize}
-			\item Payment manager
-			\item Failures report 
-			\item Organize custom timetables
-			\item Indicate anything on a "master" apartment calendar 
-			\item Missing stuff
+			\item \textbf{Payment manager -} the application let users register their expenses when buying stuff for the residence and balances the costs between the members (e.g. in an apartment with 4 persons, I buy 20\$ of house cleaning products, now everyone owes me 5\$; in a second moment another member of the house buys 10\$ of toilet paper, now he ows me only 2,5\$ while the other two ows him 2,5\$ each and still 5\$ to me).
+			\newline The application let users notify the system when they paid of their debts.
+			\item \textbf{Organize custom timetables -} the system let users define custom timetables in order to organize and assign periodically repetitive tasks to all the room mates (e.g. define a weekly timetable for taking out the trash, cleaning etc.)
+			\item \textbf{Calendar -} the application keeps track of events related to the residence on a shared calendar containing deadlines concerning the various custom timetables created.
+			\item \textbf{Stock management -} the systems let users notify their room mates when some common house related items are missing. The application keeps track of this items and let the users notify when they have been restored and creating, if agreed, the related expense in the payment manager.
+			\item \textbf{Failures report -} the application let users notify their room mates when there is a failure in some house related stuff (e.g. sink dripping).
+
 		\end{itemize}
 
-		\subsection{Other functionality}
-		
-		\begin{itemize}
-			\item Report the apartment presence periods 
-			\item Ask for an apartment zone to remain empty for a certain period 
-		\end{itemize}
 
 	\section{User interface}
 	
@@ -63,9 +58,8 @@
 		\begin{itemize}
 			\item \textbf{Notifications tab} - in which are listed all the notifications, 
 			differently labeled according to the their type;
-			\item \textbf{New action tab} - where the user can handle all the functionalities
-			the application offer, selecting one of those. Selecting one action a new specific screen
-			will be show to the user;
+			\item \textbf{Services tab} - where the user can handle all the functionalities that
+			the application offers. Selecting one service will navigate to a new specific screen for that service;
 			\item \textbf{Calendar tab} - shows a "monthly" calendar where are marked different types of events;
 			\item \textbf{Profile tab -} shows profile, apartment and settings information.
 		\end{itemize}
@@ -77,8 +71,7 @@
 
 	\section{Server connection}
 	
-	The application will have a connection to an external server which main function is storing users data.
-	Probably we are going to exploit one of many cloud services such as Firebase. 
+	The application will have a connection to an external server which main function is storing and retrive users data. We are probably going to exploit one of many cloud services such as Firebase. 
 
 
 \end{document}
