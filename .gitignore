@@ -274,3 +274,6 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+RNproject/package-lock.json
+RNproject/package.json
+RNproject/android/gradlew
