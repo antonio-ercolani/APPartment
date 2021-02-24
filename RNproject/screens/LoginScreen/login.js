@@ -43,13 +43,13 @@ function Login({navigation}) {
   function login() {
     console.log("pressed button");
     firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        navigation.navigate('JoinCreateScreen');
+      })
      .catch((error) => {
        setErrorMessage(error.message);
        console.log(errorMessage);
-     }).then(() => {
-        navigation.navigate('JoinCreateScreen');
-    });
-
+     });
   }
 
   function register() {
@@ -59,6 +59,11 @@ function Login({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.group}>
+        <Image
+          source={require("../../assets/images/home-icon.png")}
+          resizeMode="contain"
+          style={styles.image}
+        ></Image>
         <MaterialRightIconTextbox
           style={styles.materialRightIconTextbox}
           updateText={updateEmail}
@@ -68,6 +73,7 @@ function Login({navigation}) {
           updateText={updatePassword}
           secureEntry={true}
         ></MaterialRightIconTextbox>
+        <Text style={{color : 'red'}}>{errorMessage}</Text>
         <CupertinoButtonInfo
           style={styles.cupertinoButtonInfo}
           text="SIGN IN"

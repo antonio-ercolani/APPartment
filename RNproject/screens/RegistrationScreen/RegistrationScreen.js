@@ -37,22 +37,20 @@ function RegistrationScreen({navigation}) {
     if (checkForm()) {
      console.log("lozio");
      firebase.auth().createUserWithEmailAndPassword(email, password)
-      .catch((error) => {
-        var errorMessage = error.message;
-        console.log(errorMessage);
-      }).then(() => {
+      .then(() => {
         firebase.database()
         .ref('/app/users/' + firebase.auth().currentUser.uid)
         .set({
         username : username
+        })
+        navigation.navigate('RegistrationCompletedScreen');
+      })
+      .catch((error) => {
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        setErrorMessage(errorMessage);
       });
-     });
-
-      navigation.navigate('RegistrationCompletedScreen');
-       
-    } else {
-
-    }
+    } 
   }
 
   var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/
