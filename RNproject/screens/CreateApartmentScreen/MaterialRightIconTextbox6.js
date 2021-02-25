@@ -1,15 +1,17 @@
 import React, { Component, useEffect, useState } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
 
-function MaterialRightIconTextbox7(props) {
+function MaterialRightIconTextbox6(props) {
+
   let [text, setText] = useState('');
-  
+
   useEffect(() => { props.updateText(text) })
 
   return (
     <View style={[styles.container, props.style]}>
       <TextInput
-        placeholder="APARTMENT NAME"
+        placeholder="   APARTMENT NAME"
+        secureTextEntry={false}
         style={styles.inputStyle}
         onChangeText={setText}
       ></TextInput>
@@ -19,7 +21,7 @@ function MaterialRightIconTextbox7(props) {
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 9,
     borderColor: "#D9D5DC",
     backgroundColor: "transparent",
     flexDirection: "row",
@@ -38,4 +40,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MaterialRightIconTextbox7;
+export default MaterialRightIconTextbox6;
