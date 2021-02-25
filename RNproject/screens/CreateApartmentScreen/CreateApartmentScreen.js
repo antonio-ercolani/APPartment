@@ -1,28 +1,28 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import MaterialRightIconTextbox6 from "./MaterialRightIconTextbox6";
-import CupertinoButtonInfo from "./CupertinoButtonInfo";
+import MaterialRightIconTextbox7 from "./MaterialRightIconTextbox7";
+import MaterialButtonDanger from "./MaterialButtonDanger";
 
-function CreateApartmentScreen({navigation}) {
+export default function CreateApartmentScreen({navigation}) {
+  let[apartmentName, setApartmentName] = useState('');
+  let[errorMessage, setErrorMessage] = useState('');
 
-  let [apartmentName, setApartmentName] = setState('');
-
-  function navigate() {
-    navigation.navigate('JoinCreateScreen');
+  function createApartment() {
+    console.log(apartmentName);
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.group}>
         <Text style={styles.createNewApartment}>Create new apartment</Text>
-        <MaterialRightIconTextbox6
-          style={styles.materialRightIconTextbox6}
-          updateText={setApartmentName}
-        ></MaterialRightIconTextbox6>
-        <CupertinoButtonInfo
-          style={styles.cupertinoButtonInfo1}
-          onClick={createApartment}
-        ></CupertinoButtonInfo>
+        <MaterialRightIconTextbox7
+          style={styles.materialRightIconTextbox7}
+          updateText = {setApartmentName}
+        ></MaterialRightIconTextbox7>
+        <MaterialButtonDanger
+          style={styles.materialButtonDanger}
+          onClick = {createApartment}
+        ></MaterialButtonDanger>
       </View>
     </View>
   );
@@ -31,33 +31,37 @@ function CreateApartmentScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderWidth: 1,
+    borderColor: "#000000",
     justifyContent: "center"
   },
   group: {
-    width: 357,
-    height: 481,
+    width: 289,
+    height: 401,
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "space-around",
     alignSelf: "center"
   },
   createNewApartment: {
     fontFamily: "roboto-regular",
     color: "#121212",
+    height: 36,
+    width: 289,
     fontSize: 27,
-    height: 33,
-    width: 267
+    textAlign: "center"
   },
-  materialRightIconTextbox6: {
-    height: 102,
-    width: 281,
-    borderWidth: 9,
+  materialRightIconTextbox7: {
+    height: 109,
+    width: 251,
+    borderWidth: 7,
     borderColor: "rgba(249,99,70,1)",
-    borderRadius: 100
+    borderRadius: 40,
+    borderBottomWidth: 7
   },
-  cupertinoButtonInfo1: {
-    width: 220,
-    height: 60
+  materialButtonDanger: {
+    height: 67,
+    width: 214,
+    backgroundColor: "rgba(249,99,70,1)"
   }
 });
 
-export default CreateApartmentScreen;
