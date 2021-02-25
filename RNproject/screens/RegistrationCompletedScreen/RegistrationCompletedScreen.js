@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import CupertinoButtonInfo8 from "./CupertinoButtonInfo8.js";
+import CupertinoButtonInfo8 from "./Components/CupertinoButtonInfo8.js";
 
 
 

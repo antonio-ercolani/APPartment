@@ -1,7 +1,7 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import MaterialRightIconTextbox6 from "./MaterialRightIconTextbox6";
-import CupertinoButtonInfo from "./CupertinoButtonInfo";
+import MaterialRightIconTextbox6 from "./Components/MaterialRightIconTextbox6";
+import CupertinoButtonInfo from "./Components/CupertinoButtonInfo";
 
 function CreateApartmentScreen({navigation}) {
 

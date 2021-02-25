@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import CupertinoButtonInfo9 from "./Components/CupertinoButtonInfo9";
-import CupertinoButtonInfo10 from "./CupertinoButtonInfo10";
+import CupertinoButtonInfo10 from "./Components/CupertinoButtonInfo10";
 
 function JoinCreateScreen({navigation}) {
 

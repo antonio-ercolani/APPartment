@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import CupertinoButtonInfo from "./Components/CupertinoButtonInfo.js";
-import MaterialRightIconTextbox3 from "./MaterialRightIconTextbox3.js";
-import MaterialRightIconTextbox4 from "./MaterialRightIconTextbox4.js";
-import MaterialRightIconTextbox5 from "./MaterialRightIconTextbox5.js";
-import MaterialRightIconTextbox6 from "./MaterialRightIconTextbox6.js";
+import MaterialRightIconTextbox3 from "./Components/MaterialRightIconTextbox3.js";
+import MaterialRightIconTextbox4 from "./Components/MaterialRightIconTextbox4.js";
+import MaterialRightIconTextbox5 from "./Components/MaterialRightIconTextbox5.js";
+import MaterialRightIconTextbox6 from "./Components/MaterialRightIconTextbox6.js";
 import firebase from "firebase/app";
 import "firebase/database";
 
