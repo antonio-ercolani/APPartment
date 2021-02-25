@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import CupertinoButtonInfo from "./CupertinoButtonInfo.js";
+import CupertinoButtonInfo from "./Components/CupertinoButtonInfo.js";
 import MaterialRightIconTextbox3 from "./MaterialRightIconTextbox3.js";
 import MaterialRightIconTextbox4 from "./MaterialRightIconTextbox4.js";
 import MaterialRightIconTextbox5 from "./MaterialRightIconTextbox5.js";

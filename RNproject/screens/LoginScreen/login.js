@@ -1,7 +1,7 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
-import MaterialRightIconTextbox from "./MaterialRightIconTextbox";
-import CupertinoButtonInfo from "./CupertinoButtonInfo";
+import MaterialRightIconTextbox from "./Components/MaterialRightIconTextbox";
+import CupertinoButtonInfo from "./Components/CupertinoButtonInfo";
 import firebase from "firebase/app";
 
 require('firebase/auth')
