@@ -8,6 +8,21 @@ import firebase from "firebase/app";
 require("firebase/functions");
 
 
+require('firebase/auth')
+
+var firebaseConfig = {
+  apiKey: "AIzaSyBMqZAgePy_40-jXRQMpcHvK76HqPmZUxU",
+  authDomain: "dima-52e16.firebaseapp.com",
+  databaseURL: "https://dima-52e16.firebaseio.com",
+  projectId: "dima-52e16",
+  storageBucket: "dima-52e16.appspot.com",
+  messagingSenderId: "330401771086",
+  appId: "1:330401771086:web:447a4b8a9f8bb157175d1f"
+}; 
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 
 
@@ -16,11 +31,32 @@ export default function CreateApartmentScreen({navigation}) {
   let[errorMessage, setErrorMessage] = useState('');
 
   function createApartment() {
-    console.log(apartmentName);
+    /*
+    firebase.database()
+        .ref('/app/')
+        .once('value').then(snapshot => {
+          console.log(snapshot.val())
+        });
+      
+
+      
+    firebase.database()
+      .ref().child("app").child("apartments").get()
+      .then(function(snapshot) {
+        if (snapshot.exists()) {
+          snapshot.forEach(function(childSnapshot) {
+            console.log(childSnapshot.key);
+            if (apartmentName === childSnapshot.key) console.log("HANNO MATCHATO");
+          })
+        }
+      });
+    */
+
     call({ text: apartmentName }).then((result) => {
       console.log(result.data.text);
     });
-  }
+    
+    }
 
   var call = firebase.functions().httpsCallable('functionProva');
 
