@@ -29,32 +29,18 @@ if (!firebase.apps.length) {
 var searchApartment = firebase.functions().httpsCallable('searchApartment');
 
 function search(text) {
-  var res = [];
-  if(text.length<4) return;
-  firebase.database()
-  .ref().child("app").child("apartments").get()
-  .then(function(snapshot) {
-    if (snapshot.exists()) {
-      snapshot.forEach(function(childSnapshot) {
-        if (childSnapshot.key.includes(text)) {
-          console.log('Hanno matchato '+ text + ' ' + childSnapshot.key);
-          res.push(childSnapshot.key);
-        }
-      });
-    console.log(res)
-    }
-  });
 
-  /*searchApartment({ text: text })
-    .then((result) => (result.json())
-    .then((result) => setApartments(result)))
+  searchApartment({ text: text })
+    .then((result) => (JSON.parse(result.data)))
+    .then((result) => setApartments(result))
     .catch((error) => {
       console.log(error.message);
-    })*/
+    })
+
 }
 
-export default JoinScreen = ({navigation}) => {
-  [apartments, setApartments] = useState([]);
+export default JoinScreen = () => {
+  [apartments, setApartments] = useState();
 
   return (
     <SafeAreaView  style={styles.container}>

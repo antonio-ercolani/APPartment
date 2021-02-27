@@ -1,64 +1,96 @@
-import React from 'react';
-import {FlatList, Text, Image, View, StyleSheet, TouchableHighlight} from 'react-native';
+import React, { useState } from 'react';
+import {FlatList, Text, TextInput, Modal, View, StyleSheet, TouchableHighlight} from 'react-native';
 
 
-export default ApartmentList = ({apartments}) => {
+export default ApartmentList = (props) => {
+    [modalVisible, setModalVisible] = useState(false);
     return (
     <FlatList 
-        data={apartments}
-        keyExtractor={(movie, index) => {
-            return movie.imdbID;
-        }}
+        data={props.apartments}
+        keyExtractor={(item) => item}
         renderItem={({index, item}) => {
-           return (<MovieRow navigate={navigate} movie={item} />)
+           return (<ApartmentRow apartment={item}/>)
         }}
     
     />);
 }
 
-ApartmentRow = ({movie, navigate}) => {
+ApartmentRow = (props) => {
     return (
-        <TouchableHighlight activeOpacity={0.9} underlayColor="darkblue" onPress={() => navigate(movie)}>
-            <View style={styles.container}>
-                <Image style={styles.poster} source={{uri: movie.Poster}}/>
-                <View style={[styles.container, styles.description]}>
-                    <Text style={styles.title}>{movie.Title}</Text>
-                    <Text style={styles.year}>{movie.Year}</Text>
-                </View>
-            </View> 
+        <View>
+            <TouchableHighlight activeOpacity={0.8} underlayColor="white" onPress={() => setModalVisible(true)}>
+                <View style={styles.container}>
+                    <Text style={styles.title}>{props.apartment}</Text>
+                </View> 
         </TouchableHighlight>
-   
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+        >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                <TextInput
+                style={styles.input}
+                placeholder="Code"
+                />
+                </View>
+            </View>
+        </Modal>
+        </View>
+        
 
+        
     );
 }
 
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "white",
+        backgroundColor: "rgba(249,99,70,1)",
         flex: 1,
-        margin: 8,
+        marginTop:13,
+        marginBottom:13,
+        marginLeft:10,
+        marginRight:10,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 70
     },
-    poster: {
-        height: 250,
-        width: 150,
-        marginRight: 10
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
     },
-    description: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between'
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
     title: {
-        fontSize: 20,
-        fontStyle: 'italic',
-        fontWeight: "500"
+        fontSize: 30,
+        fontWeight: "500",
+        color: "#fff"
     },
-    year : {
-        fontSize: 16,
-        fontWeight: "400"
-    }
+    input: {
+        height: 50,
+        margin: 5,
+        fontSize: 28
+      }
+   
 });

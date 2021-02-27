@@ -3,8 +3,7 @@ const functions = require("firebase-functions");
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-//TODO mettere campo 'locked = false'
-//TODO CREAZIONE SOLO SE UTENTE NON HA GIA APPARTAMENTO
+
 const admin = require('firebase-admin');
 const { firestore } = require("firebase-admin");
 admin.initializeApp();
@@ -43,7 +42,7 @@ exports.functionProva = functions.https.onCall((data, context) => {
     return sRnd;
   }
   
-  if (insertedName.length < 4) return { text: "tooShort"}
+  if (insertedName.length < 3) return { text: "tooShort"}
   console.log("received name: " + insertedName);
 
 
@@ -85,6 +84,7 @@ exports.functionProva = functions.https.onCall((data, context) => {
 exports.searchApartment = functions.https.onCall((data, context) => {
   var insertedName = data.text;
   var uid = context.auth.uid;
+  var res = [];
 
   if (insertedName.length < 4) return;
 
@@ -94,10 +94,10 @@ exports.searchApartment = functions.https.onCall((data, context) => {
     if (snapshot.exists()) {
       snapshot.forEach(function(childSnapshot) {
         if (childSnapshot.key.includes(insertedName)) {
-          console.log('Hanno matchato '+ insertedName + ' ' + childSnapshot.key);
+          res.push(childSnapshot.key)
         }
       });
-    return { text: "ok"}
+    return JSON.stringify(res);
     }
   });
 });
