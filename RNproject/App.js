@@ -7,6 +7,7 @@ import RegistrationCompletedScreen from './screens/RegistrationCompletedScreen/R
 import JoinCreateScreen from './screens/JoinCreateScreen/JoinCreateScreen';
 import CreateApartmentScreen from './screens/CreateApartmentScreen/CreateApartmentScreen.js';
 import LoginScreen from './screens/LoginScreen/login.js';
+import JoinApartmentScreen from './screens/JoinScreen/JoinScreen';
 
 
 const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ export default function App() {
                 <Stack.Screen name="RegistrationCompletedScreen" component={RegistrationCompletedScreen} />
                 <Stack.Screen name="JoinCreateScreen" component={JoinCreateScreen}  />
                 <Stack.Screen name="CreateApartmentScreen" component={CreateApartmentScreen}  />
+                <Stack.Screen name="JoinApartmentScreen" component={JoinApartmentScreen}  />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -7,7 +7,7 @@ function JoinCreateScreen({navigation}) {
 
   function navigate(to){
     if (to === 'new') navigation.navigate('CreateApartmentScreen');
-    if (to === 'join') navigation.navigate('RegistrationCompletedScreen');
+    if (to === 'join') navigation.navigate('JoinApartmentScreen');
   }
   return (
     <View style={styles.container}>

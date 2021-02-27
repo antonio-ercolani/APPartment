@@ -3,7 +3,8 @@ const functions = require("firebase-functions");
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-//TODO CONTROLLO UNICITÀ NOME APPARTAMENTO E CREAZIONE SOLO SE UTENTE NON HA GIA APPARTAMENTO
+//TODO mettere campo 'locked = false'
+//TODO CREAZIONE SOLO SE UTENTE NON HA GIA APPARTAMENTO
 const admin = require('firebase-admin');
 const { firestore } = require("firebase-admin");
 admin.initializeApp();
@@ -12,7 +13,6 @@ admin.initializeApp();
 exports.functionProva = functions.https.onCall((data, context) => {
   var insertedName = data.text;
   var isUnique = true;
-  var uid = context.auth.uid;
 
   function generateRandomString() {
     var sRnd = '';
@@ -23,8 +23,10 @@ exports.functionProva = functions.https.onCall((data, context) => {
     }
     return sRnd;
   }
-
   
+  if (insertedName.length < 4) return { text: "tooShort"}
+  console.log("received name: " + insertedName);
+
   return admin.database()
   .ref().child("app").child("apartments").get()
   .then(function(snapshot) {
@@ -36,16 +38,39 @@ exports.functionProva = functions.https.onCall((data, context) => {
         }
       });
       if (isUnique === true) {
+        console.log("nome è unico!")
         admin.database()
         .ref('/app/apartments/' + insertedName)
         .set({
         uid : context.auth.uid,    //logged user id 
-        code : generateRandomString()
+        code : generateRandomString(),
+        locked : false
         });
         return { text: "ok"}
       } else {
         return { text: "notUnique"}
       }
+    }
+  });
+});
+
+
+exports.searchApartment = functions.https.onCall((data, context) => {
+  var insertedName = data.text;
+  var uid = context.auth.uid;
+
+  if (insertedName.length < 4) return;
+
+  return admin.database()
+  .ref().child("app").child("apartments").get()
+  .then(function(snapshot) {
+    if (snapshot.exists()) {
+      snapshot.forEach(function(childSnapshot) {
+        if (childSnapshot.key.includes(insertedName)) {
+          console.log('Hanno matchato '+ insertedName + ' ' + childSnapshot.key);
+        }
+      });
+    return { text: "ok"}
     }
   });
 });
