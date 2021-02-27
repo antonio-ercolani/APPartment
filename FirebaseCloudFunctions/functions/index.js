@@ -8,8 +8,27 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 const { firestore } = require("firebase-admin");
 admin.initializeApp();
-  
 
+
+
+//called by the login screen
+//checks if the user is already in an apartment 
+exports.hasApartment = functions.https.onCall((data, context) => {
+  return admin.database()
+  .ref().child("app").child("users").child(context.auth.uid).get()
+  .then(function(snapshot) {
+    if (snapshot.exists()) {
+      if (snapshot.val().apartment === false) {
+        return { text : "no"}
+      } else {
+        return { text : "yes"}
+      }
+    }
+  })
+});
+  
+//called by create apartment
+//TODO CAMBIARE IL NOME 
 exports.functionProva = functions.https.onCall((data, context) => {
   var insertedName = data.text;
   var isUnique = true;
@@ -27,25 +46,34 @@ exports.functionProva = functions.https.onCall((data, context) => {
   if (insertedName.length < 4) return { text: "tooShort"}
   console.log("received name: " + insertedName);
 
+
   return admin.database()
   .ref().child("app").child("apartments").get()
   .then(function(snapshot) {
     if (snapshot.exists()) {
       snapshot.forEach(function(childSnapshot) {
         if (insertedName === childSnapshot.key) {
-          console.log('Hanno matchato');
           isUnique = false;
         }
       });
       if (isUnique === true) {
-        console.log("nome è unico!")
+        
+        //add the new apartment
         admin.database()
         .ref('/app/apartments/' + insertedName)
         .set({
-        uid : context.auth.uid,    //logged user id 
-        code : generateRandomString(),
-        locked : false
+          uid : context.auth.uid,    //logged user id 
+          code : generateRandomString(),
+          locked : false
         });
+
+        //add the apartment name in the user
+        admin.database()
+        .ref('/app/users/' + context.auth.uid)
+        .update({
+          apartment : insertedName
+        });
+
         return { text: "ok"}
       } else {
         return { text: "notUnique"}
@@ -53,7 +81,6 @@ exports.functionProva = functions.https.onCall((data, context) => {
     }
   });
 });
-
 
 exports.searchApartment = functions.https.onCall((data, context) => {
   var insertedName = data.text;

@@ -32,19 +32,27 @@ function Login({navigation}) {
 
   function updateEmail(text) {
     setEmail(text);
-    console.log('Email setted ' + email);
   }
 
   function updatePassword(text) {
     setPassword(text);
-    console.log('Passoword setted ' + password);
   }
 
+  var hasApartment = firebase.functions().httpsCallable('hasApartment');
+
   function login() {
-    console.log("pressed button");
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(() => {
-        navigation.navigate('JoinCreateScreen');
+        hasApartment().then((result) => {
+          if (result.data.text === "yes") {
+            //QUI CI VA LA HOME PAGE HO MESSO QUESTA PAGINA PER IL MOMENTO
+            navigation.navigate('RegistrationCompletedScreen')
+          } else if (result.data.text === "no") {
+            navigation.navigate('JoinCreateScreen');
+          } else {
+            console.log('error, hasApartment returned neither yer nor no');
+          }
+        });
       })
      .catch((error) => {
        setErrorMessage(error.message);

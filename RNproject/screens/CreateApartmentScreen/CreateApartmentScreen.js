@@ -31,28 +31,9 @@ export default function CreateApartmentScreen({navigation}) {
   let[errorMessage, setErrorMessage] = useState('');
 
   function createApartment() {
-    /*
-    firebase.database()
-        .ref('/app/')
-        .once('value').then(snapshot => {
-          console.log(snapshot.val())
-        });
-      
-
-      
-    firebase.database()
-      .ref().child("app").child("apartments").get()
-      .then(function(snapshot) {
-        if (snapshot.exists()) {
-          snapshot.forEach(function(childSnapshot) {
-            console.log(childSnapshot.key);
-            if (apartmentName === childSnapshot.key) console.log("HANNO MATCHATO");
-          })
-        }
-      });
-    */
-
+    
     call({ text: apartmentName }).then((result) => {
+      //mandare l'utente alla home page oppure dirgli in base allerrore che ce un errore
       console.log(result.data.text);
     });
     

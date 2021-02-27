@@ -35,13 +35,13 @@ function RegistrationScreen({navigation}) {
 
   function createUser() {
     if (checkForm()) {
-     console.log("lozio");
      firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(() => {
         firebase.database()
         .ref('/app/users/' + firebase.auth().currentUser.uid)
         .set({
-        username : username
+        username : username,
+        apartment : false
         })
         navigation.navigate('RegistrationCompletedScreen');
       })
