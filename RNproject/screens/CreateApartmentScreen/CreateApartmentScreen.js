@@ -1,8 +1,9 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import MaterialRightIconTextbox7 from "./MaterialRightIconTextbox7";
-import MaterialButtonDanger from "./MaterialButtonDanger";
+import MaterialStackedLabelTextbox from "./Components/MaterialStackedLabelTextbox";
+import MaterialButtonDanger from "./Components/MaterialButtonDanger";
 import firebase from "firebase/app";
+
 
 // Required for side-effects
 require("firebase/functions");
@@ -26,6 +27,7 @@ if (!firebase.apps.length) {
 
 
 
+
 export default function CreateApartmentScreen({navigation}) {
   let[apartmentName, setApartmentName] = useState('');
   let[errorMessage, setErrorMessage] = useState('');
@@ -33,28 +35,29 @@ export default function CreateApartmentScreen({navigation}) {
   function createApartment() {
     
     call({ text: apartmentName }).then((result) => {
-      //mandare l'utente alla home page oppure dirgli in base allerrore che ce un errore
-      console.log(result.data.text);
+      var receivedMessage = result.data.text;
+      if (receivedMessage === 'ok') {
+        navigation.navigate('RegistrationCompletedScreen');
+      } else if (receivedMessage === 'notUnique')
+        setErrorMessage('This name already exists, please try another');
     });
     
     }
 
   var call = firebase.functions().httpsCallable('functionProva');
 
-  
-  
-
   return (
     <View style={styles.container}>
       <View style={styles.group}>
-        <Text style={styles.createNewApartment}>Create new apartment</Text>
-        <MaterialRightIconTextbox7
-          style={styles.materialRightIconTextbox7}
+        <Text style={styles.apartmentCreation}>APARTMENT CREATION</Text>
+        <MaterialStackedLabelTextbox
+          style={styles.materialStackedLabelTextbox}
           updateText = {setApartmentName}
-        ></MaterialRightIconTextbox7>
+        ></MaterialStackedLabelTextbox>
+        <Text style={{color : 'white'}}>{errorMessage}</Text>
         <MaterialButtonDanger
-          style={styles.materialButtonDanger}
           onClick = {createApartment}
+          style={styles.materialButtonDanger1}
         ></MaterialButtonDanger>
       </View>
     </View>
@@ -64,37 +67,36 @@ export default function CreateApartmentScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#000000",
+    backgroundColor: "rgba(249,99,70,1)",
     justifyContent: "center"
   },
   group: {
-    width: 289,
-    height: 401,
+    width: 318,
+    height: 563,
     justifyContent: "space-between",
-    alignItems: "center",
     alignSelf: "center"
   },
-  createNewApartment: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    height: 36,
-    width: 289,
-    fontSize: 27,
-    textAlign: "center"
+  apartmentCreation: {
+    fontFamily: "roboto-300",
+    color: "rgba(255,255,255,1)",
+    height: 106,
+    width: 318,
+    fontSize: 40,
+    fontWeight: "bold",
+    fontStyle: "italic"
   },
-  materialRightIconTextbox7: {
-    height: 109,
-    width: 251,
-    borderWidth: 7,
-    borderColor: "rgba(249,99,70,1)",
-    borderRadius: 40,
-    borderBottomWidth: 7
+  materialStackedLabelTextbox: {
+    height: 81,
+    width: 327
   },
-  materialButtonDanger: {
-    height: 67,
-    width: 214,
-    backgroundColor: "rgba(249,99,70,1)"
+  materialButtonDanger1: {
+    height: 73,
+    width: 230,
+    backgroundColor: "rgba(249,99,70,1)",
+    borderWidth: 4,
+    borderColor: "rgba(255,255,255,1)",
+    borderRadius: 12,
+    alignSelf: "center"
   }
 });
 

@@ -21,6 +21,7 @@ if (!firebase.apps.length) {
 
 
 export default ApartmentList = (props) => {
+    //TODO SITEMARE I MODAL (NE UNO PER OGNUGNO)
     [modalVisible, setModalVisible] = useState(false);
     [apartment, setApartment] = useState(false);
 

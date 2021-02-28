@@ -3,10 +3,10 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 
 function MaterialButtonDanger(props) {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity style={[styles.container, props.style]}
       style={[styles.container, props.style]}
       onPress={() => {props.onClick()}}>
-      <Text style={styles.letsGo}>LET&#39;S GO!</Text>
+      <Text style={styles.createApartment}>CREATE APARTMENT</Text>
     </TouchableOpacity>
   );
 }
@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16
   },
-  letsGo: {
+  createApartment: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "roboto-500"
   }
 });
