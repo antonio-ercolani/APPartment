@@ -86,7 +86,7 @@ exports.searchApartment = functions.https.onCall((data, context) => {
   var uid = context.auth.uid;
   var res = [];
 
-  if (insertedName.length < 4) return;
+  if (insertedName.length < 2) return;
 
   return admin.database()
   .ref().child("app").child("apartments").get()
@@ -100,6 +100,20 @@ exports.searchApartment = functions.https.onCall((data, context) => {
     return JSON.stringify(res);
     }
   });
+});
+
+exports.checkCode = functions.https.onCall((data, context) => {
+  var code = data.code;
+  var apartment = data.apartment;
+  
+  return admin.database().ref('/app/apartments/' + apartment + '/code').get()
+  .then(function(snapshot) {
+    if(snapshot.exists()) {
+      if (snapshot.val() === code) return { text: "ok"}
+    }
+    return { text: "ko"} 
+  })
+
 });
   
   

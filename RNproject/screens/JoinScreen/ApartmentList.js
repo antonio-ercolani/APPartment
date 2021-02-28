@@ -1,27 +1,79 @@
 import React, { useState } from 'react';
-import {FlatList, Text, TextInput, Modal, View, StyleSheet, TouchableHighlight} from 'react-native';
+import {FlatList, Animated, Easing, Text, TextInput, Modal, View, StyleSheet, TouchableHighlight} from 'react-native';
+
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/functions");
+
+var firebaseConfig = {
+  apiKey: "AIzaSyBMqZAgePy_40-jXRQMpcHvK76HqPmZUxU",
+  authDomain: "dima-52e16.firebaseapp.com",
+  databaseURL: "https://dima-52e16.firebaseio.com",
+  projectId: "dima-52e16",
+  storageBucket: "dima-52e16.appspot.com",
+  messagingSenderId: "330401771086",
+  appId: "1:330401771086:web:447a4b8a9f8bb157175d1f"
+}; 
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 
 export default ApartmentList = (props) => {
     [modalVisible, setModalVisible] = useState(false);
+    [apartment, setApartment] = useState(false);
+
     return (
     <FlatList 
         data={props.apartments}
         keyExtractor={(item) => item}
         renderItem={({index, item}) => {
-           return (<ApartmentRow apartment={item}/>)
+           return (<ApartmentRow navigation={props.navigation} apartment={item}/>)
         }}
     
     />);
 }
 
+var checkCode = firebase.functions().httpsCallable('checkCode');
+
+function check(code, apartment, navigation, animatedValue) {
+    if (code.length < 6) return;
+    checkCode({ code: code, apartment: apartment })
+    .then((result) => {
+        var res = result.data.text;
+        if (res === "ok") {
+            setModalVisible(false);
+            navigation.navigate('RegistrationCompletedScreen')
+        } else {
+            handleAnimation(animatedValue);
+        }
+        })
+    .catch((error) => {
+        console.log(error.message);
+    })
+}
+
+function handleAnimation(animatedValue) {
+
+      Animated.sequence([
+        Animated.timing(animatedValue, {toValue: 1.1, duration: 35, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: -1.1, duration: 70, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: 1.1, duration: 70, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: -1.1, duration: 70, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: 0.0, duration: 35, easing: Easing.linear, useNativeDriver: true})
+
+      ]).start(); 
+    }
+
 ApartmentRow = (props) => {
+    var animatedValue = new Animated.Value(0);
     return (
         <View>
-            <TouchableHighlight activeOpacity={0.8} underlayColor="white" onPress={() => setModalVisible(true)}>
-                <View style={styles.container}>
-                    <Text style={styles.title}>{props.apartment}</Text>
-                </View> 
+          <TouchableHighlight activeOpacity={0.8} underlayColor="white" onPress={() => {setModalVisible(true); setApartment(props.apartment)}}>
+              <View style={styles.container}>
+                  <Text style={styles.title}>{props.apartment}</Text>
+              </View> 
         </TouchableHighlight>
         <Modal
         animationType="slide"
@@ -32,18 +84,27 @@ ApartmentRow = (props) => {
         }}
         >
             <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                <TextInput
-                style={styles.input}
-                placeholder="Code"
-                />
-                </View>
+              <View style={styles.modalView}>
+              <Animated.View style={{transform: [{
+            rotate: animatedValue.interpolate({
+               inputRange: [-1, 1],
+               outputRange: ['-0.1rad', '0.1rad']
+              })
+            },
+            { perspective: 1000 }]}}>
+              <TextInput
+              style={styles.input}
+              placeholder="Code"
+              maxLength={6}
+              onChangeText={(code) => {check(code.toUpperCase(), apartment, props.navigation, animatedValue)}}
+              />
+                        </Animated.View>
+
+              </View>
             </View>
         </Modal>
         </View>
-        
-
-        
+             
     );
 }
 
@@ -65,10 +126,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
+        marginTop: 22,
     },
       modalView: {
         margin: 20,
+        width:200,
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,

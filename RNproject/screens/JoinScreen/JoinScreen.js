@@ -29,7 +29,6 @@ if (!firebase.apps.length) {
 var searchApartment = firebase.functions().httpsCallable('searchApartment');
 
 function search(text) {
-
   searchApartment({ text: text })
     .then((result) => (JSON.parse(result.data)))
     .then((result) => setApartments(result))
@@ -39,7 +38,7 @@ function search(text) {
 
 }
 
-export default JoinScreen = () => {
+function JoinScreen({navigation}) {
   [apartments, setApartments] = useState();
 
   return (
@@ -51,6 +50,7 @@ export default JoinScreen = () => {
         onChangeText={(text) => {search(text)}}
       />
       <ApartmentList
+        navigation={navigation}
         apartments={apartments}
       />
     </SafeAreaView>
@@ -69,3 +69,5 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 })
+
+export default JoinScreen;

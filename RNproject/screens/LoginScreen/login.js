@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 import MaterialRightIconTextbox from "./Components/MaterialRightIconTextbox";
 import CupertinoButtonInfo from "./Components/CupertinoButtonInfo";
