@@ -21,8 +21,6 @@ if (!firebase.apps.length) {
 
 
 export default ApartmentList = (props) => {
-    //TODO SITEMARE I MODAL (NE UNO PER OGNUGNO)
-    [modalVisible, setModalVisible] = useState(false);
     [apartment, setApartment] = useState(false);
 
     return (
@@ -58,17 +56,18 @@ function check(code, apartment, navigation, animatedValue) {
 function handleAnimation(animatedValue) {
 
       Animated.sequence([
-        Animated.timing(animatedValue, {toValue: 1.1, duration: 35, easing: Easing.linear, useNativeDriver: true}),
-        Animated.timing(animatedValue, {toValue: -1.1, duration: 70, easing: Easing.linear, useNativeDriver: true}),
-        Animated.timing(animatedValue, {toValue: 1.1, duration: 70, easing: Easing.linear, useNativeDriver: true}),
-        Animated.timing(animatedValue, {toValue: -1.1, duration: 70, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: 1.5, duration: 35, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: -1.5, duration: 70, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: 1.5, duration: 70, easing: Easing.linear, useNativeDriver: true}),
+        Animated.timing(animatedValue, {toValue: -1.5, duration: 70, easing: Easing.linear, useNativeDriver: true}),
         Animated.timing(animatedValue, {toValue: 0.0, duration: 35, easing: Easing.linear, useNativeDriver: true})
 
       ]).start(); 
     }
 
 ApartmentRow = (props) => {
-    var animatedValue = new Animated.Value(0);
+  [modalVisible, setModalVisible] = useState(false);
+  [animatedValue, setAnimatedValue] = useState(new Animated.Value(0))
     return (
         <View>
           <TouchableHighlight activeOpacity={0.8} underlayColor="white" onPress={() => {setModalVisible(true); setApartment(props.apartment)}}>
@@ -76,34 +75,32 @@ ApartmentRow = (props) => {
                   <Text style={styles.title}>{props.apartment}</Text>
               </View> 
         </TouchableHighlight>
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
+          <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}
-        >
+          }}
+          >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-              <Animated.View style={{transform: [{
-            rotate: animatedValue.interpolate({
-               inputRange: [-1, 1],
-               outputRange: ['-0.1rad', '0.1rad']
-              })
-            },
-            { perspective: 1000 }]}}>
-              <TextInput
-              style={styles.input}
-              placeholder="Code"
-              maxLength={6}
-              onChangeText={(code) => {check(code.toUpperCase(), apartment, props.navigation, animatedValue)}}
-              />
-                        </Animated.View>
-
+                <Animated.View style={{transform: [{
+                rotate: animatedValue.interpolate({
+                inputRange: [-1, 1],
+                outputRange: ['-0.1rad', '0.1rad']
+                })
+                },{ perspective: 1000 }]}}>
+                  <TextInput
+                  style={styles.input}
+                  placeholder="Code"
+                  maxLength={6}
+                  onChangeText={(code) => {check(code.toUpperCase(), apartment, props.navigation, animatedValue)}}
+                  />
+                </Animated.View>
               </View>
             </View>
-        </Modal>
+          </Modal>
         </View>
              
     );
