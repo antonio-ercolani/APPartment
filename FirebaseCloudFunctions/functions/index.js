@@ -60,10 +60,15 @@ exports.functionProva = functions.https.onCall((data, context) => {
         //add the new apartment
         admin.database()
         .ref('/app/apartments/' + insertedName)
-        .set({
-          uid : context.auth.uid,    //logged user id 
+        .set({ 
           code : generateRandomString(),
           locked : false
+        });
+
+        admin.database()
+        .ref('/app/apartments/' + insertedName + '/members/' + context.auth.uid)
+        .set({
+          isAdmin: true
         });
 
         //add the apartment name in the user
@@ -83,7 +88,6 @@ exports.functionProva = functions.https.onCall((data, context) => {
 
 exports.searchApartment = functions.https.onCall((data, context) => {
   var insertedName = data.text;
-  var uid = context.auth.uid;
   var res = [];
 
   if (insertedName.length < 2) return;
@@ -102,6 +106,7 @@ exports.searchApartment = functions.https.onCall((data, context) => {
   });
 });
 
+//TODO quanto appartemento è locked non accetto utenti
 exports.checkCode = functions.https.onCall((data, context) => {
   var code = data.code;
   var apartment = data.apartment;
@@ -109,7 +114,22 @@ exports.checkCode = functions.https.onCall((data, context) => {
   return admin.database().ref('/app/apartments/' + apartment + '/code').get()
   .then(function(snapshot) {
     if(snapshot.exists()) {
-      if (snapshot.val() === code) return { text: "ok"}
+      if (snapshot.val() === code) {
+        
+        admin.database()
+        .ref('/app/apartments/' + apartment + '/members/' + context.auth.uid)
+        .set({
+          isAdmin: false
+        });
+
+        admin.database()
+        .ref('/app/users/' + context.auth.uid)
+        .update({
+          apartment : apartment
+        });
+
+        return { text: "ok"}
+      }
     }
     return { text: "ko"} 
   })
