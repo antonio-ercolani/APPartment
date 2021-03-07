@@ -3,6 +3,10 @@ import { Button, Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import SettingsScreen from './SettingsScreen/SettingsScreen';
+import AccessCodeScreen from './SettingsScreen/AccessCodeScreen/AccessCodeScreen';
+//import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCredentialsScreen';
+
 
 function DetailsScreen() {
   return (
@@ -27,17 +31,6 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
-    </View>
-  );
-}
 
 const HomeStack = createStackNavigator();
 
@@ -54,9 +47,9 @@ const SettingsStack = createStackNavigator();
 
 function SettingsStackScreen() {
   return (
-    <SettingsStack.Navigator>
+    <SettingsStack.Navigator initialRouteName="Settings">
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="Details" component={DetailsScreen} />
+      <SettingsStack.Screen name="Access code" component={AccessCodeScreen} />
     </SettingsStack.Navigator>
   );
 }
@@ -67,6 +60,7 @@ export default function SchermataProva() {
   return (
       <Tab.Navigator
         screenOptions={({ route }) => ({
+          showLabel: false,
           tabBarIcon: ({ focused, color, size }) => {
             /*
             let iconName;
@@ -78,7 +72,7 @@ export default function SchermataProva() {
             }
             */
             // You can return any component that you like here!
-            return <Icon name='instagram' size={size} color={color} />;
+            return <Icon name='gear' size={size} color={color} />;
           },
         })}
         tabBarOptions={{
