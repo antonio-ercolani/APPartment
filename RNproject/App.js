@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="HomeScreen">
+            <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Login">
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="RegistrationScreen" component={RegistrationScreen}  />
                 <Stack.Screen name="RegistrationCompletedScreen" component={RegistrationCompletedScreen} />

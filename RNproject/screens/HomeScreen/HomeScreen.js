@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import SettingsScreen from './SettingsScreen/SettingsScreen';
 import AccessCodeScreen from './SettingsScreen/AccessCodeScreen/AccessCodeScreen';
-//import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCredentialsScreen';
+import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCredentialsScreen';
 
 
 function DetailsScreen() {
@@ -50,6 +50,7 @@ function SettingsStackScreen() {
     <SettingsStack.Navigator initialRouteName="Settings">
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="Access code" component={AccessCodeScreen} />
+      <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} />
     </SettingsStack.Navigator>
   );
 }

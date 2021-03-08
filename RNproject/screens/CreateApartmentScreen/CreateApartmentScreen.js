@@ -37,7 +37,7 @@ export default function CreateApartmentScreen({navigation}) {
     call({ text: apartmentName }).then((result) => {
       var receivedMessage = result.data.text;
       if (receivedMessage === 'ok') {
-        navigation.navigate('RegistrationCompletedScreen');
+        navigation.navigate('HomeScreen');
       } else if (receivedMessage === 'notUnique')
         setErrorMessage('This name already exists, please try another');
     });

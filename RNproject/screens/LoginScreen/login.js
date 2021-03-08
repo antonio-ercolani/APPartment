@@ -45,8 +45,7 @@ function Login({navigation}) {
       .then(() => {
         hasApartment().then((result) => {
           if (result.data.text === "yes") {
-            //QUI CI VA LA HOME PAGE HO MESSO QUESTA PAGINA PER IL MOMENTO
-            navigation.navigate('RegistrationCompletedScreen')
+            navigation.navigate('HomeScreen')
           } else if (result.data.text === "no") {
             navigation.navigate('JoinCreateScreen');
           } else {

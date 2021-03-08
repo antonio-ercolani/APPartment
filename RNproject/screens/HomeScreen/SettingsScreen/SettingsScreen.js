@@ -21,7 +21,7 @@ export default function SettingsScreen({ navigation }) {
             <List.Item 
               title="Edit"
               left={props => <List.Icon icon="pencil"/>}
-              //onPress = {() => navigation.navigate('Edit credentials')}
+              onPress = {() => navigation.navigate('Edit credentials')}
             />
         </List.Accordion>
         <List.Item
