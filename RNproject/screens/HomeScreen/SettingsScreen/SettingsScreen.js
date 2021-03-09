@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { List } from 'react-native-paper';
-import { View } from 'react-native';
+import { View, Alert,TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import firebase from "firebase/app";
+require('firebase/auth')
 
 export default function SettingsScreen({ navigation }) {
   const { colors } = useTheme();
@@ -34,7 +36,33 @@ export default function SettingsScreen({ navigation }) {
           left={props => <List.Icon icon="security" />}
           onPress = {() => navigation.navigate('Access code')}
         />
+        <List.Item
+          title="Logout"
+          left={props => <List.Icon icon="logout" />}
+          onPress={() =>
+            Alert.alert('Logout','Please confirm',
+              [
+                {
+                  text: "CONFIRM",
+                  onPress: () => {
+                    firebase.auth().signOut().then(() => {
+                      navigation.navigate('Login');
+                    }).catch((error) => {
+                      //logout error
+                    });
+                  }
+                },
+                {
+                  //non fa niente
+                  text: "CANCEL",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                }
+              ],
+              { cancelable: true }
+            )
+          }
+        />
       </View>
     );
-  }
-
+}
