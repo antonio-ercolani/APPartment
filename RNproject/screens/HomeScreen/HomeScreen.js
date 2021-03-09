@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import SettingsScreen from './SettingsScreen/SettingsScreen';
 import AccessCodeScreen from './SettingsScreen/AccessCodeScreen/AccessCodeScreen';
 import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCredentialsScreen';
+import reducer from './reducer';
+import Home from './Home';
+
+
+const store = createStore(reducer);
 
 
 function DetailsScreen() {
@@ -16,28 +23,13 @@ function DetailsScreen() {
   );
 }
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home screen</Text>
-        <Text>
-          <Icon name="bug" size={30} color="#900" />
-        </Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
-    </View>
-  );
-}
-
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen() {
+function HomeStackScreen({navigation}) {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Home" navigation={navigation} component={Home} />
       <HomeStack.Screen name="Details" component={DetailsScreen} />
     </HomeStack.Navigator>
   );
@@ -57,8 +49,11 @@ function SettingsStackScreen() {
 
 const Tab = createBottomTabNavigator();
 
-export default function SchermataProva() {
+
+function SchermataProva() {
+
   return (
+    <Provider store={store}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           showLabel: false,
@@ -84,5 +79,9 @@ export default function SchermataProva() {
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
       </Tab.Navigator>
+    </Provider>
   );
 }
+
+
+export default SchermataProva;
