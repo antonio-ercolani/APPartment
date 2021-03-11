@@ -8,8 +8,8 @@ import { createStore } from 'redux';
 import SettingsScreen from './SettingsScreen/SettingsScreen';
 import AccessCodeScreen from './SettingsScreen/AccessCodeScreen/AccessCodeScreen';
 import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCredentialsScreen';
-import reducer from './reducer';
-import Home from './Home';
+import reducer from './Redux/reducer';
+import Home from './NotificationScreen/Home';
 
 
 const store = createStore(reducer);

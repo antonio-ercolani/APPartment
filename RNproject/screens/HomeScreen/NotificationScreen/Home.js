@@ -1,6 +1,6 @@
 import React from "react";
 import { Button,  View, Text } from "react-native";
-import {initialize} from './action';
+import {initialize} from '../Redux/actions';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { bindActionCreators } from 'redux';
@@ -43,7 +43,7 @@ function Home(props) {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Home screen</Text>
         <Text style={{fontSize:30}}>
-          {props.red.apartment.code}
+          {props.red.apartment.name}
           <Icon name="bug" size={30} color="#900" />
         </Text>
       <Button
