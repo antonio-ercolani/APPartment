@@ -91,15 +91,15 @@ export default function SettingsScreen({ navigation }) {
         <List.Item
           title="Payments"
           left={props => <List.Icon icon="cash-multiple" />}
-          onPress={() => navigation.navigate('Payments Screen')}
+          onPress={() => navigation.navigate('Payments')}
         />
         <List.Item
           title="Calendar"
           //trova una icona per il calendario visto che comunque servirà a una certa
           //https://callstack.github.io/react-native-paper/icons.html
           //e clicca su "See the list of supported icons"
-          left={props => <List.Icon icon="cash-multiple" />} 
-          onPress={() => navigation.navigate('Payments Screen')}
+          left={props => <List.Icon icon="calendar-month-outline" />} 
+          onPress={() => navigation.navigate('Calendar')}
         />
       </View>
     </PaperProvider>

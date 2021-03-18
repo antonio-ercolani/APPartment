@@ -11,6 +11,8 @@ import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCr
 import reducer from './Redux/reducer';
 import Home from './NotificationScreen/Home';
 import PaymentsScreen from './PaymentsScreen/PaymentsScreen'
+import CalendarScreen from './CalendarScreen/CalendarScreen.js'
+
 
 
 const store = createStore(reducer);
@@ -45,6 +47,7 @@ function SettingsStackScreen() {
       <SettingsStack.Screen name="Access code" component={AccessCodeScreen} />
       <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} />
       <SettingsStack.Screen name="Payments" component={PaymentsScreen} />
+      <SettingsStack.Screen name="Calendar" component={CalendarScreen} />
     </SettingsStack.Navigator>
   );
 }
