@@ -41,7 +41,7 @@ function Login({navigation}) {
   var hasApartment = firebase.functions().httpsCallable('hasApartment');
 
   function login() {
-    firebase.auth().signInWithEmailAndPassword("riccardo1.nannini@mail.polimi.it", "Ciccio1234")
+    firebase.auth().signInWithEmailAndPassword( "tony@mail.com", "Passqw")
       .then(() => {
         hasApartment().then((result) => {
           if (result.data.text === "yes") {

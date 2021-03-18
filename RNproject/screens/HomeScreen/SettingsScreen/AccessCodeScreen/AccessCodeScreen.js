@@ -1,29 +1,18 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import firebase from "firebase/app";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-
-// Required for side-effects
-require("firebase/functions");
-
-require('firebase/auth')
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
-//il nome dellappartamento andra preso dallo stato (redux)
-var apartmentName = "Bamdiera";
-
-export default function AccessCodeScreen(props) {
-  let[code, setCode] = useState('');
+function AccessCodeScreen(props) {
+  let[code, setCode] = useState(props.red.apartment.code);
   let[show, setShow] = useState(false);
 
   function changeShow() {
     show ? setShow(false) : setShow(true);
   }
 
+  /*
   var getCode = function (){
     firebase.database()
     .ref("app/apartments/"+apartmentName+"/code/").get()
@@ -35,6 +24,7 @@ export default function AccessCodeScreen(props) {
         }
     })
   }();
+  */
 
   return (
     <View style={styles.container}>
@@ -131,4 +121,9 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = (state) => {
+  const { red } = state
+  return { red }
+};
 
+export default connect(mapStateToProps)(AccessCodeScreen);

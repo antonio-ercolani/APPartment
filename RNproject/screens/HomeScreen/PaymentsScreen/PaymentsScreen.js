@@ -31,7 +31,7 @@ const theme = {
 
 
 
-export default function SettingsScreen({ navigation }) {
+export default function PaymentScreen({ navigation }) {
 
   return (
     <PaperProvider theme={theme}>
@@ -91,16 +91,9 @@ export default function SettingsScreen({ navigation }) {
         <List.Item
           title="Payments"
           left={props => <List.Icon icon="cash-multiple" />}
-          onPress={() => navigation.navigate('Payments Screen')}
-        />
-        <List.Item
-          title="Calendar"
-          //trova una icona per il calendario visto che comunque servirà a una certa
-          //https://callstack.github.io/react-native-paper/icons.html
-          //e clicca su "See the list of supported icons"
-          left={props => <List.Icon icon="cash-multiple" />} 
-          onPress={() => navigation.navigate('Payments Screen')}
-        />
+          onPress={() => navigation.navigate('Access code')}
+        >
+        </List.Item>
       </View>
     </PaperProvider>
   );

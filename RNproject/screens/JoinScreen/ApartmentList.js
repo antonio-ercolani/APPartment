@@ -43,7 +43,7 @@ function check(code, apartment, navigation, animatedValue) {
         var res = result.data.text;
         if (res === "ok") {
             setModalVisible(false);
-            navigation.navigate('RegistrationCompletedScreen')
+            navigation.navigate('HomeScreen')
         } else {
             handleAnimation(animatedValue);
         }
