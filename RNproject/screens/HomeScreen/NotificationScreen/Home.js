@@ -31,12 +31,27 @@ function Home(props) {
             if (snapshot.exists()) {
               initial_state.apartment = snapshot.val()
               initial_state.apartment.name = apartment;
-              props.initialize(initial_state);
+
+              //associates usernames to uids
+              var getHashMap = firebase.functions().httpsCallable('getHashMap');
+              getHashMap({ apartment: initial_state.apartment.name }).then((result) => {
+                var temp = JSON.parse(result.data);
+                temp.forEach((element) => {
+                  var uid = element.uid;
+                  var username = element.username;
+                  initial_state.apartment.members[uid] = username;
+                })
+                props.initialize(initial_state);
+              })
+              
             }
       
           })
       }
     })
+
+    
+    
   }
 
   return (

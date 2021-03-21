@@ -174,8 +174,64 @@ function initializePayments(apartmentName, currentUserUid) {
     })
 }
 
+
+//find all the debts of a given user 
+exports.findDebts = functions.https.onCall  ((data, context) => {
+  var apartment = data.apartment;
+  var uid;
+  var amount, debt;
+  var res = [];
+
+  function Debt(name, amount) {
+    this.uid = uid;
+    this.amount = amount;
+  }
+
+  return admin.database()
+    .ref('/app/payments/' + apartment + '/debts/' + context.auth.uid).get().then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        uid = childSnapshot.key;
+        amount = childSnapshot.val().amount;
+        debt = new Debt(uid, amount);
+        res.push(debt);
+      })
+      return JSON.stringify(res);
+    })
+});
+
+//gets an hashMap uid - usernames 
+exports.getHashMap = functions.https.onCall  (async (data, context) => {
+  var apartment = data.apartment;
+  var name;
+  var res = [];
+  function User(uid, username) {
+    this.uid = uid;
+    this.username = username;
+  }
+  console.log(apartment);
+
+  members = await admin.database()
+    .ref('/app/apartments/' + apartment + '/members/').get();
+
+  return admin.database()
+    .ref('/app/users/').get().then( (usernames) => {
+
+      members.forEach((childMember) => {
+        usernames.forEach((childUsername) => {
+          if (childUsername.key === childMember.key) {
+            name = childUsername.val().username;
+            user = new User(childUsername.key, name);
+            console.log(User);
+            res.push(user);          }
+        })
+      })
+      return JSON.stringify(res);}
+    )
+});
+
+
 function usernameFromUid(uid) {
-  admin.database()
+  return admin.database()
     .ref('/app/users/').get()
     .then((snapshot) => {
       if (snapshot.exists()) {
@@ -189,4 +245,9 @@ function usernameFromUid(uid) {
       }
     })
 }
+
+  
+
+
+
 

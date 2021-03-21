@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/Ionicons'
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import SettingsScreen from './SettingsScreen/SettingsScreen';
@@ -12,6 +12,8 @@ import reducer from './Redux/reducer';
 import Home from './NotificationScreen/Home';
 import PaymentsScreen from './PaymentsScreen/PaymentsScreen'
 import CalendarScreen from './CalendarScreen/CalendarScreen.js'
+import CreditScreen from './PaymentsScreen/CreditScreen/CreditScreen'
+import ServicesScreen from './ServicesScreen/ServicesScreen'
 
 
 
@@ -46,17 +48,30 @@ function SettingsStackScreen() {
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="Access code" component={AccessCodeScreen} />
       <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} />
-      <SettingsStack.Screen name="Payments" component={PaymentsScreen} />
     </SettingsStack.Navigator>
   );
+}
+
+const PaymentsStack = createStackNavigator();
+function PaymentsStackScreen() {
+  return (
+    <PaymentsStack.Navigator initialRouteName="Payments">
+      <PaymentsStack.Screen name="Payments" component={PaymentsScreen}/>
+      <PaymentsStack.Screen name="Credit" component={CreditScreen}/>
+    </PaymentsStack.Navigator>
+  )
 }
 
 const ServiceStack = createStackNavigator();
 
 function ServiceStackScreen() {
   return (
-    <ServiceStack.Navigator initialRouteName="">
-
+    <ServiceStack.Navigator initialRouteName="Services">
+      <ServiceStack.Screen name="Services" component={ServicesScreen}/>
+      <ServiceStack.Screen name="Payments"  options={{ headerShown:false }} component={PaymentsStackScreen}/>
+      {
+      //<ServiceStack.Screen name="Timetables" component={TimetablesStackScreen}/>
+      }
     </ServiceStack.Navigator>
   )
 }
@@ -72,17 +87,25 @@ function SchermataProva() {
         screenOptions={({ route }) => ({
           showLabel: false,
           tabBarIcon: ({ focused, color, size }) => {
-            /*
+
             let iconName;
 
             if (route.name === 'Home') {
-              iconName = focused ? 'md-browsers' : 'md-browsers';
+              iconName = 'home'
+
+              //lo tengo qui per questo focused magari servirà in futuro
+              //iconName = focused ? 'md-browsers' : 'md-browsers';
+
             } else if (route.name === 'Settings') {
-              iconName = focused ? 'md-browsers' : 'md-browsers';
+              iconName = 'settings';
+            } else if (route.name === 'Services') {
+              iconName = 'grid';
+            } else if (route.name === 'Calendar') {
+              iconName = 'calendar';
             }
-            */
+
             // You can return any component that you like here!
-            return <Icon name='gear' size={size} color={color} />;
+            return <Icon name={iconName} size={size} color={color} />;
           },
         })}
         tabBarOptions={{
@@ -95,7 +118,7 @@ function SchermataProva() {
         <Tab.Screen name="Calendar" component={CalendarScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
       </Tab.Navigator>
-    </Provider>
+    </Provider >
   );
 }
 

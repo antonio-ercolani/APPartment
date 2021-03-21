@@ -1,100 +1,89 @@
-import * as React from 'react';
-import { List } from 'react-native-paper';
-import { View, Alert,TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import React, { Component } from "react";
+import { connect } from 'react-redux';
+import { StyleSheet, View } from "react-native";
+import CupertinoButtonSuccess1 from "./components/CupertinoButtonSuccess1";
+import CupertinoButtonDanger1 from "./components/CupertinoButtonDanger1";
+import CupertinoButtonLight from "./components/CupertinoButtonLight";
 import firebase from "firebase/app";
 require('firebase/auth')
+import { useNavigation } from '@react-navigation/native';
 
-/*
-const fontConfig = {
-  default: {
-    regular: {
-      fontWeight: 'normal',
-      fontSize:12,
-      //backgroundColor: 'white'
-    },
-  },
-};
-*/
+function PaymentsScreen(props) {
+  const navigation = useNavigation(); 
 
+  function goToCredit() {
+    var findDebts = firebase.functions().httpsCallable('findDebts');
+    let apartmentName = props.red.apartment.name;
+    //get the current user credits
+    findDebts({ apartment: apartmentName })
+      .then((result) => {
+        var res = JSON.parse(result.data);
+        console.log(res);
+        navigation.navigate('Credit',{debts:res})
+      })
+  }
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: 'rgba(249,99,70,1)',
-  },
-  //fonts: configureFonts(fontConfig),
-
-};
-
-
-
-
-export default function PaymentScreen({ navigation }) {
 
   return (
-    <PaperProvider theme={theme}>
-      <View>
-        <List.Accordion
-          title="Account"
-          left={props => <List.Icon icon="account"/>}>
-          <List.Item
-            title="Tony"
-            description="Username" />
-          <List.Item
-            title="tony@mail.it"
-            description="email" />
-          <List.Item
-            title="Edit"
-            left={props => <List.Icon icon="pencil" />}
-            onPress={() => navigation.navigate('Edit credentials')}
-          />
-        </List.Accordion>
-        <List.Item
-          title="Apartment settings"
-          description=""
-          left={props => <List.Icon icon="home" />}
-        />
-        <List.Item
-          title="Access code"
-          left={props => <List.Icon icon="security" />}
-          onPress={() => navigation.navigate('Access code')}
-        />
-        <List.Item
-          title="Logout"
-          left={props => <List.Icon icon="logout" />}
-          onPress={() =>
-            Alert.alert('Logout', 'Please confirm',
-              [
-                {
-                  text: "CONFIRM",
-                  onPress: () => {
-                    firebase.auth().signOut().then(() => {
-                      navigation.navigate('Login');
-                    }).catch((error) => {
-                      //logout error
-                    });
-                  }
-                },
-                {
-                  //non fa niente
-                  text: "CANCEL",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel"
-                }
-              ],
-              { cancelable: true }
-            )
-          }
-        />
-        <List.Item
-          title="Payments"
-          left={props => <List.Icon icon="cash-multiple" />}
-          onPress={() => navigation.navigate('Access code')}
-        >
-        </List.Item>
+    <View style={styles.container}>
+      <View style={styles.group2}>
+        <View style={styles.group}>
+          <CupertinoButtonSuccess1
+            style={styles.cupertinoButtonSuccess1}
+            creditPressed={goToCredit}
+          ></CupertinoButtonSuccess1>
+          <CupertinoButtonDanger1
+            style={styles.cupertinoButtonDanger1}
+          ></CupertinoButtonDanger1>
+        </View>
+        <CupertinoButtonLight
+          style={styles.cupertinoButtonLight}
+        ></CupertinoButtonLight>
       </View>
-    </PaperProvider>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  group2: {
+    width: 277,
+    height: 155,
+    marginTop: 30,
+    alignSelf: "center"
+  },
+  group: {
+    width: 272,
+    height: 70,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 2
+  },
+  cupertinoButtonSuccess1: {
+    height: 70,
+    width: 120,
+    backgroundColor: "rgba(64,144,120,1)"
+  },
+  cupertinoButtonDanger1: {
+    height: 70,
+    width: 120,
+    backgroundColor: "rgba(167,41,60,1)",
+    borderRadius: 5
+  },
+  cupertinoButtonLight: {
+    height: 57,
+    backgroundColor: "rgba(249,99,70,1)",
+    borderRadius: 5,
+    marginTop: 27
+  }
+});
+
+
+const mapStateToProps = (state) => {
+  const { red } = state
+  return { red }
+};
+
+export default connect(mapStateToProps)(PaymentsScreen);
