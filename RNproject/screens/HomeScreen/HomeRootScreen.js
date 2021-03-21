@@ -47,9 +47,18 @@ function SettingsStackScreen() {
       <SettingsStack.Screen name="Access code" component={AccessCodeScreen} />
       <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} />
       <SettingsStack.Screen name="Payments" component={PaymentsScreen} />
-      <SettingsStack.Screen name="Calendar" component={CalendarScreen} />
     </SettingsStack.Navigator>
   );
+}
+
+const ServiceStack = createStackNavigator();
+
+function ServiceStackScreen() {
+  return (
+    <ServiceStack.Navigator initialRouteName="">
+
+    </ServiceStack.Navigator>
+  )
 }
 
 const Tab = createBottomTabNavigator();
@@ -82,6 +91,8 @@ function SchermataProva() {
         }}
       >
         <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Services" component={ServiceStackScreen} />
+        <Tab.Screen name="Calendar" component={CalendarScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
       </Tab.Navigator>
     </Provider>
