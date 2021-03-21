@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, PureComponent } from "react";
+import { View, StyleSheet, Text } from 'react-native';
 import firebase from "firebase/app";
 require('firebase/auth')
 import {Agenda} from 'react-native-calendars';
@@ -7,7 +7,7 @@ import {Agenda} from 'react-native-calendars';
 
 
 
-export default function CalendarScreen({ navigation }) {
+export default function CalendarScreen() {
   let [items, setItems] = useState({})
 
   const currentDay = '2021-03-20';
@@ -42,33 +42,57 @@ export default function CalendarScreen({ navigation }) {
         <Agenda
           items={items} 
           loadItemsForMonth={(month) => {loadItems(month)}}
-          minDate={'2021-01-01'}  
-          maxDate={'2022-12-31'}
+          minDate={'2021-03-01'}  
+          maxDate={'2022-06-01'}
           pastScrollRange={2}
-          futureScrollRange={10}
+          futureScrollRange={12}
           markedDates={markedDates}
           markingType={'multi-dot'}
-          renderEmptyDate={() => {return (
-            <View style={styles.emptyDate}>
-              <View style={styles.separator}></View>
-            </View>
-          );}}
+          renderEmptyDate={() => renderEmptyDate()}
           renderItem={(item)=> renderItem(item)}
         />
   );
 }
 
+function renderEmptyDate() {
+  return(
+    <PureEmptyDate></PureEmptyDate>
+  )
+}
+
+class PureEmptyDate extends PureComponent {
+  
+  render() {
+    return (
+      <View style={styles.emptyDate}>
+        <View style={styles.separator}></View>
+      </View>
+    );
+  }
+}
+
 function renderItem(item) {
   return (
-    <View>
+    <PureRenderItem item={item}></PureRenderItem>
+  );
+}
+
+class PureRenderItem extends PureComponent {
+
+  state = {item: this.props.item}
+
+  render() {
+    return (
+      <View>
       <View style={styles.separator}></View>
       <View
         style={[styles.item, { height: 120 }]} 
       >
-      <Text>{item.name}</Text>
+      <Text>{this.state.item.name}</Text>
       </View>
     </View>
-  );
+    );
+  }
 }
 
 function timeToString(time) {

@@ -14,6 +14,7 @@ import PaymentsScreen from './PaymentsScreen/PaymentsScreen'
 import CalendarScreen from './CalendarScreen/CalendarScreen.js'
 import CreditScreen from './PaymentsScreen/CreditScreen/CreditScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
+import Timetable from './TimetablesScreen/Timetable'
 
 
 
@@ -62,16 +63,23 @@ function PaymentsStackScreen() {
   )
 }
 
+const TimetablesStack = createStackNavigator();
+function TimetablesStackScreen() {
+  return (
+    <PaymentsStack.Navigator initialRouteName="Timetable">
+      <PaymentsStack.Screen name="Timetable" component={Timetable}/>
+    </PaymentsStack.Navigator>
+  )
+}
+
 const ServiceStack = createStackNavigator();
 
 function ServiceStackScreen() {
   return (
     <ServiceStack.Navigator initialRouteName="Services">
       <ServiceStack.Screen name="Services" component={ServicesScreen}/>
-      <ServiceStack.Screen name="Payments"  options={{ headerShown:false }} component={PaymentsStackScreen}/>
-      {
-      //<ServiceStack.Screen name="Timetables" component={TimetablesStackScreen}/>
-      }
+      <ServiceStack.Screen name="Payments" options={{ headerShown:false }} component={PaymentsStackScreen}/>
+      <ServiceStack.Screen name="Timetables" options={{ headerShown:false }} component={TimetablesStackScreen}/>
     </ServiceStack.Navigator>
   )
 }
@@ -79,7 +87,7 @@ function ServiceStackScreen() {
 const Tab = createBottomTabNavigator();
 
 
-function SchermataProva() {
+function CoreScreen() {
 
   return (
     <Provider store={store}>
@@ -123,4 +131,4 @@ function SchermataProva() {
 }
 
 
-export default SchermataProva;
+export default CoreScreen;
