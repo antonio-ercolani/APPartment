@@ -12,7 +12,7 @@ import reducer from './Redux/reducer';
 import Home from './NotificationScreen/Home';
 import PaymentsScreen from './PaymentsScreen/PaymentsScreen'
 import CalendarScreen from './CalendarScreen/CalendarScreen.js'
-import CreditScreen from './PaymentsScreen/CreditScreen/CreditScreen'
+import BalanceScreen from './PaymentsScreen/BalanceScreen/BalanceScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
 import Timetable from './TimetablesScreen/Timetable'
 
@@ -54,11 +54,26 @@ function SettingsStackScreen() {
 }
 
 const PaymentsStack = createStackNavigator();
+
+
 function PaymentsStackScreen() {
   return (
-    <PaymentsStack.Navigator initialRouteName="Payments">
-      <PaymentsStack.Screen name="Payments" component={PaymentsScreen}/>
-      <PaymentsStack.Screen name="Credit" component={CreditScreen}/>
+    <PaymentsStack.Navigator initialRouteName="Payments"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+          //alignSelf: "center",
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          //fontWeight: 'bold',
+          //fontSize: 20,
+          fontFamily: 'sans-serif-medium'
+        },
+      }}>
+      <PaymentsStack.Screen name="Payments" component={PaymentsScreen} />
+      <PaymentsStack.Screen options={{ title: 'Your Balance' }} name="Balance" component={BalanceScreen} />
     </PaymentsStack.Navigator>
   )
 }

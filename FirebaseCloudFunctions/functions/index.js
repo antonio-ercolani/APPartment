@@ -181,6 +181,7 @@ exports.findDebts = functions.https.onCall  ((data, context) => {
   var uid;
   var amount, debt;
   var res = [];
+  var totalDebt = 0;
 
   function Debt(name, amount) {
     this.uid = uid;
@@ -194,7 +195,12 @@ exports.findDebts = functions.https.onCall  ((data, context) => {
         amount = childSnapshot.val().amount;
         debt = new Debt(uid, amount);
         res.push(debt);
+        totalDebt = totalDebt + amount;
       })
+      //the last element is the total debt 
+      uid = "Total debt";
+      debt = new Debt(uid,totalDebt);
+      res.push(debt);
       return JSON.stringify(res);
     })
 });

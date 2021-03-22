@@ -19,7 +19,7 @@ function PaymentsScreen(props) {
       .then((result) => {
         var res = JSON.parse(result.data);
         console.log(res);
-        navigation.navigate('Credit',{debts:res})
+        navigation.navigate('Balance',{debts:res})
       })
   }
 
