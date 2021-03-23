@@ -15,6 +15,8 @@ import CalendarScreen from './CalendarScreen/CalendarScreen.js'
 import BalanceScreen from './PaymentsScreen/BalanceScreen/BalanceScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
 import Timetable from './TimetablesScreen/Timetable'
+import CreateTimetable from './TimetablesScreen/CreateTimetable'
+
 
 
 
@@ -81,9 +83,23 @@ function PaymentsStackScreen() {
 const TimetablesStack = createStackNavigator();
 function TimetablesStackScreen() {
   return (
-    <PaymentsStack.Navigator initialRouteName="Timetable">
-      <PaymentsStack.Screen name="Timetable" component={Timetable}/>
-    </PaymentsStack.Navigator>
+    <TimetablesStack.Navigator initialRouteName="Timetable"
+    screenOptions={{
+      headerTitleAlign: 'center',
+      headerStyle: {
+        backgroundColor: '#f4511e',
+        //alignSelf: "center",
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        //fontWeight: 'bold',
+        //fontSize: 20,
+        fontFamily: 'sans-serif-medium'
+      },
+    }}>
+      <TimetablesStack.Screen name="Timetable" component={Timetable}/>
+      <TimetablesStack.Screen name="Timetable creation" component={CreateTimetable}/>
+    </TimetablesStack.Navigator>
   )
 }
 
