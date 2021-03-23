@@ -88,7 +88,28 @@ export default function SettingsScreen({ navigation }) {
             )
           }
         />
+        <Text style={styles.text}>Copyright © nomeapp</Text>
+        <Text style={styles.text1}>CEOs and Founders</Text>
+        <Text style={styles.text1}>Antonio Ercolani {'&'} Riccardo Nannini</Text>
       </View>
     </PaperProvider>
   );
 }
+
+
+const styles = StyleSheet.create({
+  text: {
+    alignSelf: 'center',
+    marginTop: 90,
+    fontSize: 13,
+    fontFamily: "sans-serif",
+    color: "#000000"
+  },
+  text1: {
+    alignSelf: 'center',
+    marginTop: 5,
+    fontSize: 13,
+    fontFamily: "sans-serif",
+    color: "#000000"
+  },
+})

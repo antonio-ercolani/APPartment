@@ -103,29 +103,12 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps)(BalanceScreen);
 
 const styles = StyleSheet.create({
-  text: {
-    alignSelf: "center",
-    marginTop: 30,
-    fontSize: 25,
-    fontWeight: "bold",
-    fontStyle: "italic",
-    fontFamily: "roboto-300",
-    color: "rgba(167,41,60,1)"
-  },
-  textTotalCredit: {
-    alignSelf: "center",
-    marginTop: 5,
-    fontSize: 30,
-    fontWeight: "bold",
-    fontStyle: "italic",
-    fontFamily: "roboto-300",
-    color: "rgba(167,41,60,1)"
-  }, 
   amount: {
     fontSize: 20,
     marginRight: 20,
     fontWeight: "bold", 
-    marginTop: 15
+    marginTop: 15,
+    color: "#636363",
   },
   separator: {
     width: 290,

@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 
 function CupertinoButtonDanger1(props) {
   return (
-    <TouchableOpacity style={[styles.container, props.style]}>
+    <TouchableOpacity style={[styles.container, props.style]} onPress={() => {props.creditPressed()}}>
       <Text style={styles.debt}>DEBT</Text>
     </TouchableOpacity>
   );

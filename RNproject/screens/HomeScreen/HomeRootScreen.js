@@ -16,7 +16,7 @@ import BalanceScreen from './PaymentsScreen/BalanceScreen/BalanceScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
 import Timetable from './TimetablesScreen/Timetable'
 import CreateTimetable from './TimetablesScreen/CreateTimetable'
-
+import NewTransactionScreen from './PaymentsScreen/NewTransactionScreen/NewTransactionScreen';
 
 
 
@@ -76,6 +76,7 @@ function PaymentsStackScreen() {
       }}>
       <PaymentsStack.Screen name="Payments" component={PaymentsScreen} />
       <PaymentsStack.Screen options={{ title: 'Your Balance' }} name="Balance" component={BalanceScreen} />
+      <PaymentsStack.Screen options={{ title: 'New Transaction' }} name="NewTransaction" component={NewTransactionScreen} />
     </PaymentsStack.Navigator>
   )
 }
