@@ -1,29 +1,31 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text } from "react-native";
-import CupertinoButtonSuccess1 from "./components/CupertinoButtonSuccess1";
-import CupertinoButtonDanger1 from "./components/CupertinoButtonDanger1";
-import CupertinoButtonLight from "./components/CupertinoButtonLight";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
-import * as Progress from 'react-native-progress';
-import { useState } from "react";
-import { set } from "react-native-reanimated";
+import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'rgba(249,99,70,1)',
+  },
+  //fonts: configureFonts(fontConfig),
+
+};
+
 
 
 
 function PaymentsScreen(props) {
-  let [showCircle, setShowCircle] = useState(0);
   const navigation = useNavigation(); 
   const items = [];
   items.push();
 
-  function goToCredit() {
-    setShowCircle(1);
-
-    
-    var findDebts = firebase.functions().httpsCallable('findDebts');
+  function goToBalance() {
+    var findDebts = firebase.functions().httpsCallable('payments-findDebts');
     let apartmentName = props.red.apartment.name;
     //get the current user credits
     findDebts({ apartment: apartmentName })
@@ -32,36 +34,41 @@ function PaymentsScreen(props) {
         console.log(res);
         
         navigation.navigate('Balance',{debts:res})
-        setShowCircle(0);
       })
       
   }
 
-  function goToNewTransaction() {
-    navigation.navigate('NewTransaction');
+  function goToNewPayment() {
+    navigation.navigate('NewPayment',{defaultDescription:''});
   }
 
+  function goToDebtPayOff() {
+    navigation.navigate('DebtPayOff');
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.group2}>
-        <View style={styles.group}>
-          <CupertinoButtonSuccess1
-            style={styles.cupertinoButtonSuccess1}
-            creditPressed={goToCredit}
-          ></CupertinoButtonSuccess1>
-          <CupertinoButtonDanger1
-            style={styles.cupertinoButtonDanger1}
-            creditPressed={goToNewTransaction}
-          ></CupertinoButtonDanger1>
-        </View>
-        <CupertinoButtonLight
-          style={styles.cupertinoButtonLight}
-        ></CupertinoButtonLight>
-        <Text>{showCircle}</Text>
-        <Progress.CircleSnail key={0} color='#f4511e' style={[styles.progressCircle, {opacity : showCircle}]}/>
+    <PaperProvider theme={theme}>
+      <View>
+        <List.Item
+          title="Balance"
+          description="Check out your debts"
+          left={props => <List.Icon icon="scale-balance" />}
+          onPress={() => goToBalance()}
+        />
+        <List.Item
+          title="Add new payment"
+          description="Register a new purchase"
+          left={props => <List.Icon icon="credit-card-plus" />} 
+          onPress={() => goToNewPayment()}
+        />
+        <List.Item
+          title="Debt pay off"
+          description="Register a debt pay off"
+          left={props => <List.Icon icon="equal-box" />} 
+          onPress={() => goToDebtPayOff()}
+        />
       </View>
-    </View>
+    </PaperProvider>
   );
 }
 
@@ -99,10 +106,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 27
   },
-  progressCircle: {
-    marginTop: 50,
-    alignSelf: 'center',
-  }
 });
 
 

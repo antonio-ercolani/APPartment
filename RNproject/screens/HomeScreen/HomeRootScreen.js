@@ -16,8 +16,12 @@ import BalanceScreen from './PaymentsScreen/BalanceScreen/BalanceScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
 import Timetable from './TimetablesScreen/Timetable'
 import CreateTimetable from './TimetablesScreen/CreateTimetable'
-import NewTransactionScreen from './PaymentsScreen/NewTransactionScreen/NewTransactionScreen';
-
+import NewPaymentScreen from './PaymentsScreen/NewPaymentScreen/NewPaymentScreen.js';
+import DebtPayOffScreen from './PaymentsScreen/DebtPayOffScreen/DebtPayOffScreen.js';
+import StockManagementScreen from './StockManagementScreen/StockManagementScreen';
+import NewItemScreen from './StockManagementScreen/NewItemScreen/NewItemScreen';
+import MissingListScreen from './StockManagementScreen/MissingListScreen/MissingListScreen';
+import RemoveItemsScreen from './StockManagementScreen/RemoveItemsScreen/RemoveItemsScreen';
 
 
 const store = createStore(reducer);
@@ -57,7 +61,6 @@ function SettingsStackScreen() {
 
 const PaymentsStack = createStackNavigator();
 
-
 function PaymentsStackScreen() {
   return (
     <PaymentsStack.Navigator initialRouteName="Payments"
@@ -76,8 +79,36 @@ function PaymentsStackScreen() {
       }}>
       <PaymentsStack.Screen name="Payments" component={PaymentsScreen} />
       <PaymentsStack.Screen options={{ title: 'Your Balance' }} name="Balance" component={BalanceScreen} />
-      <PaymentsStack.Screen options={{ title: 'New Transaction' }} name="NewTransaction" component={NewTransactionScreen} />
+      <PaymentsStack.Screen options={{ title: 'New Payment' }} name="NewPayment" component={NewPaymentScreen} />
+      <PaymentsStack.Screen options={{ title: 'Debt Pay Off' }} name="DebtPayOff" component={DebtPayOffScreen} />
     </PaymentsStack.Navigator>
+  )
+}
+
+const StockManagementStack = createStackNavigator();
+
+function StockManagementStackScreen() {
+  return (
+    <StockManagementStack.Navigator initialRouteName="StockManagement"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+          //alignSelf: "center",
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          //fontWeight: 'bold',
+          //fontSize: 20,
+          fontFamily: 'sans-serif-medium'
+        },
+      }}>
+      <StockManagementStack.Screen name="StockManagement" component={StockManagementScreen} />
+      <StockManagementStack.Screen options={{ title: 'New Missing Item' }} name="NewItem" component={NewItemScreen} />
+      <StockManagementStack.Screen options={{ title: 'Missing Items' }} name="MissingList" component={MissingListScreen} />
+      <StockManagementStack.Screen options={{ title: 'Remove Items' }} name="RemoveItems" component={RemoveItemsScreen} />
+      <StockManagementStack.Screen options={{ title: 'New Payment' }} name="NewPayment" component={NewPaymentScreen} />
+    </StockManagementStack.Navigator>
   )
 }
 
@@ -111,6 +142,7 @@ function ServiceStackScreen() {
     <ServiceStack.Navigator initialRouteName="Services">
       <ServiceStack.Screen name="Services" component={ServicesScreen}/>
       <ServiceStack.Screen name="Payments" options={{ headerShown:false }} component={PaymentsStackScreen}/>
+      <ServiceStack.Screen name="StockManagement" options={{ headerShown:false }} component={StockManagementStackScreen}/>
       <ServiceStack.Screen name="Timetables" options={{ headerShown:false }} component={TimetablesStackScreen}/>
     </ServiceStack.Navigator>
   )

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, useState } from "react";
 import { View, Alert, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { Button, configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Button, configureFonts, DefaultTheme, Provider as PaperProvider ,ThemeProvider} from 'react-native-paper';
 import { connect } from 'react-redux';
 require('firebase/auth')
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -11,6 +11,16 @@ var balanceColor = 'rgba(64,144,120,1)';
 
 var totalDebt = 0;
 var i = 0;
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#f4511e',
+  },
+  //fonts: configureFonts(fontConfig),
+
+};
 
 function BalanceScreen(props) {
   const navigation = useNavigation();
@@ -87,7 +97,7 @@ function BalanceScreen(props) {
   )
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <View>
         {items}
       </View>

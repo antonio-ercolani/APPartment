@@ -49,6 +49,11 @@ export default function ServicesScreen({ navigation }) {
           left={props => <List.Icon icon="calendar-month-outline" />} 
           onPress={() => navigation.navigate('Timetables')}
         />
+        <List.Item
+          title="Stock Management"
+          left={props => <List.Icon icon="format-list-checks" />} 
+          onPress={() => navigation.navigate('StockManagement')}
+        />
       </View>
     </PaperProvider>
   );

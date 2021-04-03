@@ -8,6 +8,8 @@ const admin = require('firebase-admin');
 const { firestore } = require("firebase-admin");
 admin.initializeApp();
 
+exports.payments = require('./payments.js');
+exports.stockManagement = require('./stockManagement.js');
 
 
 //called by the login screen
@@ -175,35 +177,6 @@ function initializePayments(apartmentName, currentUserUid) {
 }
 
 
-//find all the debts of a given user 
-exports.findDebts = functions.https.onCall  ((data, context) => {
-  var apartment = data.apartment;
-  var uid;
-  var amount, debt;
-  var res = [];
-  var totalDebt = 0;
-
-  function Debt(name, amount) {
-    this.uid = uid;
-    this.amount = amount;
-  }
-
-  return admin.database()
-    .ref('/app/payments/' + apartment + '/debts/' + context.auth.uid).get().then((snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        uid = childSnapshot.key;
-        amount = childSnapshot.val().amount;
-        debt = new Debt(uid, amount);
-        res.push(debt);
-        totalDebt = totalDebt + amount;
-      })
-      //the last element is the total debt 
-      uid = "Total debt";
-      debt = new Debt(uid,totalDebt);
-      res.push(debt);
-      return JSON.stringify(res);
-    })
-});
 
 //gets an hashMap uid - usernames 
 exports.getHashMap = functions.https.onCall  (async (data, context) => {
