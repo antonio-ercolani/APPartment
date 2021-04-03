@@ -1,16 +1,43 @@
-import React, { Component } from "react";
+import React, { useState, Component, useEffect } from "react";
 import { View, Alert, TouchableOpacity, StyleSheet, ScrollView, Text } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
 require('firebase/auth')
+require("firebase/functions");
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native';
 
+const firebase = require("firebase");
 
-
-function Timetable() {
+function Timetable(props) {
   const navigation = useNavigation(); 
+  const [timetables, setTimetables] = useState([]);
+  const [list, setList] = useState([]);
+
+
+  var getTimetables = firebase.functions().httpsCallable('timetables-getTimetables');
+
+  const apartment = props.red.apartment.name;
+
+  useEffect(() => {
+    getTimetables({apartment: apartment})
+    .then((result) => (JSON.parse(result.data)))
+    .then((result) => setTimetables(result))
+    .catch((error) => console.log(error.message));
+  }, []);
+
+  useEffect(() => {
+    var interm = [...timetables];
+    interm = interm.map((item, idx) =>
+      <List.Item
+        key={idx}
+        title={item.description}
+      >
+      </List.Item>
+    )
+    setList(interm);
+  }, [timetables]);
 
   return (
     <ScrollView>
@@ -24,6 +51,7 @@ function Timetable() {
           </TouchableOpacity>
         </View>
         <View style={styles.list}>
+          {list}
         </View>
       </View>
     </ScrollView>
@@ -69,7 +97,6 @@ const styles = StyleSheet.create({
     paddingLeft: 2
   },
   list: {
-    backgroundColor: "rgba(122,120,120,1)",
     marginTop: 35,
     alignSelf: "stretch",
     flex: 0.91
@@ -77,4 +104,9 @@ const styles = StyleSheet.create({
 });
 
 
-export default Timetable;
+const mapStateToProps = (state) => {
+  const { red } = state
+  return { red }
+};
+
+export default connect(mapStateToProps)(Timetable);

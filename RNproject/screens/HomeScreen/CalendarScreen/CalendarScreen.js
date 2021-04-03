@@ -13,7 +13,6 @@ export default function CalendarScreen() {
   const currentDay = '2021-03-20';
   const nextDay = '2021-03-21'
   function loadItems(day) {
-    console.log("CHIAMATO")
     const items = {}
     setTimeout(() => {
       for (let i = -15; i < 85 ; i++) {
