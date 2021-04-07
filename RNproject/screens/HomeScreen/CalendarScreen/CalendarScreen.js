@@ -3,20 +3,53 @@ import { View, StyleSheet, Text } from 'react-native';
 import firebase from "firebase/app";
 require('firebase/auth')
 import {Agenda} from 'react-native-calendars';
+import { connect } from 'react-redux';
 
 
 
 
-export default function CalendarScreen() {
+function CalendarScreen(props) {
   let [items, setItems] = useState({})
 
+  const apartment = props.red.apartment.name;
+
+
   const currentDay = '2021-03-20';
-  const nextDay = '2021-03-21'
-  function loadItems(day) {
+  const nextDay = '2021-03-21';
+
+  var getTimetables = firebase.functions().httpsCallable('timetables-getEvents');
+
+  function loadItems(month) {
+    
+    console.log(month);
+    const date = {
+      month : month.month,
+      year : month.year
+    }
+    getTimetables({apartment: apartment, date: date}).then((result) => {
+
+      var events = result.data;
+      console.log(events);
+
+      var days;
+
+      days = Object.keys(events)
+      
+      console.log(days);
+      
+      /*days.forEach((day) => {
+        var date = month.year + '-' + month.month + '-' + day;
+        console.log(date)
+      })*/
+      
+    
+    
+    });
+
     const items = {}
     setTimeout(() => {
       for (let i = -15; i < 85 ; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+        const time = month.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = timeToString(time);
         if (!items[strTime]) {
           items[strTime] = [];
@@ -122,3 +155,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(230, 230, 230,1)"
   }
 });
+
+
+const mapStateToProps = (state) => {
+  const { red } = state
+  return { red }
+};
+
+export default connect(mapStateToProps)(CalendarScreen);

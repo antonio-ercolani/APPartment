@@ -5,13 +5,22 @@ import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
 require('firebase/auth')
 require("firebase/functions");
-import Icon from 'react-native-vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native';
 
 const firebase = require("firebase");
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#f4511e',
+  },
+  //fonts: configureFonts(fontConfig),
+
+};
+
 
 function Timetable(props) {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const [timetables, setTimetables] = useState([]);
   const [list, setList] = useState([]);
 
@@ -20,40 +29,75 @@ function Timetable(props) {
 
   const apartment = props.red.apartment.name;
 
+  var key = 0;
+  function getKey() {
+    key = key+1;
+    return key;
+  }
+
+  function getNames(members) {
+    var items = []
+    for (const [chiave, value] of Object.entries(members)) {
+      items.push(chiave)
+    }
+    return items;
+  }
+
   useEffect(() => {
-    getTimetables({apartment: apartment})
-    .then((result) => (JSON.parse(result.data)))
-    .then((result) => setTimetables(result))
-    .catch((error) => console.log(error.message));
+    getTimetables({ apartment: apartment })
+      .then((result) => (JSON.parse(result.data)))
+      .then((result) => setTimetables(result))
+      .catch((error) => console.log(error.message));
   }, []);
 
   useEffect(() => {
     var interm = [...timetables];
     interm = interm.map((item, idx) =>
-      <List.Item
-        key={idx}
+      <List.Accordion
+        key={getKey()}
         title={item.description}
-      >
-      </List.Item>
+        left={props => <List.Icon {...props} icon="calendar" />}>
+        <List.Item key={getKey()} title={"Start date:  " + item.startDate} />
+        <List.Item key={getKey()} title={"End date:  " + item.endDate} />
+        <List.Item key={getKey()} title={"Period:  " + item.period + " days"} />
+        <List.Item key={getKey()} title={"Members:  " + getNames(item.members)} />
+      </List.Accordion>
     )
     setList(interm);
   }, [timetables]);
 
+  function goToTimetableCreation() {
+    navigation.navigate('Timetable creation')
+  }
+
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.row}>
-          <TouchableOpacity onPress={() => navigation.navigate('Timetable creation')} style={styles.icon1}>
-            <Icon size={64} name='add' color="white"></Icon>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.icon2}>
-            <Icon style={styles.icon} size={64} name='trash' color="white"></Icon>
-          </TouchableOpacity>
+      <PaperProvider theme={theme}>
+
+        <View>
+          <View style={styles.containerButton}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => goToTimetableCreation()}>
+              <Text style={styles.buttonText}>CREATE TIMETABLE</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {}}>
+              <Text style={styles.buttonText}>DELETE TIMETABLE</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.list}>
-          {list}
+        <View style={[styles.separator, { marginTop: 45, marginBottom: 25 }]}></View>
+
+
+        <View style={styles.container}>
+          <View style={styles.list}>
+            <List.Subheader style={styles.header}>Current Timetables</List.Subheader>
+            {list}
+          </View>
         </View>
-      </View>
+      </PaperProvider>
     </ScrollView>
   );
 }
@@ -96,11 +140,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 2
   },
+  separator: {
+    width: 290,
+    alignSelf: 'center',
+    height: 2,
+    marginTop: 10,
+    backgroundColor: "#8F8F8F"
+  },
   list: {
-    marginTop: 35,
     alignSelf: "stretch",
     flex: 0.91
-  }
+  },
+  header: {
+    fontFamily: "sans-serif-medium",
+    color: "#121212",
+    fontSize: 20,
+
+    marginLeft: 80
+  },
+  button: {
+    backgroundColor: '#f4511e',
+    width: '40%',
+    height: 70,
+    borderRadius: 10,
+    justifyContent: "center",
+    
+  },
+  containerButton: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: "space-around",
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 30
+  },
+  buttonText: {
+    alignSelf: "flex-start",
+    fontSize: 18,
+    color: "white",
+    fontFamily: "sans-serif",
+    fontWeight: "bold",
+    marginLeft: 12
+  },
 });
 
 
