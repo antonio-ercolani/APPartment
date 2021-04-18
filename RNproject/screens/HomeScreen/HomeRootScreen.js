@@ -22,7 +22,8 @@ import StockManagementScreen from './StockManagementScreen/StockManagementScreen
 import NewItemScreen from './StockManagementScreen/NewItemScreen/NewItemScreen';
 import MissingListScreen from './StockManagementScreen/MissingListScreen/MissingListScreen';
 import RemoveItemsScreen from './StockManagementScreen/RemoveItemsScreen/RemoveItemsScreen';
-
+import AnnouncementsScreen from './AnnouncementsScreen/AnnouncementsScreen';
+import NewAnnouncementScreen from './AnnouncementsScreen/NewAnnouncementScreen';
 
 const store = createStore(reducer);
 
@@ -85,6 +86,30 @@ function PaymentsStackScreen() {
   )
 }
 
+const AnnouncementsStack = createStackNavigator();
+
+function AnnouncementsStackScreen() {
+  return (
+    <AnnouncementsStack.Navigator initialRouteName="Announcements"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+          //alignSelf: "center",
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          //fontWeight: 'bold',
+          //fontSize: 20,
+          fontFamily: 'sans-serif-medium'
+        },
+      }}>
+      <AnnouncementsStack.Screen name="Announcements" component={AnnouncementsScreen} />
+      <AnnouncementsStack.Screen options={{ title: 'New Announcement' }} name="NewAnnouncement" component={NewAnnouncementScreen} />
+    </AnnouncementsStack.Navigator>
+  )
+}
+
 const StockManagementStack = createStackNavigator();
 
 function StockManagementStackScreen() {
@@ -144,6 +169,7 @@ function ServiceStackScreen() {
       <ServiceStack.Screen name="Payments" options={{ headerShown:false }} component={PaymentsStackScreen}/>
       <ServiceStack.Screen name="StockManagement" options={{ headerShown:false }} component={StockManagementStackScreen}/>
       <ServiceStack.Screen name="Timetables" options={{ headerShown:false }} component={TimetablesStackScreen}/>
+      <ServiceStack.Screen name="Announcements" options={{ headerShown:false }} component={AnnouncementsStackScreen}/>
     </ServiceStack.Navigator>
   )
 }

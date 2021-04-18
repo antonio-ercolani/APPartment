@@ -2,7 +2,7 @@ import React, { Component, useState } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 require('firebase/auth')
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation} from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import firebase from "firebase/app";
 
@@ -16,42 +16,29 @@ const theme = {
 
 };
 
-function NewPaymentScreen(props) {
+function NewAnnouncementScreen(props) {
   const navigation = useNavigation();
-  const route = useRoute();
 
-  const defaultDescription = route.params.defaultDescription;
-
-  const [description, setDescription] = useState(defaultDescription);
-  const [amount, setAmount] = useState('');
-
+  const [announcement, setAnnouncement] = useState('');
 
   function checkForm() {
-    if ((description !== "") && (amount !== "")) {
-      if ((!isNaN(amount)) && (parseInt(amount, 10) > 0)) {
-        //the form is ok
-        sendPayment();
-      } else {
-        Alert.alert('Alert', 'Please insert a valid amount',
-          [{ text: "Ok" }],
-          { cancelable: true }
-        )
-      }
-    } else {
-      Alert.alert('Alert', 'Please complete all the fields to continue',
+    if ((announcement !== "")) {
+      sendNewAnnouncement();
+  } else {
+    Alert.alert('Alert', 'Please fill the form to continue',
         [{ text: "Ok" }],
         { cancelable: true }
       )
     }
   }
 
-  function sendPayment() {
-    var newPayment = firebase.functions().httpsCallable('payments-newPayment');
-    newPayment({ description: description, amount: parseInt(amount, 10), apartment: props.red.apartment.name })
+  function sendNewAnnouncement() {
+    var newAnnouncement = firebase.functions().httpsCallable('announcements-newAnnouncement');
+    newAnnouncement({ announcement: announcement, apartment: props.red.apartment.name })
       .then((result) => {
         //error handling 
       })
-    navigation.navigate('Payments');
+    navigation.navigate('Announcements');
   }
 
   return (
@@ -61,19 +48,11 @@ function NewPaymentScreen(props) {
           <TextInput
             style={styles.input}
             label="Description"
+            mode='flat'
             multiline= {true}
-            mode='flat'
-            value={description}
-            onChangeText={description => setDescription(description)}
+            value={announcement}
+            onChangeText={announcement => setAnnouncement(announcement)}
             left={<TextInput.Icon name="message-text-outline" />}
-          />
-          <TextInput
-            label="Amount"
-            mode='flat'
-            value={amount}
-            onChangeText={amount => setAmount(amount)}
-            left={<TextInput.Icon name="cash" />}
-            right={<TextInput.Icon name="currency-eur" size={20} />}
           />
           <View style={styles.container}>
             <View style={styles.rectFiller}></View>
@@ -129,4 +108,4 @@ const mapStateToProps = (state) => {
   return { red }
 };
 
-export default connect(mapStateToProps)(NewPaymentScreen);
+export default connect(mapStateToProps)(NewAnnouncementScreen);

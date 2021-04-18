@@ -1,11 +1,11 @@
 import React, { Component, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
-import { TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import firebase from "firebase/app";
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
 const theme = {
   ...DefaultTheme,
@@ -58,55 +58,57 @@ function DebtPayOffScreen(props) {
 
   function sendPayOff() {
     var newPayOff = firebase.functions().httpsCallable('payments-newPayOff');
-    newPayOff({ 
-      description: description, 
-      amount : parseInt(amount, 10), 
+    newPayOff({
+      description: description,
+      amount: parseInt(amount, 10),
       apartment: props.red.apartment.name,
-      member: selectedMember 
+      member: selectedMember
     }).then((result) => {
-        //error handling 
+      //error handling 
     })
-      navigation.navigate('Payments');
+    navigation.navigate('Payments');
   }
 
   return (
-    <PaperProvider theme={theme}>
-      <View style={styles.main}>
-        <Picker
-          mode= "dialog"
-          selectedValue={selectedMember}
-          onValueChange={(itemValue) =>
-            setSelectedMember(itemValue)
-          }>
-          <Picker.Item label="Select a member" value="select" />
-          {items}
-        </Picker>
-        <TextInput
-          style={styles.input}
-          label="Description"
-          mode='flat'
-          value={description}
-          onChangeText={description => setDescription(description)}
-          left={<TextInput.Icon name="message-text-outline" />}
-        />
-        <TextInput
-          label="Paid off amount"
-          mode='flat'
-          value={amount}
-          onChangeText={amount => setAmount(amount)}
-          left={<TextInput.Icon name="cash" />}
-          right={<TextInput.Icon name="currency-eur" size={20} />}
-        />
-        <View style={styles.container}>
-          <View style={styles.rectFiller}></View>
-          <TouchableOpacity 
-            style={styles.rect}
-            onPress={() => checkForm()}>
-            <Text style={styles.text}>CONFIRM</Text>
-          </TouchableOpacity>
+    <ScrollView>
+      <PaperProvider theme={theme}>
+        <View style={styles.main}>
+          <Picker
+            mode="dialog"
+            selectedValue={selectedMember}
+            onValueChange={(itemValue) =>
+              setSelectedMember(itemValue)
+            }>
+            <Picker.Item label="Select a member" value="select" />
+            {items}
+          </Picker>
+          <TextInput
+            style={styles.input}
+            label="Description"
+            mode='flat'
+            value={description}
+            onChangeText={description => setDescription(description)}
+            left={<TextInput.Icon name="message-text-outline" />}
+          />
+          <TextInput
+            label="Paid off amount"
+            mode='flat'
+            value={amount}
+            onChangeText={amount => setAmount(amount)}
+            left={<TextInput.Icon name="cash" />}
+            right={<TextInput.Icon name="currency-eur" size={20} />}
+          />
+          <View style={styles.container}>
+            <View style={styles.rectFiller}></View>
+            <TouchableOpacity
+              style={styles.rect}
+              onPress={() => checkForm()}>
+              <Text style={styles.text}>CONFIRM</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </PaperProvider>
+      </PaperProvider>
+    </ScrollView>
   );
 }
 
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 3,
     justifyContent: "center",
+    marginBottom: 30
   },
   text: {
     alignSelf: "center",

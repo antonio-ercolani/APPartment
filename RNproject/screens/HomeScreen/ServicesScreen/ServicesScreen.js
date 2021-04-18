@@ -54,6 +54,15 @@ export default function ServicesScreen({ navigation }) {
           left={props => <List.Icon icon="format-list-checks" />} 
           onPress={() => navigation.navigate('StockManagement')}
         />
+        <List.Item
+          title="Announcements"
+          left={props => <List.Icon icon="message-alert-outline" />} 
+          onPress={() => navigation.navigate('Announcements')}
+        />
+        <List.Item
+          title="Schermata per nanno"
+          onPress={() => navigation.navigate('SchermataNanno')}
+        />
       </View>
     </PaperProvider>
   );

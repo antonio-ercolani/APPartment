@@ -11,6 +11,7 @@ admin.initializeApp();
 exports.payments = require('./payments.js');
 exports.stockManagement = require('./stockManagement.js');
 exports.timetables = require('./timetables.js');
+exports.announcements = require('./announcements.js');
 
 
 //called by the login screen

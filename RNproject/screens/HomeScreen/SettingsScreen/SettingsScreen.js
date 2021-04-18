@@ -4,6 +4,9 @@ import { View, Alert,TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import firebase from "firebase/app";
 require('firebase/auth')
+import { connect } from 'react-redux';
+import {  useLinkProps, useNavigation, useRoute } from '@react-navigation/native';
+
 
 /*
 const fontConfig = {
@@ -29,9 +32,8 @@ const theme = {
 };
 
 
-
-
-export default function SettingsScreen({ navigation }) {
+function SettingsScreen(props) {
+  const navigation = useNavigation();
 
   return (
     <PaperProvider theme={theme}>
@@ -40,10 +42,10 @@ export default function SettingsScreen({ navigation }) {
           title="Account"
           left={props => <List.Icon icon="account"/>}>
           <List.Item
-            title="Tony"
+            title= {props.red.username}
             description="Username" />
           <List.Item
-            title="tony@mail.it"
+            title= {firebase.auth().currentUser.email}
             description="email" />
           <List.Item
             title="Edit"
@@ -113,3 +115,10 @@ const styles = StyleSheet.create({
     color: "#000000"
   },
 })
+
+const mapStateToProps = (state) => {
+  const { red } = state
+  return { red }
+};
+
+export default connect(mapStateToProps)(SettingsScreen);

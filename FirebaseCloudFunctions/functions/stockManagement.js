@@ -13,6 +13,10 @@ exports.removeItems = functions.https.onCall  ((data, context) => {
   })
 
   //register the removals (inglese?)
+  //TODO 
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //MI SA CHE QUESTA COSA NON SERVE A NIENTE GUARDARCI
+  //QUANDO SISTEMO COSE PER LA HOME NOTIFICATIONS 
   const ref = admin.database().ref('/app/stockManagement/' + apartment + '/removals').push();
   ref.set({
     member: context.auth.uid,
