@@ -26,12 +26,13 @@ function Timetable(props) {
 
 
   var getTimetables = firebase.functions().httpsCallable('timetables-getTimetables');
+  var deleteTimetable = firebase.functions().httpsCallable('timetables-deleteTimetables');
 
   const apartment = props.red.apartment.name;
 
   var key = 0;
   function getKey() {
-    key = key+1;
+    key = key + 1;
     return key;
   }
 
@@ -43,31 +44,93 @@ function Timetable(props) {
     return items;
   }
 
-  useEffect(() => {
+  function callGetTimetables() {
     getTimetables({ apartment: apartment })
-      .then((result) => (JSON.parse(result.data)))
-      .then((result) => setTimetables(result))
+      .then((result) => JSON.parse(result.data))
+      .then((result) => {
+        if (result != undefined || result != null) {
+          var IDs = Object.keys(result);
+          var tt = []
+          IDs.forEach(function (id) {
+            result[id].key = id;
+            tt.push(result[id]);
+          });
+        }
+        setTimetables(tt)
+      })
       .catch((error) => console.log(error.message));
+  }
+
+  useEffect(() => {
+    callGetTimetables();
   }, []);
 
   useEffect(() => {
     var interm = [...timetables];
-    interm = interm.map((item, idx) =>
-      <List.Accordion
-        key={getKey()}
-        title={item.description}
-        left={props => <List.Icon {...props} icon="calendar" />}>
-        <List.Item key={getKey()} title={"Start date:  " + item.startDate} />
-        <List.Item key={getKey()} title={"End date:  " + item.endDate} />
-        <List.Item key={getKey()} title={"Period:  " + item.period + " days"} />
-        <List.Item key={getKey()} title={"Members:  " + getNames(item.members)} />
-      </List.Accordion>
-    )
-    setList(interm);
+    var res = [];
+
+    interm.forEach((item) => {
+      if (item.date == undefined) {
+        res.push(
+          <List.Accordion
+            key={getKey()}
+            titleNumberOfLines={10}
+            title={item.description}
+            left={props => <List.Icon {...props} icon="calendar-month" />}>
+            <List.Item key={getKey()} title={"Start date:  " + item.startDate}
+              left={props => <View style={{ paddingLeft: 56 }}></View>}
+              right={props => <TouchableOpacity onPress={() => removeEvent(item.key)}><List.Icon {...props} icon="trash-can-outline" /></TouchableOpacity>}
+            />
+            <List.Item key={getKey()} title={"End date:  " + item.endDate} />
+            <List.Item key={getKey()} title={"Period:  " + item.period + " days"} />
+            <List.Item key={getKey()} title={"Members:  " + getNames(item.members)} />
+          </List.Accordion>
+      );
+      } else {
+        res.push(
+          <List.Accordion
+            key={getKey()}
+            titleNumberOfLines={10}
+            title={item.description}
+            left={props => <List.Icon {...props} icon="calendar" />}>
+            <List.Item key={getKey()} title={"Date:  " + item.date}
+              left={props => <View style={{ paddingLeft: 56 }}></View>}
+              right={props => <TouchableOpacity onPress={() => removeEvent(item.key)}><List.Icon {...props} icon="trash-can-outline" /></TouchableOpacity>}
+            />
+            <List.Item key={getKey()} title={"Author:  " + item.author} />
+          </List.Accordion>
+      );
+      }
+    });
+    setList(res);
   }, [timetables]);
+
+
+  function removeEvent(key) {
+    Alert.alert('Delete event', 'Do you want to remove the event/timetable?',
+      [
+        {
+          text: "YES",
+          onPress: () => {
+            deleteTimetable({ apartment: apartment, key: key }).then(() => {
+              callGetTimetables();
+            });
+          }
+        },
+        {
+          text: "NO",
+        }
+      ],
+      { cancelable: true }
+    )
+  }
 
   function goToTimetableCreation() {
     navigation.navigate('Timetable creation')
+  }
+
+  function goToCreateSingleEvent() {
+    navigation.navigate('Create event')
   }
 
   return (
@@ -83,8 +146,8 @@ function Timetable(props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {}}>
-              <Text style={styles.buttonText}>DELETE TIMETABLE</Text>
+              onPress={() => goToCreateSingleEvent()}>
+              <Text style={styles.buttonText}>CREATE EVENT</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -164,7 +227,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 10,
     justifyContent: "center",
-    
+
   },
   containerButton: {
     flex: 1,

@@ -24,6 +24,7 @@ import MissingListScreen from './StockManagementScreen/MissingListScreen/Missing
 import RemoveItemsScreen from './StockManagementScreen/RemoveItemsScreen/RemoveItemsScreen';
 import AnnouncementsScreen from './AnnouncementsScreen/AnnouncementsScreen';
 import NewAnnouncementScreen from './AnnouncementsScreen/NewAnnouncementScreen';
+import CreateSingleEvent from './TimetablesScreen/CreateSingleEvent';
 
 const store = createStore(reducer);
 
@@ -156,6 +157,7 @@ function TimetablesStackScreen() {
     }}>
       <TimetablesStack.Screen name="Timetable" component={Timetable}/>
       <TimetablesStack.Screen name="Timetable creation" component={CreateTimetable}/>
+      <TimetablesStack.Screen name="Create event" component={CreateSingleEvent}/>
     </TimetablesStack.Navigator>
   )
 }

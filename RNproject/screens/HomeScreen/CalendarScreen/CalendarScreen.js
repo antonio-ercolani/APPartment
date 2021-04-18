@@ -10,24 +10,119 @@ import { connect } from 'react-redux';
 
 function CalendarScreen(props) {
   let [items, setItems] = useState({});
+  let [markedDates, setMarkedDates] = useState({})
 
   const apartment = props.red.apartment.name;
+  const username = props.red.username;
 
   const currentDay = '2021-03-20';
   const nextDay = '2021-03-21';
 
+  const mine = { key: 'vacation', color: '#39e648', selectedDotColor: '#39e648' };
+  const other = { key: 'massage', color: '#0741f0', selectedDotColor: '#0741f0' };
+  const single = { key: 'workout', color: 'red', selectedDotColor: 'red' };
+
   var getTimetables = firebase.functions().httpsCallable('timetables-getEvents');
+
+  function callBack(result, actualMonth, month) {
+    var events = JSON.parse(result.data);
+  
+    var markdDates = JSON.parse(JSON.stringify(markedDates))
+
+    if ((events == undefined || events == null)) {
+      //copy of items in newItems
+      const item = JSON.parse(JSON.stringify(items))
+
+      for (let i = -15; i < 85; i++) {
+        const time = month.timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = timeToString(time);
+        if (!item[strTime]) {
+          item[strTime] = [];
+        }
+      }
+      setItems(item);
+      return;
+    }
+
+    var days;
+    if (events == null || events == undefined) return;
+    days = Object.keys(events);
+    console.log(days);
+
+    //copy of items in newItems
+    const item = JSON.parse(JSON.stringify(items))
+
+
+    var eventObj;
+    var dots;
+    var evArray;
+    days.forEach(function (day, index, days) {
+
+      dots = [];
+      evArray = [];
+
+      let dayEvents = Object.keys(events[day]);
+
+      if (day < 10) {
+        days[index] = month.year + '-' + actualMonth.month + '-' + '0' + day;
+      } else {
+        days[index] = month.year + '-' + actualMonth.month + '-' + day;
+      }
+
+      dayEvents.forEach(function (ev, index, dayEvents) {
+        eventObj = {};
+        eventObj.event = events[day][ev].event;
+        eventObj.member = events[day][ev].member;
+        eventObj.isSingle = events[day][ev].isSingle;
+
+        evArray.push(eventObj);
+        if (eventObj.isSingle) {
+          if (!dots.includes(single)) dots.push(single);
+        } else {
+          if (eventObj.member == username) {
+            if (!dots.includes(mine)) dots.push(mine);
+          } else {
+            if (!dots.includes(other)) dots.push(other);
+          }
+        } 
+      })
+
+      //console.log(day, " ha eventi: ", evArray);
+      item[days[index]] = evArray;
+      markdDates[days[index]] = {dots: dots}
+
+
+    });
+
+    //create an empty array for each day without events
+    for (let i = -15; i < 85; i++) {
+      const time = month.timestamp + i * 24 * 60 * 60 * 1000;
+      const strTime = timeToString(time);
+      if (!item[strTime] || (item[strTime] != [] && !days.includes(strTime) && isSameMonth(strTime, days[0]))) {
+        item[strTime] = [];
+      }
+    }
+
+    setItems(item);
+    setMarkedDates(markdDates);
+  }
+
+  function isSameMonth(m1, m2) {
+    let d1 = new Date(Date.parse(m1));
+    let d2 = new Date(Date.parse(m2));
+
+    return (d1.getMonth() == d2.getMonth())
+  }
 
   function loadItems(month) {
 
-    //let mm = month.month - 1;
     const date = {
       month: month.month,
       year: month.year
     }
 
     //adjusting the month
-    var m = month.month+1;
+    var m = month.month + 1;
     if (m < 10) m = '0' + m;
 
     const actualMonth = {
@@ -35,84 +130,11 @@ function CalendarScreen(props) {
     }
 
     getTimetables({ apartment: apartment, date: date }).then((result) => {
-
-      var events = JSON.parse(result.data);
-
-      if (events == undefined) {
-        //copy of items in newItems
-        const item = JSON.parse(JSON.stringify(items))
-
-        for (let i = -15; i < 85; i++) {
-          const time = month.timestamp + i * 24 * 60 * 60 * 1000;
-          const strTime = timeToString(time);
-          if (!item[strTime]) {
-            item[strTime] = [];
-          }
-        }
-        setItems(item);
-        return;
-      }
-
-      var days;
-      days = Object.keys(events);
-      console.log(days);
-
-      /*days.forEach(function (day, index, days) {
-        if (day < 10) {
-          days[index] = month.year + '-' + actualMonth.month + '-' + '0' + day;
-        } else {
-          days[index] = month.year + '-' + actualMonth.month + '-' + day;
-        }
-      });*/
-
-      //copy of items in newItems
-      const item = JSON.parse(JSON.stringify(items))
-
-      setTimeout(() => {
-        //create an empty array for each day without events
-        for (let i = -15; i < 85; i++) {
-          const time = month.timestamp + i * 24 * 60 * 60 * 1000;
-          const strTime = timeToString(time);
-          //if (!item[strTime]) {
-            item[strTime] = [];
-          //}
-        }
-        item[currentDay] = [{ event: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' }]
-        item[nextDay] = [{ event: 'FDFDDDDDDDDDDDDD' }]
-
-
-        var eventObj;
-        days.forEach(function (day, index, days) {
-
-          
-          eventObj = {};
-
-          let dayEvents = Object.keys(events[day]);
-
-          if (day < 10) {
-            days[index] = month.year + '-' + actualMonth.month + '-' + '0' + day;
-          } else {
-            days[index] = month.year + '-' + actualMonth.month + '-' + day;
-          }
-
-          dayEvents.forEach(function(ev, index, dayEvents) {
-            eventObj.event = events[day][ev].event;
-            eventObj.member = events[day][ev].member;
-          })
-
-          
-          item[days[index]] = [eventObj]
-
-
-
-        });
-        setItems(item);
-
-      }, 1000);
-
+      callBack(result, actualMonth, month);
     });
-
   }
+
+
 
   function loadMonthOnPress(month) {
     let mm = month.month - 1;
@@ -130,94 +152,10 @@ function CalendarScreen(props) {
     }
 
     getTimetables({ apartment: apartment, date: date }).then((result) => {
-
-      var events = JSON.parse(result.data);
-
-      if (events == undefined) {
-        //copy of items in newItems
-        const item = JSON.parse(JSON.stringify(items))
-
-        for (let i = -15; i < 85; i++) {
-          const time = month.timestamp + i * 24 * 60 * 60 * 1000;
-          const strTime = timeToString(time);
-          if (!item[strTime]) {
-            item[strTime] = [];
-          }
-        }
-        setItems(item);
-        return;
-      }
-
-      var days;
-      days = Object.keys(events);
-      console.log(days);
-
-      /*days.forEach(function (day, index, days) {
-        if (day < 10) {
-          days[index] = month.year + '-' + actualMonth.month + '-' + '0' + day;
-        } else {
-          days[index] = month.year + '-' + actualMonth.month + '-' + day;
-        }
-      });*/
-
-      //copy of items in newItems
-      const item = JSON.parse(JSON.stringify(items))
-
-      setTimeout(() => {
-        //create an empty array for each day without events
-        for (let i = -15; i < 85; i++) {
-          const time = month.timestamp + i * 24 * 60 * 60 * 1000;
-          const strTime = timeToString(time);
-          //if (!item[strTime]) {
-            item[strTime] = [];
-          //}
-        }
-        item[currentDay] = [{ event: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' }]
-        item[nextDay] = [{ event: 'FDFDDDDDDDDDDDDD' }]
-
-
-        var eventObj;
-        days.forEach(function (day, index, days) {
-
-          
-          eventObj = {};
-
-          let dayEvents = Object.keys(events[day]);
-
-          if (day < 10) {
-            days[index] = month.year + '-' + actualMonth.month + '-' + '0' + day;
-          } else {
-            days[index] = month.year + '-' + actualMonth.month + '-' + day;
-          }
-
-          dayEvents.forEach(function(ev, index, dayEvents) {
-            eventObj.event = events[day][ev].event;
-            eventObj.member = events[day][ev].member;
-          })
-
-          
-          item[days[index]] = [eventObj]
-
-
-
-        });
-        setItems(item);
-
-      }, 1000);
-
+      callBack(result, actualMonth, month);
     });
 
   }
-
-
-
-  const vacation = { key: 'vacation', color: 'red', selectedDotColor: 'red' };
-  const massage = { key: 'massage', color: 'blue', selectedDotColor: 'blue' };
-  const workout = { key: 'workout', color: 'green' };
-
-  const markedDates = {}
-  markedDates[currentDay] = { dots: [vacation, massage] };
-  markedDates[nextDay] = { dots: [workout] }
 
   return (
     <Agenda
@@ -231,8 +169,13 @@ function CalendarScreen(props) {
       markingType={'multi-dot'}
       renderEmptyDate={() => renderEmptyDate()}
       renderItem={(item) => renderItem(item)}
-      onDayPress={(day)=>{loadMonthOnPress(day)}}  
-      />
+      onDayPress={(day) => { loadMonthOnPress(day) }}
+      theme={{
+        selectedDayBackgroundColor: '#f4511e',
+        todayTextColor: '#f4511e',
+        agendaTodayColor: '#f4511e',
+      }}
+    />
   );
 }
 
@@ -255,27 +198,17 @@ class PureEmptyDate extends PureComponent {
 
 function renderItem(item) {
   return (
-    <PureRenderItem item={item}></PureRenderItem>
-  );
-}
-
-class PureRenderItem extends PureComponent {
-
-  state = { item: this.props.item }
-
-  render() {
-    return (
-      <View>
+    <View>
         <View style={styles.separator}></View>
         <View
           style={[styles.item, { height: 120 }]}
         >
-          <Text>{this.state.item.event}</Text>
-          <Text>{this.state.item.member}</Text>
+          <Text>{item.event}</Text>
+          <Text>{item.member}</Text>
         </View>
       </View>
-    );
-  }
+  );
+  
 }
 
 function timeToString(time) {
