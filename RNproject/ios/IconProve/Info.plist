@@ -80,6 +80,28 @@
 		<string>LemonMilkMediumItalic-d95nl.otf</string>
 		<string>LemonMilkRegular-X3XE2.otf</string>
 		<string>LemonMilkRegularItalic-L3AEy.otf</string>
+		<string>FuturaPTDemi.otf</string>
+		<string>FuturaPTExtraBold.otf</string>
+		<string>FuturaPTBold.otf</string>
+		<string>FuturaPTBoldOblique.otf</string>
+		<string>FuturaPTBook.otf</string>
+		<string>FuturaPTBookOblique.otf</string>
+		<string>FuturaPTCondBold.otf</string>
+		<string>FuturaPTCondBoldOblique.otf</string>
+		<string>FuturaPTCondBook.otf</string>
+		<string>FuturaPTCondBookOblique.otf</string>
+		<string>FuturaPTCondExtraBold.otf</string>
+		<string>FuturaPTCondExtraBoldOblique.otf</string>
+		<string>FuturaPTCondMedium.otf</string>
+		<string>FuturaPTCondMediumOblique.otf</string>
+		<string>FuturaPTDemiOblique.otf</string>
+		<string>FuturaPTExtraBoldOblique.otf</string>
+		<string>FuturaPTHeavy.otf</string>
+		<string>FuturaPTHeavyOblique.otf</string>
+		<string>FuturaPTLight.otf</string>
+		<string>FuturaPTLightOblique.otf</string>
+		<string>FuturaPTMedium.otf</string>
+		<string>FuturaPTMediumOblique.otf</string>
 	</array>
 </dict>
 </plist>

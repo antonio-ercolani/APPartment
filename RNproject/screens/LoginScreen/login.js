@@ -3,19 +3,11 @@ import { StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from "rea
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 
+const font = 'FuturaPTDemi';
 const fontConfig = {
   default: {
     regular: {
-      fontFamily: "LemonMilkRegular-X3XE2",
-      fontWeight: "bold"
-    },
-    light: {
-      fontFamily: "LemonMilkLight-owxMq",
-      fontWeight: "bold"
-    },
-    thin: {
-      fontFamily: "LemonMilkLight-owxMq",
-      fontWeight: "bold"
+      fontFamily: font,
     }
   }
 }
@@ -84,15 +76,6 @@ function Login({ navigation }) {
     navigation.navigate('RegistrationScreen');
   }
 
-  function hidePassword(password) {
-    var len = password.length;
-    var res = '';
-    for (let i = 0; i < len; i++) {
-      res = res.concat('*');
-    }
-    return res;
-  }
-
   return (
     <View style={styles.main}>
       <ScrollView>
@@ -113,6 +96,7 @@ function Login({ navigation }) {
               mode='flat'
               underlineColor="white"
               value={password}
+              secureTextEntry
               onChangeText={password => setPassword(password)}
             />
             <Text style={styles.error}>{errorMessage}</Text>
@@ -152,12 +136,12 @@ const styles = StyleSheet.create({
     marginTop: 70,
   },
   login: {
-    fontSize: 30,
+    fontSize: 60,
     color: "white",
     alignSelf: "center",
     color: "white",
     marginBottom: 40,
-    fontFamily: "LemonMilkBoldItalic-PKZ3P"
+    fontFamily: 'FuturaPTCondBoldOblique'
   },
   input: {
     backgroundColor: '#f4511e',
@@ -173,9 +157,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     alignSelf: "flex-start",
-    fontSize: 18,
+    fontSize: 20,
     color: "black",
-    fontFamily: "LemonMilkBold-gx2B3",
+    fontFamily: 'FuturaPTBold',
     alignSelf: "center"
   },
   container: {

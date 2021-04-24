@@ -21,19 +21,11 @@ if (!firebase.apps.length) {
 }
 var database = firebase.database();
 
+const font = 'FuturaPTDemi';
 const fontConfig = {
   default: {
     regular: {
-      fontFamily: "LemonMilkRegular-X3XE2",
-      fontWeight: "bold"
-    },
-    light: {
-      fontFamily: "LemonMilkLight-owxMq",
-      fontWeight: "bold"
-    },
-    thin: {
-      fontFamily: "LemonMilkLight-owxMq",
-      fontWeight: "bold"
+      fontFamily: font,
     }
   }
 }
@@ -123,6 +115,7 @@ function RegistrationScreen({navigation}) {
               mode='flat'
               underlineColor="white"
               value={password}
+              secureTextEntry
               onChangeText={password => setPassword(password)}
             />
             <TextInput
@@ -131,6 +124,7 @@ function RegistrationScreen({navigation}) {
               mode='flat'
               underlineColor="white"
               value={repeatPassword}
+              secureTextEntry
               onChangeText={repeatPassword => setRepeatPassword(repeatPassword)}
             />
             <Text style={styles.error}>{errorMessage}</Text>
@@ -163,12 +157,12 @@ const styles = StyleSheet.create({
     marginTop: 70,
   },
   login: {
-    fontSize: 30,
+    fontSize: 35,
     color: "white",
     alignSelf: "center",
     color: "white",
     marginBottom: 40,
-    fontFamily: "LemonMilkBoldItalic-PKZ3P"
+    fontFamily:'FuturaPTBold'
   },
   input: {
     backgroundColor: '#f4511e',
@@ -184,9 +178,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     alignSelf: "flex-start",
-    fontSize: 18,
+    fontSize: 20,
     color: "black",
-    fontFamily: "LemonMilkBold-gx2B3",
+    fontFamily: 'FuturaPTBold',
     alignSelf: "center"
   },
   container: {

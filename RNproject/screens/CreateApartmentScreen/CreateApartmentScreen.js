@@ -23,19 +23,11 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+const font = 'FuturaPTDemi';
 const fontConfig = {
   default: {
     regular: {
-      fontFamily: "LemonMilkRegular-X3XE2",
-      fontWeight: "bold"
-    },
-    light: {
-      fontFamily: "LemonMilkLight-owxMq",
-      fontWeight: "bold"
-    },
-    thin: {
-      fontFamily: "LemonMilkLight-owxMq",
-      fontWeight: "bold"
+      fontFamily: font,
     }
   }
 }
@@ -50,8 +42,6 @@ const theme = {
   },
   fonts: configureFonts(fontConfig)
 };
-
-
 
 
 export default function CreateApartmentScreen({ navigation }) {
@@ -76,10 +66,11 @@ export default function CreateApartmentScreen({ navigation }) {
       <ScrollView>
         <PaperProvider theme={theme}>
           <View style={styles.margin}>
-            <Text style={styles.login}>{'CREATE\nAPARTMENT'}</Text>
+            <Text style={styles.login}>{'CREATE'}</Text>
+            <Text style={styles.login1}>{'APARTMENT'}</Text>
             <TextInput
               style={styles.input}
-              label="Apartment name"
+              label="apartment name"
               mode='flat'
               underlineColor="white"
               value={apartmentName}
@@ -112,11 +103,19 @@ const styles = StyleSheet.create({
     marginTop: 70,
   },
   login: {
-    fontSize: 30,
+    alignSelf: "center",
+    fontSize: 35,
+    color: "white",
+    color: "white",
+    fontFamily: 'FuturaPTBold'
+  },
+  login1: {
+    alignSelf: "center",
+    fontSize: 35,
     color: "white",
     color: "white",
     marginBottom: 40,
-    fontFamily: "LemonMilkBoldItalic-PKZ3P"
+    fontFamily: 'FuturaPTBold'
   },
   input: {
     backgroundColor: '#f4511e',
@@ -131,9 +130,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     alignSelf: "flex-start",
-    fontSize: 18,
+    fontSize: 20,
     color: "black",
-    fontFamily: "LemonMilkBold-gx2B3",
+    fontFamily: 'FuturaPTBold',
     alignSelf: "center"
   },
   container: {

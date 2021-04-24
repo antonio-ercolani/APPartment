@@ -14,13 +14,15 @@ function JoinCreateScreen({ navigation }) {
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigate('new')}>
-        <Text style={styles.buttonText}>NEW APARTMENT</Text>
+        <Text style={styles.buttonText}>{'NEW'}</Text>
+        <Text style={styles.buttonText1}>{'APARTMENT'}</Text>
       </TouchableOpacity>
       <View style={styles.separator}></View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigate('join')}>
-        <Text style={styles.buttonText}>JOIN APARTMENT</Text>
+        <Text style={styles.buttonText}>{'JOIN'}</Text>
+        <Text style={styles.buttonText1}>{'APARTMENT'}</Text>
       </TouchableOpacity>
     </View>
     </View>
@@ -39,14 +41,21 @@ const styles = StyleSheet.create({
     height: 110,
     borderRadius: 10,
     justifyContent: "center",
-
+    alignItems: "center",
   },
   buttonText: {
-    alignSelf: "flex-start",
-    fontSize: 18,
+    fontSize: 24,
     color: "black",
-    fontFamily: "LemonMilkBold-gx2B3",
-    alignSelf: "center"
+    fontFamily: "FuturaPTBold",
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  buttonText1: {
+    fontSize: 20,
+    color: "black",
+    fontFamily: "FuturaPTBold",
+    alignSelf: "center",
+    alignItems: "center",
   },
   container: {
     flexDirection: 'column',
