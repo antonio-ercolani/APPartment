@@ -54,16 +54,17 @@ function Home(props) {
                     initial_state.apartment.members[uid] = username;
                   })
                   props.initialize(initial_state);
+                  firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+                  .then(result => {
+                    setNotifications(result);
+                  })
                 })
 
               }
 
             })
         }
-        firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
-          .then(result => {
-            setNotifications(result);
-          })
+       
       })
 
 

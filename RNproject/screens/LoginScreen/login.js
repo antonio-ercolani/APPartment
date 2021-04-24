@@ -103,7 +103,6 @@ function Login({ navigation }) {
               style={styles.input}
               label="email"
               mode='flat'
-              multiline={true}
               underlineColor="white"
               value={email}
               onChangeText={email => setEmail(email)}
@@ -113,7 +112,6 @@ function Login({ navigation }) {
               label="password"
               mode='flat'
               underlineColor="white"
-              multiline={true}
               value={password}
               onChangeText={password => setPassword(password)}
             />

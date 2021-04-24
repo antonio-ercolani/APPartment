@@ -1,9 +1,7 @@
 import React, { Component, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import MaterialStackedLabelTextbox from "./Components/MaterialStackedLabelTextbox";
-import MaterialButtonDanger from "./Components/MaterialButtonDanger";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
-
+import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 
 // Required for side-effects
 require("firebase/functions");
@@ -19,21 +17,48 @@ var firebaseConfig = {
   storageBucket: "dima-52e16.appspot.com",
   messagingSenderId: "330401771086",
   appId: "1:330401771086:web:447a4b8a9f8bb157175d1f"
-}; 
+};
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: "LemonMilkRegular-X3XE2",
+      fontWeight: "bold"
+    },
+    light: {
+      fontFamily: "LemonMilkLight-owxMq",
+      fontWeight: "bold"
+    },
+    thin: {
+      fontFamily: "LemonMilkLight-owxMq",
+      fontWeight: "bold"
+    }
+  }
+}
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'white',
+    text: 'white',
+    placeholder: 'white'
+  },
+  fonts: configureFonts(fontConfig)
+};
 
 
 
-export default function CreateApartmentScreen({navigation}) {
-  let[apartmentName, setApartmentName] = useState('');
-  let[errorMessage, setErrorMessage] = useState('');
+
+export default function CreateApartmentScreen({ navigation }) {
+  let [apartmentName, setApartmentName] = useState('');
+  let [errorMessage, setErrorMessage] = useState('');
 
   function createApartment() {
-    
     call({ text: apartmentName }).then((result) => {
       var receivedMessage = result.data.text;
       if (receivedMessage === 'ok') {
@@ -41,62 +66,92 @@ export default function CreateApartmentScreen({navigation}) {
       } else if (receivedMessage === 'notUnique')
         setErrorMessage('This name already exists, please try another');
     });
-    
-    }
+
+  }
 
   var call = firebase.functions().httpsCallable('functionProva');
 
   return (
-    <View style={styles.container}>
-      <View style={styles.group}>
-        <Text style={styles.apartmentCreation}>APARTMENT CREATION</Text>
-        <MaterialStackedLabelTextbox
-          style={styles.materialStackedLabelTextbox}
-          updateText = {setApartmentName}
-        ></MaterialStackedLabelTextbox>
-        <Text style={{color : 'white'}}>{errorMessage}</Text>
-        <MaterialButtonDanger
-          onClick = {createApartment}
-          style={styles.materialButtonDanger1}
-        ></MaterialButtonDanger>
-      </View>
+    <View style={styles.main}>
+      <ScrollView>
+        <PaperProvider theme={theme}>
+          <View style={styles.margin}>
+            <Text style={styles.login}>{'CREATE\nAPARTMENT'}</Text>
+            <TextInput
+              style={styles.input}
+              label="Apartment name"
+              mode='flat'
+              underlineColor="white"
+              value={apartmentName}
+              onChangeText={apartmentName => setApartmentName(apartmentName)}
+            />
+            <Text style={styles.error}>{errorMessage}</Text>
+            <View style={styles.container}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => createApartment()}>
+                <Text style={styles.buttonText}>CREATE APARTMENT</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </PaperProvider>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  main: {
+    backgroundColor: "#f4511e",
+    flex: 1
+  },
+  margin: {
+    marginLeft: '10%',
+    marginRight: '10%',
+    marginTop: 70,
+  },
+  login: {
+    fontSize: 30,
+    color: "white",
+    color: "white",
+    marginBottom: 40,
+    fontFamily: "LemonMilkBoldItalic-PKZ3P"
+  },
+  input: {
+    backgroundColor: '#f4511e',
+    height: 60,
+  },
+  button: {
+    backgroundColor: 'white',
+    width: 240,
+    height: 70,
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  buttonText: {
+    alignSelf: "flex-start",
+    fontSize: 18,
+    color: "black",
+    fontFamily: "LemonMilkBold-gx2B3",
+    alignSelf: "center"
+  },
   container: {
     flex: 1,
-    backgroundColor: "rgba(249,99,70,1)",
-    justifyContent: "center"
+    marginTop: 20,
+    alignSelf: "center",
+    marginBottom: 50
   },
-  group: {
-    width: 318,
-    height: 563,
-    justifyContent: "space-between",
-    alignSelf: "center"
+  separator: {
+    alignSelf: "center",
+    width: 175,
+    height: 2,
+    backgroundColor: "white",
+    borderRadius: 34,
   },
-  apartmentCreation: {
-    fontFamily: "roboto-300",
-    color: "rgba(255,255,255,1)",
-    height: 106,
-    width: 318,
-    fontSize: 40,
-    fontWeight: "bold",
-    fontStyle: "italic"
-  },
-  materialStackedLabelTextbox: {
-    height: 81,
-    width: 327
-  },
-  materialButtonDanger1: {
-    height: 73,
-    width: 230,
-    backgroundColor: "rgba(249,99,70,1)",
-    borderWidth: 4,
-    borderColor: "rgba(255,255,255,1)",
-    borderRadius: 12,
-    alignSelf: "center"
+  error: {
+    color: "white",
+    marginTop: 10,
   }
 });
 

@@ -1,48 +1,65 @@
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
-import CupertinoButtonInfo9 from "./Components/CupertinoButtonInfo9";
-import CupertinoButtonInfo10 from "./Components/CupertinoButtonInfo10";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
-function JoinCreateScreen({navigation}) {
+function JoinCreateScreen({ navigation }) {
 
-  function navigate(to){
+  function navigate(to) {
     if (to === 'new') navigation.navigate('CreateApartmentScreen');
     if (to === 'join') navigation.navigate('JoinApartmentScreen');
   }
   return (
+    <View style={styles.main}>
+
     <View style={styles.container}>
-      <View style={styles.group}>
-        <CupertinoButtonInfo9
-          style={styles.cupertinoButtonInfo9}
-          onClick={navigate}
-        ></CupertinoButtonInfo9>
-        <CupertinoButtonInfo10
-          style={styles.cupertinoButtonInfo10}
-          onClick={navigate}
-        ></CupertinoButtonInfo10>
-      </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigate('new')}>
+        <Text style={styles.buttonText}>NEW APARTMENT</Text>
+      </TouchableOpacity>
+      <View style={styles.separator}></View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigate('join')}>
+        <Text style={styles.buttonText}>JOIN APARTMENT</Text>
+      </TouchableOpacity>
+    </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  main: {
+    backgroundColor: "#f4511e",
     flex: 1,
     justifyContent: "center"
   },
-  group: {
-    width: 199,
-    height: 498,
-    justifyContent: "space-around",
+  button: {
+    backgroundColor: 'white',
+    width: 210,
+    height: 110,
+    borderRadius: 10,
+    justifyContent: "center",
+
+  },
+  buttonText: {
+    alignSelf: "flex-start",
+    fontSize: 18,
+    color: "black",
+    fontFamily: "LemonMilkBold-gx2B3",
     alignSelf: "center"
   },
-  cupertinoButtonInfo9: {
-    height: 152,
-    width: 197
+  container: {
+    flexDirection: 'column',
+    justifyContent: "space-between",
+    height: '50%',
+    alignSelf: "center",
   },
-  cupertinoButtonInfo10: {
-    height: 156,
-    width: 199
+  separator: {
+    alignSelf: "center",
+    width: 210,
+    height: 2,
+    backgroundColor: "white",
+    borderRadius: 34,
   }
 });
 

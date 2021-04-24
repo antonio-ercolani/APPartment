@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import CupertinoButtonInfo from "./Components/CupertinoButtonInfo.js";
-import MaterialRightIconTextbox3 from "./Components/MaterialRightIconTextbox3.js";
-import MaterialRightIconTextbox4 from "./Components/MaterialRightIconTextbox4.js";
-import MaterialRightIconTextbox5 from "./Components/MaterialRightIconTextbox5.js";
-import MaterialRightIconTextbox6 from "./Components/MaterialRightIconTextbox6.js";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
+import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import "firebase/database";
 
 require('firebase/auth')
@@ -25,6 +21,34 @@ if (!firebase.apps.length) {
 }
 var database = firebase.database();
 
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: "LemonMilkRegular-X3XE2",
+      fontWeight: "bold"
+    },
+    light: {
+      fontFamily: "LemonMilkLight-owxMq",
+      fontWeight: "bold"
+    },
+    thin: {
+      fontFamily: "LemonMilkLight-owxMq",
+      fontWeight: "bold"
+    }
+  }
+}
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'white',
+    text: 'white',
+    placeholder: 'white'
+  },
+  fonts: configureFonts(fontConfig)
+};
+
 
 function RegistrationScreen({navigation}) {
   let [username, setUsername] = useState('');
@@ -43,7 +67,7 @@ function RegistrationScreen({navigation}) {
         username : username,
         apartment : false
         })
-        navigation.navigate('RegistrationCompletedScreen');
+        navigation.navigate('JoinCreateScreen');
       })
       .catch((error) => {
         var errorMessage = error.message;
@@ -72,78 +96,115 @@ function RegistrationScreen({navigation}) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.group3}>
-        <CupertinoButtonInfo
-          style={styles.cupertinoButtonInfo}
-          onSignUp={createUser}
-        ></CupertinoButtonInfo>
-        <View style={styles.group2}>
-          <MaterialRightIconTextbox6 
-            style={styles.materialRightIconTextbox3} 
-            updateText={setUsername}
-          ></MaterialRightIconTextbox6>
-          <MaterialRightIconTextbox3 
-            style={styles.materialRightIconTextbox3} 
-            updateText={setEmail}
-          ></MaterialRightIconTextbox3>
-          <MaterialRightIconTextbox4
-            style={styles.materialRightIconTextbox4}
-            updateText={setPassword}
-          ></MaterialRightIconTextbox4>
-          <MaterialRightIconTextbox5
-            style={styles.materialRightIconTextbox5}
-            updateText={setRepeatPassword}
-          ></MaterialRightIconTextbox5>
-          <Text></Text>
-          <Text style={{color : 'red'}}>{errorMessage}</Text>
-        </View>
-        <Text style={styles.createNewAccount}>Create new account</Text>
-      </View>
+    <View style={styles.main}>
+      <ScrollView>
+        <PaperProvider theme={theme}>
+          <View style={styles.margin}>
+            <Text style={styles.login}>REGISTRATION</Text>
+            <TextInput
+              style={styles.input}
+              label="username"
+              mode='flat'
+              underlineColor="white"
+              value={username}
+              onChangeText={username => setUsername(username)}
+            />
+            <TextInput
+              style={styles.input}
+              label="email"
+              mode='flat'
+              underlineColor="white"
+              value={email}
+              onChangeText={email => setEmail(email)}
+            />
+            <TextInput
+              style={styles.input}
+              label="password"
+              mode='flat'
+              underlineColor="white"
+              value={password}
+              onChangeText={password => setPassword(password)}
+            />
+            <TextInput
+              style={styles.input}
+              label="repeat password"
+              mode='flat'
+              underlineColor="white"
+              value={repeatPassword}
+              onChangeText={repeatPassword => setRepeatPassword(repeatPassword)}
+            />
+            <Text style={styles.error}>{errorMessage}</Text>
+            <View style={styles.container}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => createUser()}>
+                <Text style={styles.buttonText}>REGISTER</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </PaperProvider>
+      </ScrollView>
     </View>
   );
 }
 
 
 
-const styles = StyleSheet.create({      
-  container: {
-    flex: 1,
-    justifyContent: "center"
+
+const styles = StyleSheet.create({
+  main: {
+    backgroundColor: "#f4511e",
+    flex: 1
   },
-  group3: {
-    width: 301,
-    height: 518,
-    flexDirection: "column-reverse",
-    justifyContent: "space-between",
-    alignItems: "center",
+  margin: {
+    marginLeft: '10%',
+    marginRight: '10%',
+    marginTop: 70,
+  },
+  login: {
+    fontSize: 30,
+    color: "white",
+    alignSelf: "center",
+    color: "white",
+    marginBottom: 40,
+    fontFamily: "LemonMilkBoldItalic-PKZ3P"
+  },
+  input: {
+    backgroundColor: '#f4511e',
+    height: 60,
+  },
+  button: {
+    backgroundColor: 'white',
+    width: 175,
+    height: 70,
+    borderRadius: 10,
+    justifyContent: "center",
+    
+  },
+  buttonText: {
+    alignSelf: "flex-start",
+    fontSize: 18,
+    color: "black",
+    fontFamily: "LemonMilkBold-gx2B3",
     alignSelf: "center"
   },
-  cupertinoButtonInfo: {
-    width: 220,
-    height: 60
+  container: {
+    flex: 1,
+    marginTop: 20,
+    alignSelf: "center",
+    marginBottom: 50
   },
-  group2: {
-    width: 301,
-    height: 204,
-    justifyContent: "space-between"
+  separator: {
+    alignSelf: "center",
+    width: 175,
+    height: 2,
+    backgroundColor: "white",
+    borderRadius: 34,
   },
-  materialRightIconTextbox3: {
-    height: 40,
-    width: 300
-  },
-  materialRightIconTextbox4: {
-    height: 40,
-    width: 300
-  },
-  materialRightIconTextbox5: {
-    height: 40,
-    width: 300
-  },
-  createNewAccount: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 27
+  error: {
+    color: "white",
+    marginTop: 10,
   }
 });
 
