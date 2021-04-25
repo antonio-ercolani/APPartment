@@ -1,12 +1,12 @@
-
 import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 import ApartmentList from './ApartmentList';
+import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
+
 
 const firebase = require("firebase");
 // Required for side-effects
@@ -26,6 +26,26 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'white',
+    text: 'white',
+    placeholder: 'white'
+  },
+  fonts: configureFonts(fontConfig)
+};
+
 var searchApartment = firebase.functions().httpsCallable('searchApartment');
 
 function search(text) {
@@ -42,31 +62,40 @@ function JoinScreen({navigation}) {
   [apartments, setApartments] = useState();
 
   return (
+    <PaperProvider theme={theme}>
     <SafeAreaView  style={styles.container}>
-      <View style={{height:12}}></View>
+      <View style={styles.margin}>
       <TextInput
         style={styles.input}
-        placeholder="Search"
+        label="Apartment name"
         onChangeText={(text) => {search(text)}}
       />
       <ApartmentList
         navigation={navigation}
         apartments={apartments}
       />
+      </View>
     </SafeAreaView>
+    </PaperProvider>
   ) 
 
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: "#f4511e",
+    flex: 1
+  },
+  margin: {
+    marginLeft: '10%',
+    marginRight: '10%',
+    marginTop: 25,
   },
   input: {
-    height: 50,
-    margin: 5,
-    fontSize: 20
+    backgroundColor: '#f4511e',
+    height: 60,
+    fontSize: 25,
+    marginBottom:23
   }
 })
 
