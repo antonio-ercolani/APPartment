@@ -3,17 +3,27 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 require('firebase/auth')
 import { useNavigation} from '@react-navigation/native';
-import { TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
+
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#f4511e',
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
 
 function NewAnnouncementScreen(props) {
@@ -25,7 +35,7 @@ function NewAnnouncementScreen(props) {
     if ((announcement !== "")) {
       sendNewAnnouncement();
   } else {
-    Alert.alert('Alert', 'Please fill the form to continue',
+    Alert.alert('Attention', 'Please fill the form to continue',
         [{ text: "Ok" }],
         { cancelable: true }
       )
@@ -70,8 +80,8 @@ function NewAnnouncementScreen(props) {
 
 const styles = StyleSheet.create({
   main: {
-    marginLeft: 30,
-    marginRight: 30,
+    marginLeft: '8%',
+    marginRight: '8%',
     marginTop: 5,
   },
   input: {
@@ -89,8 +99,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 46,
     backgroundColor: "#f4511e",
-    marginTop: 20,
-    borderRadius: 3,
+    marginTop: 10,
+    borderRadius: 5,
     justifyContent: "center",
     marginBottom: 30
   },
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 15,
     color: "white",
-    fontFamily: "sans-serif-medium"
+    fontFamily: "FuturaPTBold"
   }
 });
 

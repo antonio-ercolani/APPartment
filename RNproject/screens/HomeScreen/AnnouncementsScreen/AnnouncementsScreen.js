@@ -1,20 +1,30 @@
 import React, { Component, useEffect, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
 
 
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'rgba(249,99,70,1)',
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -23,19 +33,21 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 
 function AnnouncementsScreen(props) {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const [announcements, setAnnouncements] = useState([]);
   const items = [];
   const [renderList, setRenderList] = useState([]);
   items.push();
   let apartmentName = props.red.apartment.name;
+  const [loading, setLoading] = useState(true);
 
   //set announcements 
   useEffect(() => {
     firebase.database().ref('/app/announcements/' + apartmentName).orderByChild('timestamp').once('value')
-    .then (result => {
-      setAnnouncements(result);
-    })
+      .then(result => {
+        setAnnouncements(result);
+        setLoading(false);
+      })
   }, []);
 
   useEffect(() => {
@@ -45,7 +57,7 @@ function AnnouncementsScreen(props) {
 
       var timestamp = new Date(announcement.timestamp);
       var day = timestamp.getDate();
-      var month = timestamp.getMonth() + 1;
+      var month = timestamp.getMonth();
       var year = timestamp.getFullYear();
 
       /* Nel caso serva prendere ora e minuti dal timestamp
@@ -58,26 +70,27 @@ function AnnouncementsScreen(props) {
       items.push(
         <List.Item
           key={i}
-          titleStyle = {styles.announcement}
-          descriptionStyle = {styles.announcementDescription}
+          titleStyle={styles.announcement}
+          descriptionStyle={styles.announcementDescription}
           title={announcement.announcement}
           titleNumberOfLines={10}
-          description= {'Inserted by' + ' ' + props.red.apartment.members[announcement.member]}
-          right={props => 
-              <Text style={styles.date}>{dateDayMonth}</Text>
+          description={'Inserted by' + ' ' + props.red.apartment.members[announcement.member]}
+          right={props =>
+            <Text style={styles.date}>{dateDayMonth}</Text>
           }
-          onPress = {() => removeAnnouncement(
+          onPress={() => removeAnnouncement(
             //The logged user owns the announcement?
             props.red.apartment.members[announcement.member] === props.red.username, child.key)}
         />
       )
       i++;
     })
-   
+
     setRenderList(items);
+    
   }, [announcements])
 
-  
+
 
   function remove(key) {
     var removeAnnouncement = firebase.functions().httpsCallable('announcements-removeAnnouncement');
@@ -86,7 +99,7 @@ function AnnouncementsScreen(props) {
         //error handling
       })
   }
-  
+
 
   function removeAnnouncement(owns, key) {
     if (owns) {
@@ -103,7 +116,7 @@ function AnnouncementsScreen(props) {
         { cancelable: true }
       )
     } else {
-      Alert.alert('Alert', 'You cannot remove an announcement posted by another memeber',
+      Alert.alert('Alert', 'You cannot remove an announcement posted by another member',
         [{ text: "Ok" }],
         { cancelable: true }
       )
@@ -116,54 +129,55 @@ function AnnouncementsScreen(props) {
 
   return (
     <ScrollView>
-      <PaperProvider theme={theme}>
-    
-        <View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => goToNewAnnouncement()}>
-            <Text style={styles.buttonText}>NEW{'\n'}ANNOUNCEMENT</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={[styles.separator, { marginTop: 30, marginBottom: 30 }]}></View>
-        {renderList.reverse()}
-      </PaperProvider>
+      <View style={styles.main}>
+        <PaperProvider theme={theme}>
+          <View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => goToNewAnnouncement()}>
+              <Text style={styles.buttonText}>NEW{'\n'}ANNOUNCEMENT</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.separator, { marginTop: 30, marginBottom: 10 }]}></View>
+          {renderList.reverse()}
+        </PaperProvider>
+        {loading && <ActivityIndicator size="large" color="#f4511e" style={{marginTop: 30}}/>}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  main: {
+    marginLeft: '1%',
+    marginRight: '1%',
+  },
   date: {
     fontSize: 15,
     marginRight: 20,
-    fontWeight: "bold", 
     marginTop: 15,
-    fontFamily: "sans-serif-light",
-
+    fontFamily: 'FuturaPTBold'
   },
   separator: {
-    width: 290,
+    width: 200,
     alignSelf: 'center',
     height: 2,
     marginTop: 10,
-    backgroundColor: "#8F8F8F"
+    backgroundColor: "#6b6b6b",
+    borderRadius: 34,
   },
   badge: {
     alignSelf: 'center',
   },
   containerText: {
     fontSize: 17,
-    fontFamily: "sans-serif-medium",
-    color: "#fff"
   },
   title: {
-    fontWeight: "bold",
     color: "#f4511e",
-    fontFamily: "sans-serif-medium"
   },
   button: {
     backgroundColor: '#f4511e',
-    width: '60%',
+    width: 200,
     alignSelf: 'center',
     height: 70,
     borderRadius: 10,
@@ -172,20 +186,16 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     alignSelf: "center",
-    textAlign:"center",
+    textAlign: "center",
     fontSize: 18,
     color: "white",
-    fontFamily: "sans-serif",
-    fontWeight: "bold",
+    fontFamily: "FuturaPTBold",
   },
-  announcement : {
-    marginRight: 25,
-    fontFamily: "sans-serif-light",
+  announcement: {
+    fontSize: 17
   },
   announcementDescription: {
     fontSize: 12,
-    fontFamily: "sans-serif-light",
-
   }
 });
 

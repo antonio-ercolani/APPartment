@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
@@ -9,13 +9,27 @@ import "firebase/database";
 import { DataTable } from 'react-native-paper';
 
 
+
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'rgba(249,99,70,1)',
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
   },
+  fonts: configureFonts(fontConfig)
 };
+
 
 
 function StockManagementScreen(props) {
@@ -24,6 +38,7 @@ function StockManagementScreen(props) {
   const items = [];
   const [renderList, setRenderList] = useState([]);
   const [missingItems, setMissingItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const members = props.red.apartment.members;
   let name;
@@ -35,14 +50,16 @@ function StockManagementScreen(props) {
     firebase.database().ref('/app/stockManagement/' + props.red.apartment.name + '/items/').get()
       .then((result) => {
         setMissingItems(result.val());
+        setLoading(false);
       })
   }, []);
 
-  useEffect(() => {if (missingItems.length !== 0) {
-    items.push(
-      
-    )
-  }
+  useEffect(() => {
+    if (missingItems.length !== 0) {
+      items.push(
+
+      )
+    }
     if (missingItems.length !== 0) {
       items.push(
         <View key={1} >
@@ -73,7 +90,7 @@ function StockManagementScreen(props) {
           <DataTable.Cell numeric>{date}</DataTable.Cell>
         </DataTable.Row>)
     }
-    
+
     setRenderList(items);
   }, [missingItems])
 
@@ -114,11 +131,11 @@ function StockManagementScreen(props) {
         </View>
 
         <View style={styles.main}>
-          <DataTable>            
+          <DataTable>
             {renderList}
           </DataTable>
         </View>
-
+        {loading && <ActivityIndicator size="large" color="#f4511e" style={{marginTop: 30}}/>}
       </PaperProvider>
     </ScrollView>
   );
@@ -126,46 +143,43 @@ function StockManagementScreen(props) {
 
 const styles = StyleSheet.create({
   main: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: '4%',
+    marginRight: '4%',
     marginTop: 10,
   },
   button: {
     backgroundColor: '#f4511e',
-    width: '40%',
+    width: 120,
     height: 70,
     borderRadius: 10,
     justifyContent: "center",
-    
   },
   container: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-around",
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 30
+    justifyContent: 'space-between',
+    marginTop: 30,
+    width: 270,
+    alignSelf: 'center'
   },
   buttonText: {
     alignSelf: "flex-start",
     fontSize: 18,
     color: "white",
-    fontFamily: "sans-serif",
-    fontWeight: "bold",
+    fontFamily: "FuturaPTBold",
     marginLeft: 12
   },
   separator: {
-    width: 290,
+    width: 270,
     alignSelf: 'center',
     height: 2,
-    marginTop: 20,
-    backgroundColor: "#8F8F8F"
+    marginTop: 10,
+    backgroundColor: "#6b6b6b",
+    borderRadius: 34,
   },
   missingItemsTitle: {
     textAlign: "center",
-    fontFamily: "sans-serif-medium",
-    fontWeight: "bold",
-    fontSize: 25,
+    fontFamily: "FuturaPTBold",
+    fontSize: 30,
     marginBottom: 10,
     color: "#f4511e",
     marginTop: 20

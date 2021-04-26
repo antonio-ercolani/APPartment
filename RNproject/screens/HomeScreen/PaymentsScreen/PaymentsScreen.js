@@ -1,47 +1,54 @@
 import React, { Component, useEffect, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
 
-//TODO 
-// ELIMINARE BALANCE E TUTTI I RIMANDI VISTO CHE È 
-// STAT INCLUSA IN QUESTA SCHERMATA 
+
+
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'rgba(249,99,70,1)',
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
 
 var balanceColor = 'rgba(64,144,120,1)';
 
 var totalDebt = 0;
 
-
 function PaymentsScreen(props) {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const [debts, setDebts] = useState([]);
   const items = [];
   const [renderList, setRenderList] = useState([]);
-  items.push();
   let apartmentName = props.red.apartment.name;
-
+  const [loading, setLoading] = useState(true);
 
   var findDebts = firebase.functions().httpsCallable('payments-findDebts');
 
   useEffect(() => {
     findDebts({ apartment: apartmentName })
-    .then((result) => {
-      var res = JSON.parse(result.data);
-      setDebts(res);
-    })
+      .then((result) => {
+        var res = JSON.parse(result.data);
+        setDebts(res);
+        setLoading(false);
+      })
   }, []);
 
   useEffect(() => {
@@ -52,49 +59,49 @@ function PaymentsScreen(props) {
       var amount = debt.amount.toString();
       if (debt.uid === "Total debt") {
         totalDebt = amount;
-  
+
         if (totalDebt >= 0) {
-          balanceColor = "rgba(64,144,120,1)"
+          balanceColor = "#188547"
         } else {
           console.log(totalDebt);
-          balanceColor= "rgba(167,41,60,1)"
+          balanceColor = "#c92626"
         }
-        //set the color of the overall balance banner 
-        
-  
+
+
+
         //per l'indice delle key che viene aumentato
         //alla fine del for each
-        i = i - 1 ;
-  
+        i = i - 1;
+
       } else if (amount < 0) {
         items.push(
           <List.Item
             key={i}
             title={props.red.apartment.members[debt.uid]}
-            left={props => <List.Icon color="rgba(167,41,60,1)" icon="arrow-down-thick"/>}
+            left={props => <List.Icon color="#c92626" icon="arrow-down-thick" />}
             description={"You are in debt of " + Math.abs(amount) + "€"}
-            right={props => 
-              <Text style={[styles.amount,{ color: "rgba(167,41,60,1)"}]} >{amount} €</Text>
+            right={props =>
+              <Text style={[styles.amount, { color: "#c92626" }]} >{amount} €</Text>
             }
           ></List.Item>);
-  
+
       } else if (amount > 0) {
         items.push(
           <List.Item
             key={i}
             title={props.red.apartment.members[debt.uid]}
-            left={props => <List.Icon color="rgba(64,144,120,1)" icon="arrow-up-thick"/>}
-            right={props => <Text style={[styles.amount,{ color: "rgba(64,144,120,1)"}]}>{amount} €</Text>}
+            left={props => <List.Icon color="#188547" icon="arrow-up-thick" />}
+            right={props => <Text style={[styles.amount, { color: "#188547" }]}>{amount} €</Text>}
             description={"You have to receive " + Math.abs(amount) + "€"}
           ></List.Item>);
-  
+
       } else {
         //amount = 0 
         items.push(
           <List.Item
             key={i}
             title={props.red.apartment.members[debt.uid]}
-            left={props => <List.Icon icon="check-bold"/>}
+            left={props => <List.Icon icon="check-bold" />}
             right={props => <Text style={styles.amount}>OK</Text>}
           ></List.Item>);
       }
@@ -103,7 +110,7 @@ function PaymentsScreen(props) {
     if (debts.length !== 0) {
       items.push(
         <View key={i + 1} >
-          <View style={styles.separator}></View>
+          <View style={styles.separator1}></View>
           <List.Item
             key={i}
             title="OVERALL BALANCE"
@@ -117,20 +124,9 @@ function PaymentsScreen(props) {
     setRenderList(items);
   }, [debts])
 
-  function goToBalance() {
-    var findDebts = firebase.functions().httpsCallable('payments-findDebts');
-    let apartmentName = props.red.apartment.name;
-    //get the current user credits
-    findDebts({ apartment: apartmentName })
-      .then((result) => {
-        var res = JSON.parse(result.data);        
-        navigation.navigate('Balance',{debts:res})
-      })
-      
-  }
 
   function goToNewPayment() {
-    navigation.navigate('NewPayment',{defaultDescription:''});
+    navigation.navigate('NewPayment', { defaultDescription: '' });
   }
 
   function goToDebtPayOff() {
@@ -139,104 +135,92 @@ function PaymentsScreen(props) {
 
   return (
     <ScrollView>
-      <PaperProvider theme={theme}>
-    
-        <View>
-          <View style={styles.container}>
-            <TouchableOpacity 
-              style={styles.button}
-              onPress={() => goToNewPayment()}>
-              <Text style={styles.buttonText}>NEW PAYMENT</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.button}
-              onPress={() => goToDebtPayOff()}>
-              <Text style={styles.buttonText}>DEBT {'\n'}PAY OFF</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={[styles.separator,{marginTop: 30, marginBottom: 30}]}></View>
-        
+      <View style={styles.main}>
+        <PaperProvider theme={theme}>
 
-        {renderList}
-      </PaperProvider>
+          <View>
+            <View style={styles.container}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => goToNewPayment()}>
+                <Text style={styles.buttonText}>NEW PAYMENT</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => goToDebtPayOff()}>
+                <Text style={styles.buttonText}>DEBT {'\n'}PAY OFF</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={[styles.separator, { marginTop: 30, marginBottom: 30 }]}></View>
+          {renderList}
+          {loading && <ActivityIndicator size="large" color="#f4511e"/>}
+        </PaperProvider>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  main: {
+    marginLeft: '4%',
+    marginRight: '4%',
+  },
   amount: {
     fontSize: 20,
     marginRight: 20,
-    fontWeight: "bold", 
     marginTop: 15,
     color: "#636363",
+    fontFamily: 'FuturaPTDemi'
   },
   separator: {
-    width: 290,
+    width: 270,
     alignSelf: 'center',
     height: 2,
     marginTop: 10,
-    backgroundColor: "#8F8F8F"
+    backgroundColor: "#6b6b6b",
+    borderRadius: 34,
+  },
+  separator1: {
+    width: '92%',
+    alignSelf: 'center',
+    height: 2,
+    marginTop: 10,
+    backgroundColor: "#6b6b6b",
+    borderRadius: 34,
   },
   badge: {
     alignSelf: 'center',
-  },
-  containerText: {
-    fontSize: 17,
-    fontFamily: "sans-serif-medium",
-    color: "#fff"
-  },
-  containerTextTotalDebt: {
-    fontSize: 20,
-    fontFamily: "sans-serif-medium",
-    color: "#fff"
-  },
-  overallBalance: {
-    marginTop: 20,
-    fontSize: 20,
-    fontWeight: "bold", 
-    color: "#636363",
-    justifyContent: "center",
-    flex: 1
   },
   overallBalanceContainer: {
     flex: 1,
     flexDirection: "row",
   },
-  title: {
-    fontWeight: "bold",
-    color: "#f4511e",
-    fontFamily: "sans-serif-medium"
-  },
   button: {
     backgroundColor: '#f4511e',
-    width: '40%',
+    width: 120,
     height: 70,
     borderRadius: 10,
     justifyContent: "center",
-    
+
   },
   container: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-around",
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 30
+    justifyContent: 'space-between',
+    marginTop: 30,
+    width: 270,
+    alignSelf: 'center'
   },
   buttonText: {
     alignSelf: "flex-start",
     fontSize: 18,
     color: "white",
-    fontFamily: "sans-serif",
-    fontWeight: "bold",
+    fontFamily: "FuturaPTBold",
     marginLeft: 12
   },
   balanceTitle: {
     textAlign: "center",
-    fontFamily: "sans-serif-medium",
-    fontWeight: "bold",
+    fontFamily: "FuturaPTBold",
     fontSize: 25,
     marginBottom: 10,
     color: "#f4511e"

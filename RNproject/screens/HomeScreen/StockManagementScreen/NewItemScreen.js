@@ -3,21 +3,32 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
-import { TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { TextInput,DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
 require('firebase/auth')
 
 
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#f4511e',
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
+
 
 function NewItemScreen(props) {
   const navigation = useNavigation();
@@ -31,7 +42,7 @@ function NewItemScreen(props) {
       //the form is ok
       addItem();
     } else {
-      Alert.alert('Alert', 'Please insert an item',
+      Alert.alert('Attention', 'Please insert an item',
         [{text: "Ok"}],
         { cancelable: true }
       )
@@ -77,8 +88,8 @@ function NewItemScreen(props) {
 
 const styles = StyleSheet.create({
   main: {
-    marginLeft: 30,
-    marginRight: 30,
+    marginLeft: '8%',
+    marginRight: '8%',
     marginTop: 25,
   },
   input: {
@@ -97,14 +108,14 @@ const styles = StyleSheet.create({
     height: 46,
     backgroundColor: "#f4511e",
     marginTop: 20,
-    borderRadius: 3,
+    borderRadius: 5,
     justifyContent: "center",
   },
   text: {
     alignSelf: "center",
     fontSize: 15,
     color: "white",
-    fontFamily: "sans-serif-medium"
+    fontFamily: "FuturaPTBold"
   },
   errorMessage: {
     color: "red",

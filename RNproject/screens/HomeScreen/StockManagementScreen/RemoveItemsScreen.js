@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 require('firebase/auth')
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { TextInput, DefaultTheme, Provider as PaperProvider, Checkbox, ToggleButton } from 'react-native-paper';
+import { TextInput, DefaultTheme, Provider as PaperProvider,configureFonts, Checkbox, ToggleButton } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
 require('firebase/auth')
@@ -11,15 +11,26 @@ import { DataTable } from 'react-native-paper';
 import { cos } from "react-native-reanimated";
 
 
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#f4511e',
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
+
 
 
 function RemoveItemsScreen(props) {
@@ -90,7 +101,7 @@ function RemoveItemsScreen(props) {
         { cancelable: true }
       )
     } else {
-      Alert.alert('Alert', 'Please select a product',
+      Alert.alert('Attention', 'Please select a product',
         [{ text: "Ok" }],
         { cancelable: true }
       )
@@ -132,8 +143,8 @@ function RemoveItemsScreen(props) {
 
 const styles = StyleSheet.create({
   main: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: '8%',
+    marginRight: '8%',
     marginTop: 10,
     marginBottom: 15
   },
@@ -150,17 +161,17 @@ const styles = StyleSheet.create({
   },
   rect: {
     width: 135,
-    height: 46,
+    height: 50,
     backgroundColor: "#f4511e",
     marginTop: 20,
-    borderRadius: 3,
+    borderRadius: 5,
     justifyContent: "center",
   },
   text: {
     alignSelf: "center",
     fontSize: 15,
     color: "white",
-    fontFamily: "sans-serif-medium"
+    fontFamily: "FuturaPTBold"
   },
   row: {
     flexDirection: "row",

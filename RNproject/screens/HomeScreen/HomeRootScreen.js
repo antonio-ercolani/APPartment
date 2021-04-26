@@ -16,12 +16,11 @@ import BalanceScreen from './PaymentsScreen/BalanceScreen/BalanceScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
 import Timetable from './TimetablesScreen/Timetable'
 import CreateTimetable from './TimetablesScreen/CreateTimetable'
-import NewPaymentScreen from './PaymentsScreen/NewPaymentScreen/NewPaymentScreen.js';
-import DebtPayOffScreen from './PaymentsScreen/DebtPayOffScreen/DebtPayOffScreen.js';
+import NewPaymentScreen from './PaymentsScreen/NewPaymentScreen.js';
+import DebtPayOffScreen from './PaymentsScreen/DebtPayOffScreen.js';
 import StockManagementScreen from './StockManagementScreen/StockManagementScreen';
-import NewItemScreen from './StockManagementScreen/NewItemScreen/NewItemScreen';
-import MissingListScreen from './StockManagementScreen/MissingListScreen/MissingListScreen';
-import RemoveItemsScreen from './StockManagementScreen/RemoveItemsScreen/RemoveItemsScreen';
+import NewItemScreen from './StockManagementScreen/NewItemScreen';
+import RemoveItemsScreen from './StockManagementScreen/RemoveItemsScreen';
 import AnnouncementsScreen from './AnnouncementsScreen/AnnouncementsScreen';
 import NewAnnouncementScreen from './AnnouncementsScreen/NewAnnouncementScreen';
 import CreateSingleEvent from './TimetablesScreen/CreateSingleEvent';
@@ -131,7 +130,6 @@ function StockManagementStackScreen() {
       }}>
       <StockManagementStack.Screen name="StockManagement" component={StockManagementScreen} />
       <StockManagementStack.Screen options={{ title: 'New Missing Item' }} name="NewItem" component={NewItemScreen} />
-      <StockManagementStack.Screen options={{ title: 'Missing Items' }} name="MissingList" component={MissingListScreen} />
       <StockManagementStack.Screen options={{ title: 'Remove Items' }} name="RemoveItems" component={RemoveItemsScreen} />
       <StockManagementStack.Screen options={{ title: 'New Payment' }} name="NewPayment" component={NewPaymentScreen} />
     </StockManagementStack.Navigator>
