@@ -6,13 +6,12 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import SettingsScreen from './SettingsScreen/SettingsScreen';
-import AccessCodeScreen from './SettingsScreen/AccessCodeScreen/AccessCodeScreen';
-import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen/EditCredentialsScreen';
+import AccessCodeScreen from './SettingsScreen/AccessCodeScreen';
+import EditCredentialsScreen from './SettingsScreen/EditCredentialsScreen';
 import reducer from './Redux/reducer';
 import Home from './NotificationScreen/Home';
 import PaymentsScreen from './PaymentsScreen/PaymentsScreen'
 import CalendarScreen from './CalendarScreen/CalendarScreen.js'
-import BalanceScreen from './PaymentsScreen/BalanceScreen/BalanceScreen'
 import ServicesScreen from './ServicesScreen/ServicesScreen'
 import Timetable from './TimetablesScreen/Timetable'
 import CreateTimetable from './TimetablesScreen/CreateTimetable'
@@ -39,10 +38,23 @@ function DetailsScreen() {
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen({navigation}) {
+function HomeStackScreen({ navigation }) {
   return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" navigation={navigation} component={Home} />
+    <HomeStack.Navigator
+      
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
+        },
+        headerLeft: null
+      }}>
+      <HomeStack.Screen name="Home" navigation={navigation} component={Home} options={{ title: 'Home' }}/>
       <HomeStack.Screen name="Details" component={DetailsScreen} />
     </HomeStack.Navigator>
   );
@@ -52,10 +64,21 @@ const SettingsStack = createStackNavigator();
 
 function SettingsStackScreen() {
   return (
-    <SettingsStack.Navigator initialRouteName="Settings">
+    <SettingsStack.Navigator initialRouteName="Settings"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
+        },
+      }}>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="Access code" component={AccessCodeScreen} />
-      <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} />
+      <SettingsStack.Screen name="Access code" component={AccessCodeScreen} options={{ title: 'Settings' }} />
+      <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} options={{ title: 'Settings' }} />
     </SettingsStack.Navigator>
   );
 }
@@ -69,17 +92,14 @@ function PaymentsStackScreen() {
         headerTitleAlign: 'center',
         headerStyle: {
           backgroundColor: '#f4511e',
-          //alignSelf: "center",
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-          //fontWeight: 'bold',
-          //fontSize: 20,
-          fontFamily: 'sans-serif-medium'
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
         },
       }}>
       <PaymentsStack.Screen name="Payments" component={PaymentsScreen} />
-      <PaymentsStack.Screen options={{ title: 'Your Balance' }} name="Balance" component={BalanceScreen} />
       <PaymentsStack.Screen options={{ title: 'New Payment' }} name="NewPayment" component={NewPaymentScreen} />
       <PaymentsStack.Screen options={{ title: 'Debt Pay Off' }} name="DebtPayOff" component={DebtPayOffScreen} />
     </PaymentsStack.Navigator>
@@ -95,13 +115,11 @@ function AnnouncementsStackScreen() {
         headerTitleAlign: 'center',
         headerStyle: {
           backgroundColor: '#f4511e',
-          //alignSelf: "center",
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-          //fontWeight: 'bold',
-          //fontSize: 20,
-          fontFamily: 'sans-serif-medium'
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
         },
       }}>
       <AnnouncementsStack.Screen name="Announcements" component={AnnouncementsScreen} />
@@ -119,13 +137,11 @@ function StockManagementStackScreen() {
         headerTitleAlign: 'center',
         headerStyle: {
           backgroundColor: '#f4511e',
-          //alignSelf: "center",
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-          //fontWeight: 'bold',
-          //fontSize: 20,
-          fontFamily: 'sans-serif-medium'
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
         },
       }}>
       <StockManagementStack.Screen name="StockManagement" component={StockManagementScreen} />
@@ -140,22 +156,20 @@ const TimetablesStack = createStackNavigator();
 function TimetablesStackScreen() {
   return (
     <TimetablesStack.Navigator initialRouteName="Timetable"
-    screenOptions={{
-      headerTitleAlign: 'center',
-      headerStyle: {
-        backgroundColor: '#f4511e',
-        //alignSelf: "center",
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        //fontWeight: 'bold',
-        //fontSize: 20,
-        fontFamily: 'sans-serif-medium'
-      },
-    }}>
-      <TimetablesStack.Screen name="Timetable" component={Timetable}/>
-      <TimetablesStack.Screen name="Timetable creation" component={CreateTimetable}/>
-      <TimetablesStack.Screen name="Create event" component={CreateSingleEvent}/>
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
+        },
+      }}>
+      <TimetablesStack.Screen name="Timetable" component={Timetable} />
+      <TimetablesStack.Screen name="Timetable creation" component={CreateTimetable} />
+      <TimetablesStack.Screen name="Create event" component={CreateSingleEvent} />
     </TimetablesStack.Navigator>
   )
 }
@@ -164,12 +178,23 @@ const ServiceStack = createStackNavigator();
 
 function ServiceStackScreen() {
   return (
-    <ServiceStack.Navigator initialRouteName="Services">
-      <ServiceStack.Screen name="Services" component={ServicesScreen}/>
-      <ServiceStack.Screen name="Payments" options={{ headerShown:false }} component={PaymentsStackScreen}/>
-      <ServiceStack.Screen name="StockManagement" options={{ headerShown:false }} component={StockManagementStackScreen}/>
-      <ServiceStack.Screen name="Timetables" options={{ headerShown:false }} component={TimetablesStackScreen}/>
-      <ServiceStack.Screen name="Announcements" options={{ headerShown:false }} component={AnnouncementsStackScreen}/>
+    <ServiceStack.Navigator initialRouteName="Services"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23,
+          fontFamily: 'FuturaPTBold'
+        },
+      }}>
+      <ServiceStack.Screen name="Services" component={ServicesScreen} />
+      <ServiceStack.Screen name="Payments" options={{ headerShown: false }} component={PaymentsStackScreen} />
+      <ServiceStack.Screen name="StockManagement" options={{ headerShown: false }} component={StockManagementStackScreen} />
+      <ServiceStack.Screen name="Timetables" options={{ headerShown: false }} component={TimetablesStackScreen} />
+      <ServiceStack.Screen name="Announcements" options={{ headerShown: false }} component={AnnouncementsStackScreen} />
     </ServiceStack.Navigator>
   )
 }
@@ -207,11 +232,14 @@ function CoreScreen() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'tomato',
+          activeTintColor: '#f4511e',
           inactiveTintColor: 'gray',
+          labelStyle: {
+            fontFamily: "FuturaPTBold"
+          }
         }}
       >
-        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Home" component={HomeStackScreen}/>
         <Tab.Screen name="Services" component={ServiceStackScreen} />
         <Tab.Screen name="Calendar" component={CalendarScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />

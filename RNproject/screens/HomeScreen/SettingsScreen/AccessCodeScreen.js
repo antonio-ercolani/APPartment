@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,21 +12,8 @@ function AccessCodeScreen(props) {
     show ? setShow(false) : setShow(true);
   }
 
-  /*
-  var getCode = function (){
-    firebase.database()
-    .ref("app/apartments/"+apartmentName+"/code/").get()
-    .then(function(snapshot) {
-        if (snapshot.exists()) {
-            setCode(snapshot.val());
-        } else {
-            //error
-        }
-    })
-  }();
-  */
-
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.group}>
         <View style={styles.loremIpsumStack}>
@@ -50,13 +37,15 @@ function AccessCodeScreen(props) {
         </View>
       </View>
     </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: 12
   },
   group: {
     width: 225,
@@ -76,13 +65,12 @@ const styles = StyleSheet.create({
     top: 22,
     left: 0,
     position: "absolute",
-    fontFamily: "roboto-700",
+    fontFamily: "FuturaPTBold",
     color: "#121212",
     height: 67,
     width: 225,
     textAlign: "center",
     fontSize: 55,
-    fontWeight: "bold"
   },
   loremIpsumStack: {
     width: 225,
@@ -106,7 +94,7 @@ const styles = StyleSheet.create({
     top: 200,
     left: 0,
     position: "absolute",
-    fontFamily: "roboto-regular",
+    fontFamily: "FuturaPTBold",
     color: "#121212",
     height: 45,
     width: 137,
