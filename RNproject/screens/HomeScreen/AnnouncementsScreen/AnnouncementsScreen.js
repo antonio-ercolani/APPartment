@@ -40,13 +40,20 @@ function AnnouncementsScreen(props) {
   items.push();
   let apartmentName = props.red.apartment.name;
   const [loading, setLoading] = useState(true);
+  const [noAnnouncements, setNoAnnouncements] = useState(false);
 
   //set announcements 
   useEffect(() => {
     firebase.database().ref('/app/announcements/' + apartmentName).orderByChild('timestamp').once('value')
       .then(result => {
-        setAnnouncements(result);
-        setLoading(false);
+        if (result.exists()) {
+          setAnnouncements(result);
+          setLoading(false);
+        } else {
+          setNoAnnouncements(true);
+          setLoading(false);
+        }
+
       })
   }, []);
 
@@ -141,7 +148,13 @@ function AnnouncementsScreen(props) {
           <View style={[styles.separator, { marginTop: 30, marginBottom: 10 }]}></View>
           {renderList.reverse()}
         </PaperProvider>
-        {loading && <ActivityIndicator size="large" color="#f4511e" style={{marginTop: 30}}/>}
+        {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
+        {noAnnouncements &&
+          <View style={styles.noAnnouncements}>
+            <Text style={styles.noAnnouncementsText}>There are no announcements,</Text>
+            <Text style={styles.noAnnouncementsText}>click on the button to add one!</Text>
+          </View>
+        }
       </View>
     </ScrollView>
   );
@@ -196,6 +209,14 @@ const styles = StyleSheet.create({
   },
   announcementDescription: {
     fontSize: 12,
+  },
+  noAnnouncements: {
+    alignSelf: "center",
+    marginTop: 40,
+  },
+  noAnnouncementsText: {
+    fontFamily: "FuturaPTDemi",
+    fontSize: 20
   }
 });
 

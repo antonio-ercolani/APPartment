@@ -39,6 +39,7 @@ function StockManagementScreen(props) {
   const [renderList, setRenderList] = useState([]);
   const [missingItems, setMissingItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [noItems, setNoItems] = useState(false);
 
   const members = props.red.apartment.members;
   let name;
@@ -49,8 +50,13 @@ function StockManagementScreen(props) {
   useEffect(() => {
     firebase.database().ref('/app/stockManagement/' + props.red.apartment.name + '/items/').get()
       .then((result) => {
-        setMissingItems(result.val());
-        setLoading(false);
+        if (result.val() != null) {
+          setMissingItems(result.val());
+          setLoading(false);
+        } else {
+          setNoItems(true);
+          setLoading(false);
+        }
       })
   }, []);
 
@@ -63,7 +69,6 @@ function StockManagementScreen(props) {
     if (missingItems.length !== 0) {
       items.push(
         <View key={1} >
-          <View style={styles.separator}></View>
           <Text style={styles.missingItemsTitle}>MISSING ITEMS</Text>
           <DataTable.Header>
             <DataTable.Title>Item</DataTable.Title>
@@ -116,6 +121,7 @@ function StockManagementScreen(props) {
 
   return (
     <ScrollView>
+      
       <PaperProvider theme={theme}>
         <View style={styles.container}>
           <TouchableOpacity
@@ -131,12 +137,21 @@ function StockManagementScreen(props) {
         </View>
 
         <View style={styles.main}>
+          <View style={styles.separator}></View>
           <DataTable>
             {renderList}
           </DataTable>
+          {noItems &&
+          <View style={styles.noAnnouncements}>
+            <Text style={styles.noAnnouncementsText}>There are no missing items,</Text>
+            <Text style={styles.noAnnouncementsText}>click on the button to add one!</Text>
+          </View>
+        }
         </View>
-        {loading && <ActivityIndicator size="large" color="#f4511e" style={{marginTop: 30}}/>}
+        {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
+        
       </PaperProvider>
+      
     </ScrollView>
   );
 }
@@ -183,6 +198,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#f4511e",
     marginTop: 20
+  },
+  noAnnouncements: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 40,
+  },
+  noAnnouncementsText: {
+    fontFamily: "FuturaPTDemi",
+    fontSize: 20
   }
 });
 

@@ -123,7 +123,7 @@ function AnnouncementsStackScreen() {
         },
       }}>
       <AnnouncementsStack.Screen name="Announcements" component={AnnouncementsScreen} />
-      <AnnouncementsStack.Screen options={{ title: 'New Announcement' }} name="NewAnnouncement" component={NewAnnouncementScreen} />
+      <AnnouncementsStack.Screen options={{ title: 'New one' }} name="NewAnnouncement" component={NewAnnouncementScreen} />
     </AnnouncementsStack.Navigator>
   )
 }
