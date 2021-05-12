@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Animated, Easing, Text, Modal, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { Animated, Easing, Text, Modal, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { List, TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 
 const firebase = require("firebase");
@@ -28,9 +28,46 @@ const theme = {
 };
 
 export default ApartmentList = (props) => {
-  [apartment, setApartment] = useState(false);
-  [modalVisible, setModalVisible] = useState(false);
-  [animatedValue, setAnimatedValue] = useState(new Animated.Value(0))
+  const [apartment, setApartment] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [animatedValue, setAnimatedValue] = useState(new Animated.Value(0))
+  const [loading, setLoading] = useState(false);
+
+  var checkCode = firebase.functions().httpsCallable('checkCode');
+
+  function check(code, apartment, navigation, animatedValue) {
+    if (code.length < 6) return;
+    setLoading(true);
+    console.log(code);
+    console.log(apartment);
+    checkCode({ code: code, apartment: apartment })
+      .then((result) => {
+        var res = result.data.text;
+        if (res === "ok") {
+          setLoading(false);
+          setModalVisible(false);
+          navigation.navigate('HomeScreen')
+        } else {
+          setLoading(false);
+          handleAnimation(animatedValue);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+  }
+
+  function handleAnimation(animatedValue) {
+
+    Animated.sequence([
+      Animated.timing(animatedValue, { toValue: 1.5, duration: 35, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: -1.5, duration: 70, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 1.5, duration: 70, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: -1.5, duration: 70, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 0.0, duration: 35, easing: Easing.linear, useNativeDriver: true })
+
+    ]).start();
+  }
 
   let list = props.apartments;
   let res = [];
@@ -40,7 +77,7 @@ export default ApartmentList = (props) => {
         <List.Item
           key={idx}
           title={item}
-          titleStyle={[styles.title, {marginRight:15}]}
+          titleStyle={[styles.title, { marginRight: 15 }]}
           borderRadius={100}
           onPress={() => { setModalVisible(true); setApartment(item) }}
         >
@@ -52,17 +89,17 @@ export default ApartmentList = (props) => {
 
   return (
     <View>{res}
-    <PaperProvider theme={theme}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-            <Animated.View style={[styles.modalView,{
+      <PaperProvider theme={theme}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>             
+            <Animated.View style={[styles.modalView, {
               transform: [{
                 rotate: animatedValue.interpolate({
                   inputRange: [-1, 1],
@@ -77,42 +114,12 @@ export default ApartmentList = (props) => {
                 onChangeText={(code) => { check(code.toUpperCase(), apartment, props.navigation, animatedValue) }}
               />
             </Animated.View>
-        </View>
-      </Modal></PaperProvider></View>);
+            {loading && <ActivityIndicator style={styles.activityindicator} size="large" color="white" />}       
+          </View>
+        </Modal></PaperProvider></View>);
 }
 
-var checkCode = firebase.functions().httpsCallable('checkCode');
 
-function check(code, apartment, navigation, animatedValue) {
-  if (code.length < 6) return;
-  console.log(code);
-  console.log(apartment);
-  checkCode({ code: code, apartment: apartment })
-    .then((result) => {
-      var res = result.data.text;
-      if (res === "ok") {
-        setModalVisible(false);
-        navigation.navigate('HomeScreen')
-      } else {
-        handleAnimation(animatedValue);
-      }
-    })
-    .catch((error) => {
-      console.log(error.message);
-    })
-}
-
-function handleAnimation(animatedValue) {
-
-  Animated.sequence([
-    Animated.timing(animatedValue, { toValue: 1.5, duration: 35, easing: Easing.linear, useNativeDriver: true }),
-    Animated.timing(animatedValue, { toValue: -1.5, duration: 70, easing: Easing.linear, useNativeDriver: true }),
-    Animated.timing(animatedValue, { toValue: 1.5, duration: 70, easing: Easing.linear, useNativeDriver: true }),
-    Animated.timing(animatedValue, { toValue: -1.5, duration: 70, easing: Easing.linear, useNativeDriver: true }),
-    Animated.timing(animatedValue, { toValue: 0.0, duration: 35, easing: Easing.linear, useNativeDriver: true })
-
-  ]).start();
-}
 
 
 const styles = StyleSheet.create({
@@ -135,8 +142,8 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
-    height:120,
-    width:180,
+    height: 120,
+    width: 180,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 25,
@@ -158,9 +165,12 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    alignSelf:'stretch',
-    fontSize:30,
-    backgroundColor:'white'
+    alignSelf: 'stretch',
+    fontSize: 30,
+    backgroundColor: 'white'
+  },
+  activityindicator: {
+    marginTop:25
   }
 
 });

@@ -61,6 +61,7 @@ function search(text) {
 function JoinScreen({navigation}) {
   [apartments, setApartments] = useState();
 
+
   return (
     <PaperProvider theme={theme}>
     <SafeAreaView  style={styles.container}>
