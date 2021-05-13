@@ -1,5 +1,5 @@
 import React, { useState, Component, useEffect } from "react";
-import { View, Alert, TouchableOpacity, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, Alert, Modal, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Text } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -8,21 +8,34 @@ require("firebase/functions");
 import { useNavigation } from '@react-navigation/native';
 
 const firebase = require("firebase");
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
     primary: '#f4511e',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
-
 
 function Timetable(props) {
   const navigation = useNavigation();
   const [timetables, setTimetables] = useState([]);
   const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [noItems, setNoItems] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
 
 
   var getTimetables = firebase.functions().httpsCallable('timetables-getTimetables');
@@ -49,13 +62,24 @@ function Timetable(props) {
       .then((result) => JSON.parse(result.data))
       .then((result) => {
         if (result != undefined || result != null) {
+          if (result.length == 0) {
+            setNoItems(true);
+          } else {
+            setNoItems(false);
+          }
+          setLoading(false);
+
           var IDs = Object.keys(result);
           var tt = []
           IDs.forEach(function (id) {
             result[id].key = id;
             tt.push(result[id]);
           });
+        } else {
+          setNoItems(true);
+          setLoading(false);
         }
+        setModalVisible(false)
         setTimetables(tt)
       })
       .catch((error) => console.log(error.message));
@@ -85,7 +109,7 @@ function Timetable(props) {
             <List.Item key={getKey()} title={"Period:  " + item.period + " days"} />
             <List.Item key={getKey()} title={"Members:  " + getNames(item.members)} />
           </List.Accordion>
-      );
+        );
       } else {
         res.push(
           <List.Accordion
@@ -99,7 +123,7 @@ function Timetable(props) {
             />
             <List.Item key={getKey()} title={"Author:  " + item.author} />
           </List.Accordion>
-      );
+        );
       }
     });
     setList(res);
@@ -112,6 +136,7 @@ function Timetable(props) {
         {
           text: "YES",
           onPress: () => {
+            setModalVisible(true);
             deleteTimetable({ apartment: apartment, key: key }).then(() => {
               callGetTimetables();
             });
@@ -136,7 +161,6 @@ function Timetable(props) {
   return (
     <ScrollView>
       <PaperProvider theme={theme}>
-
         <View>
           <View style={styles.containerButton}>
             <TouchableOpacity
@@ -153,11 +177,28 @@ function Timetable(props) {
         </View>
         <View style={[styles.separator, { marginTop: 45, marginBottom: 25 }]}></View>
 
-
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />
+          </View>
+        </Modal>
         <View style={styles.container}>
           <View style={styles.list}>
-            <List.Subheader style={styles.header}>Current Timetables</List.Subheader>
+            {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
             {list}
+            {noItems &&
+              <View style={styles.noAnnouncements}>
+                <Text style={styles.noAnnouncementsText}>There are no timetables,</Text>
+                <Text style={styles.noAnnouncementsText}>click on the button to add one!</Text>
+              </View>
+            }
           </View>
         </View>
       </PaperProvider>
@@ -192,6 +233,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 6,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
   icon2: {
     width: 75,
     height: 75,
@@ -204,22 +251,16 @@ const styles = StyleSheet.create({
     paddingLeft: 2
   },
   separator: {
-    width: 290,
+    width: 270,
     alignSelf: 'center',
     height: 2,
     marginTop: 10,
-    backgroundColor: "#8F8F8F"
+    backgroundColor: "#6b6b6b",
+    borderRadius: 34,
   },
   list: {
     alignSelf: "stretch",
     flex: 0.91
-  },
-  header: {
-    fontFamily: "sans-serif-medium",
-    color: "#121212",
-    fontSize: 20,
-
-    marginLeft: 80
   },
   button: {
     backgroundColor: '#f4511e',
@@ -236,6 +277,15 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     marginTop: 30
+  },
+  noAnnouncements: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 40,
+  },
+  noAnnouncementsText: {
+    fontFamily: "FuturaPTDemi",
+    fontSize: 20
   },
   buttonText: {
     alignSelf: "flex-start",

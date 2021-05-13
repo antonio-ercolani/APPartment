@@ -1,9 +1,10 @@
 import React, { useState, Component } from "react";
-import { TextInput, View, StyleSheet, ScrollView } from 'react-native';
-import { configureFonts, DefaultTheme, Provider as PaperProvider, ToggleButton } from 'react-native-paper';
+import { View, Alert, Modal, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import {TextInput, configureFonts, DefaultTheme, Provider as PaperProvider, ToggleButton } from 'react-native-paper';
 import { List, Checkbox } from 'react-native-paper';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
+import { useNavigation } from '@react-navigation/native';
 import InputSpinner from "react-native-input-spinner";
 import CupertinoButtonInfo from "../../LoginScreen/Components/CupertinoButtonInfo";
 
@@ -11,18 +12,41 @@ const firebase = require("firebase");
 require("firebase/functions");
 
 
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'black',
+    text: 'black',
+    placeholder: 'black'
+  },
+  fonts: configureFonts(fontConfig)
+};
+
 function CreateTimetable(props) {
+  const navigation = useNavigation();
+
   let [checked, setChecked] = useState([])
   let [startDate, setStartDate] = useState()
   let [endDate, setEndDate] = useState()
-  let [period, setPeriod] = useState()
-  let [description, setDescription] = useState('')
+  let [period, setPeriod] = useState(1)
+  let [description, setDescription] = useState()
+  const [modalVisible, setModalVisible] = useState(false);
+
 
 //---------------------------------------------------------------------------------------------------------
 //Asyncronous call to the backend submitting the form for the creation of the timetable
 //---------------------------------------------------------------------------------------------------------
 function creationHandler() {
-
     var createTimetablecall = firebase.functions().httpsCallable('timetables-createTimetable');
 
     var timetable = {
@@ -51,18 +75,55 @@ function creationHandler() {
           timetable.members.push(members[i - 1]);
         }
       }
-      //TODO handle error
-      if (!sanityFlag) return;
+      if (!sanityFlag) {
+        Alert.alert('Attention', 'Please insert a member',
+          [{text: "Ok"}],
+          { cancelable: true }
+        )
+        return;
+      }
+        
     }
-    //TODO handle errors here (show an error message for instance?)
-    if (startDate === undefined || endDate === undefined || period === undefined || description === undefined) return;
+    let valid = true;
+    let message;
+    //Input validity checks
+    if (startDate === undefined || endDate === undefined || period === undefined || 
+      description === undefined) { 
+        valid = false;
+        message = 'Please complete all the fields'
+      }
+    if (valid && (period <= 0 || period > 30)) { 
+      valid = false;
+      message = 'Please insert a valid period'
+    }
+    if (valid && (description.length > 50)) {
+      valid = false;
+      message = 'Please insert a description of less that 50 characters'
+    }
 
-    console.log("Input sano, procedo con chiamata")
-    console.log(timetable.members)
+    var stDate = new Date();
+    stDate.setTime(Date.parse(timetable.startDate));
+    var eDate = new Date();
+    eDate.setTime(Date.parse(timetable.endDate));
+    if (valid && (endDate <= startDate)) {
+      valid = false;
+      message = 'The ending date cannot precede the starting date'
+    }
+
+    if (!valid) {
+      Alert.alert('Attention', message,
+        [{text: "Ok"}],
+        { cancelable: true }
+      )
+      return;
+    }
+    setModalVisible(true);
     createTimetablecall({ input: timetable, apartment: props.red.apartment.name })
-      //TODO handle the result (modal with a success/error message?)
+      //TODO handle server side errors
       .then((result) => {
-        var res = result.data.text;
+        //var res = result.data.text;
+        setModalVisible(false)
+        navigation.navigate('Timetable');
       })
 
 
@@ -109,6 +170,7 @@ function creationHandler() {
     <List.Item
       key={idx + 1}
       title={item}
+      titleStyle={{fontSize:20}}
       left={props => <Checkbox
         status={checked[idx + 1] ? 'checked' : 'unchecked'}
         onPress={() => toggle(idx + 1)}
@@ -122,6 +184,7 @@ function creationHandler() {
     <List.Item
       key={0}
       title={"Everyone"}
+      titleStyle={{fontSize:20}}
       left={props => <Checkbox
         status={checked[0] ? 'checked' : 'unchecked'}
         onPress={() => toggleEveryone(0)}
@@ -131,14 +194,17 @@ function creationHandler() {
   )
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView >
+          <PaperProvider theme={theme}>
+
       <List.Subheader style={styles.involving}>Create a new timetable</List.Subheader>
       {items}
       <List.Item
         key={items.length}
         title={"Starting from"}
+        titleStyle={{fontSize:20}}
         left={props => <DatePicker
-          style={{ width: 200 }}
+          style={styles.datePickerStyle}
           date={startDate}
           mode="date"
           placeholder="Select date"
@@ -165,8 +231,9 @@ function creationHandler() {
       <List.Item
         key={items.length + 1}
         title={"Ending in"}
+        titleStyle={{fontSize:20}}
         left={props => <DatePicker
-          style={{ width: 200 }}
+          style={styles.datePickerStyle}
           date={endDate}
           mode="date"
           placeholder="Select date"
@@ -183,7 +250,7 @@ function creationHandler() {
               marginLeft: 0
             },
             dateInput: {
-              marginLeft: 36
+              marginLeft: 36,
             }
           }}
           onDateChange={(date) => {
@@ -195,13 +262,17 @@ function creationHandler() {
 
       <List.Item
         key={items.length + 2}
+        style={styles.spinnerStyle}
         title={"Period"}
+        titleStyle={{fontSize:20, marginLeft:10}}
         left={props => <InputSpinner
           max={30}
           min={1}
           continuity={true}
           step={1}
+          skin='clean'
           colorMax={'#f4511e'}
+          background={'#f4511e'}
           colorPress={'#bd3f19'}
           colorMin={'#f4511e'}
           colorLeft={'#f4511e'}
@@ -216,8 +287,10 @@ function creationHandler() {
         key={items.length + 3}
         left={props => <View style={[styles.container, props.style]}>
           <TextInput
-            placeholder={"Description"}
+            label={"Description"}
+            mode='flat'
             style={styles.inputStyle}
+            left={<TextInput.Icon name="comment-text-outline" />}
             onChangeText={(text) => { setDescription(text) }}
           ></TextInput>
         </View>}
@@ -228,17 +301,30 @@ function creationHandler() {
         text="CONFIRM"
         pressFunc={creationHandler}
       ></CupertinoButtonInfo>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />
+          </View>
+        </Modal>
+      </PaperProvider>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
   cupertinoButtonInfo: {
     height: 60,
-    width: 220
+    width: 220,
+    alignSelf:'center',
+    marginTop:30,
+    marginBottom:30
   },
   container: {
     borderBottomWidth: 1,
@@ -246,22 +332,34 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flexDirection: "row",
   },
-  inputStyle: {
-    color: "#000",
-    paddingRight: 16,
-    fontSize: 16,
-    alignSelf: "stretch",
+  centeredView: {
     flex: 1,
-    lineHeight: 16,
-    paddingTop: 14,
-    paddingBottom: 8
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  spinnerStyle: {
+    marginTop:10,
+    marginLeft:10
+  },
+  datePickerStyle: {
+    marginTop:10,
+    width:200,
+    marginLeft:5
+  },
+  inputStyle: {
+    fontSize: 18,
+    alignSelf: "stretch",
+    width:270,
+    paddingLeft:10,
+    marginLeft:10,
+    marginTop:10
   },
   involving: {
-    fontFamily: "sans-serif-medium",
     color: "#121212",
-    fontSize: 20,
-    marginTop: 25,
-    marginLeft: 70
+    fontSize: 25,
+    marginTop: 20,
+    marginLeft: 55
   },
 
 });

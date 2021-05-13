@@ -120,8 +120,8 @@ function StockManagementScreen(props) {
   }
 
   return (
+    
     <ScrollView>
-      
       <PaperProvider theme={theme}>
         <View style={styles.container}>
           <TouchableOpacity
@@ -151,8 +151,8 @@ function StockManagementScreen(props) {
         {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
         
       </PaperProvider>
-      
     </ScrollView>
+    
   );
 }
 
