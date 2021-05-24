@@ -1,4 +1,4 @@
-import React, { useState, Component, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Alert, Modal, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Text } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { List } from 'react-native-paper';
@@ -181,9 +181,7 @@ function Timetable(props) {
           animationType="slide"
           transparent={true}
           visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
+          
         >
           <View style={styles.centeredView}>
             <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />

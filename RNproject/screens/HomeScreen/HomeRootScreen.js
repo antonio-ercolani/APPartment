@@ -189,6 +189,7 @@ function ServiceStackScreen() {
           fontSize: 23,
           fontFamily: 'FuturaPTBold'
         },
+        headerLeft: null
       }}>
       <ServiceStack.Screen name="Services" component={ServicesScreen} />
       <ServiceStack.Screen name="Payments" options={{ headerShown: false }} component={PaymentsStackScreen} />
@@ -235,7 +236,8 @@ function CoreScreen() {
           activeTintColor: '#f4511e',
           inactiveTintColor: 'gray',
           labelStyle: {
-            fontFamily: "FuturaPTBold"
+            fontFamily: "FuturaPTBold",
+            fontSize:12.2
           }
         }}
       >

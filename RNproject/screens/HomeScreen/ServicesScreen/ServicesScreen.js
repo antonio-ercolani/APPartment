@@ -5,30 +5,27 @@ import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-n
 import firebase from "firebase/app";
 require('firebase/auth')
 
-/*
+const font = 'FuturaPTMedium';
 const fontConfig = {
   default: {
     regular: {
-      fontWeight: 'normal',
-      fontSize:12,
-      //backgroundColor: 'white'
-    },
-  },
-};
-*/
-
+      fontFamily: font,
+    }
+  }
+}
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'rgba(249,99,70,1)',
+    primary: '#f4511e',
+    text: 'black',
+    placeholder: 'black'
   },
-  //fonts: configureFonts(fontConfig),
-
+  fonts: configureFonts(fontConfig)
 };
 
-
+const fSize = 24;
 
 
 export default function ServicesScreen({ navigation }) {
@@ -38,28 +35,37 @@ export default function ServicesScreen({ navigation }) {
       <View>
         <List.Item
           title="Payments"
+          titleStyle={{fontSize:fSize}}
           left={props => <List.Icon icon="cash-multiple" />}
           onPress={() => navigation.navigate('Payments')}
         />
         <List.Item
           title="Timetables"
-          //trova una icona per il calendario visto che comunque servirà a una certa
-          //https://callstack.github.io/react-native-paper/icons.html
-          //e clicca su "See the list of supported icons"
+          titleStyle={{fontSize:fSize}}
           left={props => <List.Icon icon="calendar-month-outline" />} 
           onPress={() => navigation.navigate('Timetables')}
         />
         <List.Item
           title="Stock Management"
+          titleStyle={{fontSize:fSize}}
           left={props => <List.Icon icon="format-list-checks" />} 
           onPress={() => navigation.navigate('StockManagement')}
         />
         <List.Item
           title="Announcements"
+          titleStyle={{fontSize:fSize}}
           left={props => <List.Icon icon="message-alert-outline" />} 
           onPress={() => navigation.navigate('Announcements')}
         />
+
       </View>
     </PaperProvider>
   );
+
 }
+
+const styles = StyleSheet.create({
+    
+  
+
+});

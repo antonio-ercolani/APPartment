@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { useLinkProps, useNavigation, useRoute } from '@react-navigation/native';
 
 
-const font = 'FuturaPTDemi';
+const font = 'FuturaPTMedium';
 const fontConfig = {
   default: {
     regular: {
@@ -27,7 +27,8 @@ const theme = {
   },
   fonts: configureFonts(fontConfig)
 };
-
+const fSize = 24;
+const fSize2 = 21;
 
 
 function SettingsScreen(props) {
@@ -39,26 +40,32 @@ function SettingsScreen(props) {
         <View>
           <List.Accordion
             title="Account"
+            titleStyle={{fontSize:fSize}}
             left={props => <List.Icon icon="account" />}>
             <List.Item
+              titleStyle={{fontSize:fSize2}}            
               title={props.red.username}
               description="Username" />
             <List.Item
               title={firebase.auth().currentUser.email}
+              titleStyle={{fontSize:fSize2}}
               description="email" />
             <List.Item
               title="Edit"
+              titleStyle={{fontSize:fSize2}}
               description="Modify email and password"
               onPress={() => navigation.navigate('Edit credentials')}
             />
           </List.Accordion>
           <List.Item
             title="Access code"
+            titleStyle={{fontSize:fSize}}
             left={props => <List.Icon icon="home-lock" />}
             onPress={() => navigation.navigate('Access code')}
           />
           <List.Item
             title="Logout"
+            titleStyle={{fontSize:fSize}}
             left={props => <List.Icon icon="logout" />}
             onPress={() =>
               Alert.alert('Logout', 'Please confirm',
