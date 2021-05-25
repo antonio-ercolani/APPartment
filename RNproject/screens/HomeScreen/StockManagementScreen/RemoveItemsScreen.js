@@ -1,14 +1,14 @@
 import React, { Component, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { TextInput, DefaultTheme, Provider as PaperProvider,configureFonts, Checkbox, ToggleButton } from 'react-native-paper';
+import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts, Checkbox, ToggleButton } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
 require('firebase/auth')
 import { DataTable } from 'react-native-paper';
-import { cos } from "react-native-reanimated";
+import { CommonActions } from '@react-navigation/native';
 
 
 const font = 'FuturaPTDemi';
@@ -37,6 +37,7 @@ function RemoveItemsScreen(props) {
   const navigation = useNavigation();
   const route = useRoute();
 
+  const [loading, setLoading] = useState(false);
 
   const items = [];
   const missingItems = route.params.items;
@@ -51,16 +52,16 @@ function RemoveItemsScreen(props) {
     items.push(
       <DataTable.Row key={index}>
         <DataTable.Cell>{item.name}</DataTable.Cell>
-        <DataTable.Cell style = {{ justifyContent: "center"}}>
+        <DataTable.Cell style={{ justifyContent: "center" }}>
           <Checkbox
             status={checked[index] ? 'checked' : 'unchecked'}
             onPress={() => { toggle(index) }}
-            color= '#f4511e'
+            color='#f4511e'
           />
         </DataTable.Cell>
       </DataTable.Row>)
   })
-  
+
   function toggle(index) {
     let boxes;
     boxes = [...checked];
@@ -85,16 +86,16 @@ function RemoveItemsScreen(props) {
               removedItems.forEach((element) => {
                 names.push(element.name);
               })
-              let defaultDescription =  'Purchased ' + names.join(', ');
-              navigation.navigate('NewPayment', {defaultDescription:defaultDescription});
-              removeItems(removedItems);
+              let defaultDescription = 'Purchased ' + names.join(', ');
+              navigation.navigate('NewPayment', { defaultDescription: defaultDescription });
+              removeItems(removedItems,"addPayment");
             }
           },
           {
             text: "JUST REMOVE",
             onPress: () => {
-              navigation.navigate('StockManagement');
-              removeItems(removedItems);
+              setLoading(true);
+              removeItems(removedItems, 'justRemove');
             }
           }
         ],
@@ -108,11 +109,27 @@ function RemoveItemsScreen(props) {
     }
   }
 
-  function removeItems(removedItems) {
+  function removeItems(removedItems, origin) {
     var removeItems = firebase.functions().httpsCallable('stockManagement-removeItems');
     removeItems({ removedItems: removedItems, apartment: props.red.apartment.name })
       .then((result) => {
-        //error handling 
+        setChecked([]);
+        if (origin === "justRemove") {
+          navigation.dispatch(state => {
+            
+            // Remove old stock management screen
+            const routes = state.routes.filter(r => r.name !== 'StockManagement');
+
+            //reset navigation state
+            return CommonActions.reset({
+              ...state,
+              routes,
+              index: routes.length - 1,
+            });
+          });
+          navigation.navigate("StockManagement");
+          setLoading(false);
+        }
       })
   }
 
@@ -120,10 +137,10 @@ function RemoveItemsScreen(props) {
   return (
     <PaperProvider theme={theme}>
       <ScrollView>
-      <View style={styles.main}>
-        <DataTable>
-          <DataTable.Header>
-            <DataTable.Title>Item</DataTable.Title>
+        <View style={styles.main}>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Item</DataTable.Title>
               <DataTable.Title numeric>Tick the purchased items</DataTable.Title>
             </DataTable.Header>
             {items}
@@ -135,6 +152,7 @@ function RemoveItemsScreen(props) {
               <Text style={styles.text}>REMOVE ITEMS</Text>
             </TouchableOpacity>
           </View>
+          {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
         </View>
       </ScrollView>
     </PaperProvider>

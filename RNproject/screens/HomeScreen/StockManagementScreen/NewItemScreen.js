@@ -7,6 +7,7 @@ import { TextInput,DefaultTheme, Provider as PaperProvider, configureFonts } fro
 import firebase from "firebase/app";
 import "firebase/database";
 require('firebase/auth')
+import { CommonActions } from '@react-navigation/native';
 
 
 const font = 'FuturaPTDemi';
@@ -50,14 +51,27 @@ function NewItemScreen(props) {
   }
 
   function addItem() {
-    let currentUser = firebase.auth().currentUser.uid; 
+    let currentUser = firebase.auth().currentUser.uid;
     const ref = firebase.database().ref('/app/stockManagement/' + props.red.apartment.name + '/items').push();
     ref.set({
       member: currentUser,
       name: itemName,
       timestamp: Date.now()
-      })
-    navigation.navigate('StockManagement');
+    });
+
+    setItemName('');
+    navigation.dispatch(state => {
+      // Remove old stock management screen
+      const routes = state.routes.filter(r => r.name !== 'StockManagement');
+
+      //reset navigation state
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    });
+    navigation.navigate("StockManagement");
   }
 
 

@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
 import { Picker } from '@react-native-picker/picker';
+import { CommonActions } from '@react-navigation/native';
+
 
 const font = 'FuturaPTDemi';
 const fontConfig = {
@@ -77,7 +79,18 @@ function DebtPayOffScreen(props) {
     }).then((result) => {
       //error handling 
     })
-    navigation.navigate('Payments');
+    navigation.dispatch(state => {
+      // Remove old stock management screen
+      const routes = state.routes.filter(r => r.name !== 'Payments');
+
+      //reset navigation state
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    });
+    navigation.navigate("Payments");
   }
 
   return (

@@ -1,10 +1,11 @@
 import React, { Component, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation} from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
+import { CommonActions } from '@react-navigation/native';
 
 const font = 'FuturaPTDemi';
 const fontConfig = {
@@ -30,9 +31,12 @@ function NewAnnouncementScreen(props) {
   const navigation = useNavigation();
 
   const [announcement, setAnnouncement] = useState('');
+  const [loading, setLoading] = useState(false);
+
 
   function checkForm() {
     if ((announcement !== "")) {
+      setLoading(true);
       sendNewAnnouncement();
   } else {
     Alert.alert('Attention', 'Please fill the form to continue',
@@ -47,8 +51,23 @@ function NewAnnouncementScreen(props) {
     newAnnouncement({ announcement: announcement, apartment: props.red.apartment.name })
       .then((result) => {
         //error handling 
+        navigation.dispatch(state => {
+          // Remove old stock management screen
+          const routes = state.routes.filter(r => r.name !== 'Announcements');
+    
+          //reset navigation state
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          });
+        });
+        navigation.navigate("Announcements");
+        setAnnouncement('');
+        setLoading(false);
       })
-    navigation.navigate('Announcements');
+      
+      
   }
 
   return (
@@ -72,6 +91,7 @@ function NewAnnouncementScreen(props) {
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
           </View>
+          {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
         </View>
       </PaperProvider>
     </ScrollView>
