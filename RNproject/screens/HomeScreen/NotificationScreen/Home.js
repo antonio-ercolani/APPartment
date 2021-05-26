@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import { Button, View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Modal, View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { initialize } from '../Redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -24,6 +24,8 @@ function Home(props) {
   const [notifications, setNotifications] = useState([]);
   const items = [];
   const [renderList, setRenderList] = useState([]);
+  const [modalVisible, setModalVisible] = useState(true);
+
   items.push();
 
 
@@ -56,6 +58,7 @@ function Home(props) {
                   props.initialize(initial_state);
                   firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
                   .then(result => {
+                    setModalVisible(false)
                     setNotifications(result);
                   })
                 })
@@ -108,6 +111,15 @@ function Home(props) {
   return (
     <ScrollView>
       <View>
+      <Modal
+          animationType='none'
+          transparent={true}
+          visible={modalVisible}
+        >
+          <View style={styles.centeredView}>
+            <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />
+          </View>
+        </Modal>
         {renderList}
       </View>
     </ScrollView>
@@ -122,6 +134,12 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontFamily: "sans-serif-light",
 
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom:20
   },
   separator: {
     width: 290,
