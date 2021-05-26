@@ -49,11 +49,30 @@ function Login({ navigation }) {
   let [errorMessage, setErrorMessage] = useState('');
 
 
+  //Questa funzione viene triggerata solo se l'utente
+  //è già loggato
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log('user is logged');
+      hasApartment().then((result) => {
+        if (result.data.text === "yes") {
+          navigation.navigate('HomeScreen')
+        } else if (result.data.text === "no") {
+          navigation.navigate('JoinCreateScreen');
+        } else {
+          console.log('error, hasApartment returned neither yer nor no');
+        }
+      });
+    }
+  });
+
 
   var hasApartment = firebase.functions().httpsCallable('hasApartment');
 
   function login() {
     console.log(email,password)
+    console.log(firebase.auth().currentUser);
+    
     firebase.auth().signInWithEmailAndPassword('tony@mail.com','Passqw')
       .then(() => {
         hasApartment().then((result) => {
@@ -70,6 +89,7 @@ function Login({ navigation }) {
         setErrorMessage(error.message);
         console.log(errorMessage);
       });
+      
   }
 
   function register() {

@@ -8,20 +8,21 @@ import CreateApartmentScreen from './screens/CreateApartmentScreen/CreateApartme
 import LoginScreen from './screens/LoginScreen/login.js';
 import JoinApartmentScreen from './screens/JoinScreen/JoinScreen';
 import HomeScreen from './screens/HomeScreen/HomeRootScreen';
-
+import IndexScreen from './screens/IndexScreen/index'
 
 const Stack = createStackNavigator();
 
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Login">
+            <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="IndexScreen">
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="RegistrationScreen" component={RegistrationScreen}  />
                 <Stack.Screen name="JoinCreateScreen" component={JoinCreateScreen}  />
                 <Stack.Screen name="CreateApartmentScreen" component={CreateApartmentScreen}  />
                 <Stack.Screen name="JoinApartmentScreen" component={JoinApartmentScreen}  />
                 <Stack.Screen name="HomeScreen" component={HomeScreen}  />
+                <Stack.Screen name="IndexScreen" component={IndexScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
