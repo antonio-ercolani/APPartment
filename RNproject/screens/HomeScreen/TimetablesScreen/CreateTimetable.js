@@ -7,6 +7,8 @@ import DatePicker from 'react-native-datepicker'
 import { useNavigation } from '@react-navigation/native';
 import InputSpinner from "react-native-input-spinner";
 import CupertinoButtonInfo from "../../LoginScreen/Components/CupertinoButtonInfo";
+import { CommonActions } from '@react-navigation/native';
+
 
 const firebase = require("firebase");
 require("firebase/functions");
@@ -69,7 +71,7 @@ function creationHandler() {
     else {
       let sanityFlag = false;
 
-      for (i = 1; i < checked.length; i++) {
+      for (let i = 1; i < checked.length; i++) {
         if (checked[i]) {
           sanityFlag = true;
           timetable.members.push(members[i - 1]);
@@ -123,7 +125,18 @@ function creationHandler() {
       .then((result) => {
         //var res = result.data.text;
         setModalVisible(false)
-        navigation.navigate('Timetable');
+        navigation.dispatch(state => {
+          // Remove old stock management screen
+          const routes = state.routes.filter(r => r.name !== 'Timetable');
+    
+          //reset navigation state
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          });
+        });
+        navigation.navigate("Timetable");
       })
 
 
@@ -305,9 +318,6 @@ function creationHandler() {
           animationType="slide"
           transparent={true}
           visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
         >
           <View style={styles.centeredView}>
             <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />

@@ -1,17 +1,18 @@
 import React, { useState, PureComponent } from "react";
-import { View, StyleSheet, Text } from 'react-native';
+import { View, Modal, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import firebase from "firebase/app";
 require('firebase/auth')
 import { Agenda } from 'react-native-calendars';
 import { connect } from 'react-redux';
-
-
+import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 
 
 function CalendarScreen(props) {
   let [items, setItems] = useState({});
   let [markedDates, setMarkedDates] = useState({})
+  let [firstCall, setFirstCall] = useState(true);
 
+  var itemz = items;
   const apartment = props.red.apartment.name;
   const username = props.red.username;
 
@@ -24,12 +25,16 @@ function CalendarScreen(props) {
 
   var getTimetables = firebase.functions().httpsCallable('timetables-getEvents');
 
+
+
+
   function callBack(result, actualMonth, month) {
+
     var events = JSON.parse(result.data);
-  
+
     var markdDates = JSON.parse(JSON.stringify(markedDates))
 
-    if ((events == undefined || events == null)) {
+    if (events == undefined || events == null) {
       //copy of items in newItems
       const item = JSON.parse(JSON.stringify(items))
 
@@ -40,18 +45,19 @@ function CalendarScreen(props) {
           item[strTime] = [];
         }
       }
+
+      itemz = item;
       setItems(item);
       return;
     }
 
     var days;
-    if (events == null || events == undefined) return;
     days = Object.keys(events);
     console.log(days);
 
     //copy of items in newItems
-    const item = JSON.parse(JSON.stringify(items))
-
+    const item = JSON.parse(JSON.stringify(itemz))
+    console.log(itemz);
 
     var eventObj;
     var dots;
@@ -84,12 +90,12 @@ function CalendarScreen(props) {
           } else {
             if (!dots.includes(other)) dots.push(other);
           }
-        } 
+        }
       })
 
       //console.log(day, " ha eventi: ", evArray);
       item[days[index]] = evArray;
-      markdDates[days[index]] = {dots: dots}
+      markdDates[days[index]] = { dots: dots }
 
 
     });
@@ -103,9 +109,15 @@ function CalendarScreen(props) {
       }
     }
 
+    itemz = item;
     setItems(item);
     setMarkedDates(markdDates);
   }
+
+
+
+
+
 
   function isSameMonth(m1, m2) {
     let d1 = new Date(Date.parse(m1));
@@ -113,6 +125,12 @@ function CalendarScreen(props) {
 
     return (d1.getMonth() == d2.getMonth())
   }
+
+
+
+
+
+
 
   function loadItems(month) {
 
@@ -129,10 +147,36 @@ function CalendarScreen(props) {
       month: m
     }
 
+    if (firstCall) {
+
+      setFirstCall(false);
+
+      let d = new Date();
+      d.setMonth(month.month);
+      d.setFullYear(month.year)
+      d.setMonth(d.getMonth()-1);
+      
+      date.month = d.getMonth()
+      date.year = d.getFullYear();
+
+      let m = date.month + 1;
+      if (m < 10) m = '0' + m;
+      actualMonth.month = m;
+
+      console.log("first call, " ,d.getMonth()," ", d.getFullYear());
+    }
+    
+
+
     getTimetables({ apartment: apartment, date: date }).then((result) => {
       callBack(result, actualMonth, month);
     });
   }
+
+
+
+
+
 
 
 
@@ -151,31 +195,76 @@ function CalendarScreen(props) {
       month: m
     }
 
+
+
+
+
+
     getTimetables({ apartment: apartment, date: date }).then((result) => {
       callBack(result, actualMonth, month);
     });
 
+
   }
 
-  return (
-    <Agenda
-      items={items}
-      loadItemsForMonth={(month) => { loadItems(month) }}
-      minDate={'2021-03-01'}
-      maxDate={'2022-06-01'}
-      pastScrollRange={2}
-      futureScrollRange={12}
-      markedDates={markedDates}
-      markingType={'multi-dot'}
-      renderEmptyDate={() => renderEmptyDate()}
-      renderItem={(item) => renderItem(item)}
-      onDayPress={(day) => { loadMonthOnPress(day) }}
-      theme={{
-        selectedDayBackgroundColor: '#f4511e',
-        todayTextColor: '#f4511e',
-        agendaTodayColor: '#f4511e',
-      }}
-    />
+
+  function renderItem(item) {
+    var color;
+    var subt; 
+
+    if (item.isSingle) {
+      color = 'red'
+      subt = ''
+    } else {
+      if (item.member === username) {
+        color = '#40dbc2';
+        subt = 'Your turn';
+      } else {
+        color = '#4839b8';
+        subt = item.member + "'s turn";
+      }
+    }
+    return (
+      <View>
+        <View style={styles.separator}></View>
+        <Card
+          style={styles.item}
+        >
+          <Card.Title 
+          titleStyle={{fontFamily:'FuturaPTMedium', fontSize:25, marginLeft:18}} 
+          title={item.event} 
+          titleNumberOfLines={3}
+          subtitle={subt}
+          subtitleStyle={{fontFamily:'FuturaPTMedium', fontSize:20, marginLeft:18, marginTop:5}} 
+
+          left={(props) => <Avatar.Text size={50} color='white' style={{backgroundColor:color}} label={item.member.substring(0,2).toUpperCase()}/>}
+          />
+          
+        </Card>
+      </View>
+    );
+  
+  }
+  
+  return ( 
+      <Agenda
+        items={items}
+        loadItemsForMonth={(month) => { loadItems(month) }}
+        minDate={'2021-03-01'}
+        maxDate={'2022-06-01'}
+        pastScrollRange={2}
+        futureScrollRange={12}
+        markedDates={markedDates}
+        markingType={'multi-dot'}
+        renderEmptyDate={() => renderEmptyDate()}
+        renderItem={(item) => renderItem(item)}
+        onDayPress={(day) => { loadMonthOnPress(day) }}
+        theme={{
+          selectedDayBackgroundColor: '#f4511e',
+          todayTextColor: '#f4511e',
+          agendaTodayColor: '#f4511e',
+        }}
+      />
   );
 }
 
@@ -196,20 +285,6 @@ class PureEmptyDate extends PureComponent {
   }
 }
 
-function renderItem(item) {
-  return (
-    <View>
-        <View style={styles.separator}></View>
-        <View
-          style={[styles.item, { height: 120 }]}
-        >
-          <Text>{item.event}</Text>
-          <Text>{item.member}</Text>
-        </View>
-      </View>
-  );
-  
-}
 
 function timeToString(time) {
   const date = new Date(time);
@@ -226,7 +301,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 10,
     marginTop: 17,
-    width: 290
+    marginRight: 35,
   },
   emptyDate: {
     height: 110,
@@ -234,9 +309,10 @@ const styles = StyleSheet.create({
     paddingTop: 30
   },
   separator: {
-    width: 290,
+    alignSelf: 'stretch',
     height: 2,
-    backgroundColor: "rgba(230, 230, 230,1)"
+    backgroundColor: "rgba(230, 230, 230,1)",
+    marginRight:35
   }
 });
 

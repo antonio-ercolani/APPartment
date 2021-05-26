@@ -1,11 +1,13 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { StyleSheet, ActivityIndicator, Modal, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 require('firebase/auth')
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import firebase from "firebase/app";
-import DatePicker from 'react-native-datepicker'
+import DatePicker from 'react-native-datepicker';
+import { CommonActions } from '@react-navigation/native';
+
 
 const theme = {
   ...DefaultTheme,
@@ -25,6 +27,8 @@ function CreateSingleEvent(props) {
 
   const [selectedDate, setSelectedDate] = useState('');
   const [eventDescription, setEventDescription] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   function checkForm() {
     if ((eventDescription !== "") && (selectedDate !== "")) {
@@ -44,10 +48,23 @@ function CreateSingleEvent(props) {
       date: selectedDate,
       description: eventDescription
     }
+    setModalVisible(true)
     let send = firebase.functions().httpsCallable('timetables-newSingleEvent');
     send({ apartment : apartment, input: input })
       .then((result) => {
-        navigation.navigate('Timetable');
+        setModalVisible(false)
+        navigation.dispatch(state => {
+          // Remove old stock management screen
+          const routes = state.routes.filter(r => r.name !== 'Timetable');
+    
+          //reset navigation state
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          });
+        });
+        navigation.navigate("Timetable");
       })
   }
 
@@ -98,6 +115,15 @@ function CreateSingleEvent(props) {
               onPress={() => checkForm()}>
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
+            <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+        >
+          <View style={styles.centeredView}>
+            <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />
+          </View>
+        </Modal>
           </View>
         </View>
       </PaperProvider>
@@ -113,6 +139,12 @@ const styles = StyleSheet.create({
   },
   input: {
     marginVertical: 20
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
   },
   container: {
     flex: 1,
