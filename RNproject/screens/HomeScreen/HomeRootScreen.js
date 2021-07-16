@@ -26,16 +26,6 @@ import CreateSingleEvent from './TimetablesScreen/CreateSingleEvent';
 
 const store = createStore(reducer);
 
-
-function DetailsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Details!</Text>
-    </View>
-  );
-}
-
-
 const HomeStack = createStackNavigator();
 
 function HomeStackScreen({ navigation }) {
@@ -54,8 +44,7 @@ function HomeStackScreen({ navigation }) {
         },
         headerLeft: null
       }}>
-      <HomeStack.Screen name="Home" navigation={navigation} component={Home} options={{ title: 'Home' }}/>
-      <HomeStack.Screen name="Details" component={DetailsScreen} />
+      <HomeStack.Screen name="Home" navigation={navigation} component={Home} options={{ title: '' }}/>
     </HomeStack.Navigator>
   );
 }

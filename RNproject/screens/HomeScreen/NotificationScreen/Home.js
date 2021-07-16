@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Modal, View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+  import { Modal, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { initialize } from '../Redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
+import { Avatar, Button, IconButton, Card, Title } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import HomeCard from './HomeCard.js'
 
-require('firebase/auth')
 
 //PER IL REFRESH 
 //https://reactnative.dev/docs/refreshcontrol
@@ -16,8 +18,26 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
+const font = 'FuturaPTDemi';
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: font,
+    }
+  }
+}
 
-var initialized = false;
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#f4511e',
+    text: 'black',
+    placeholder: 'black'
+  },
+  fonts: configureFonts(fontConfig)
+};
+
 
 function Home(props) {
 
@@ -25,9 +45,36 @@ function Home(props) {
   const items = [];
   const [renderList, setRenderList] = useState([]);
   const [modalVisible, setModalVisible] = useState(true);
+  const [noItems, setNoItems] = useState(false);
+  const [balance, setBalance] = useState("Balance");
+
+  const navigation = useNavigation();
+  var findDebts = firebase.functions().httpsCallable('payments-findDebts');
+  var findMissingItems = firebase.functions().httpsCallable('stockManagement-numberMissingItems');
+
+
 
   items.push();
 
+  function getBalance(apartment) {
+    findDebts({apartment: apartment}).then((result) => {
+      let res = JSON.parse(result.data);
+      var amount = res[res.length-1].amount;
+      if (amount >= 0) {
+        setBalance("Balance +"+amount+"$");
+      } else {
+        setBalance("Balance "+amount+"$");
+      }
+    })
+  };
+
+  function getMissingItems(apartment) {
+    findMissingItems({apartment: apartment}).then((result) => {
+      console.log(result)
+      let res = JSON.parse(result.data);
+      console.log(res);
+    })
+  }
 
   useEffect(() => {
     var initial_state = {
@@ -56,18 +103,23 @@ function Home(props) {
                     initial_state.apartment.members[uid] = username;
                   })
                   props.initialize(initial_state);
+                  getBalance(initial_state.apartment.name);
+                  getMissingItems(initial_state.apartment.name);
                   firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
-                  .then(result => {
-                    setModalVisible(false)
-                    setNotifications(result);
-                  })
+                    .then(result => {
+                      navigation.setOptions({ title: initial_state.apartment.name });
+                      setModalVisible(false);
+                      if (result.exists()) {
+                        setNotifications(result);
+                        setNoItems(false);
+                      } else {
+                        setNoItems(true);
+                      }
+                    })
                 })
-
               }
-
             })
         }
-       
       })
 
 
@@ -109,20 +161,34 @@ function Home(props) {
 
 
   return (
-    <ScrollView>
-      <View>
-      <Modal
+    <PaperProvider theme={theme}>
+      <ScrollView>
+        <View style={styles.containerCards}>
+          <HomeCard title={balance} icon="cash-usd-outline"/>
+          <HomeCard title="0 Missing items" icon="basket"/>
+        </View>
+        <View style={styles.containerCards2}>
+          <HomeCard title="3 Events today" icon="calendar-text"/>
+          <HomeCard title="Apartment members" icon="account-group"/>
+        </View>
+        <Modal
           animationType='none'
           transparent={true}
           visible={modalVisible}
         >
           <View style={styles.centeredView}>
-            <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />
+            <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 150 }} />
           </View>
         </Modal>
+        <Text style={styles.title}>Notifications:</Text>
         {renderList}
-      </View>
-    </ScrollView>
+        {noItems &&
+              <View style={styles.noNotifications}>
+                <Text style={styles.noNotificationsText}>There are no notifications yet!</Text>
+              </View>
+            }
+      </ScrollView>
+    </PaperProvider>
   );
 }
 
@@ -139,54 +205,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom:20
+    marginBottom: 20
   },
-  separator: {
-    width: 290,
-    alignSelf: 'center',
-    height: 2,
-    marginTop: 10,
-    backgroundColor: "#8F8F8F"
-  },
-  badge: {
-    alignSelf: 'center',
-  },
-  containerText: {
-    fontSize: 17,
-    fontFamily: "sans-serif-medium",
-    color: "#fff"
-  },
+  
   title: {
-    fontWeight: "bold",
-    color: "#f4511e",
-    fontFamily: "sans-serif-medium"
-  },
-  button: {
-    backgroundColor: '#f4511e',
-    width: '60%',
-    alignSelf: 'center',
-    height: 70,
-    borderRadius: 10,
-    marginTop: 25,
-    justifyContent: "center",
-  },
-  buttonText: {
-    alignSelf: "center",
-    textAlign: "center",
-    fontSize: 18,
-    color: "white",
-    fontFamily: "sans-serif",
-    fontWeight: "bold",
+    fontFamily: "FuturaPTDemi",
+    marginLeft:15,
+    fontSize:20
   },
   announcement: {
     marginRight: 25,
-    fontFamily: "sans-serif-light",
+    fontFamily: "FuturaPTMedium",
+    fontSize:19
   },
   announcementDescription: {
-    fontSize: 12,
-    fontFamily: "sans-serif-light",
-
-  }
+    fontSize: 14,
+    fontFamily: "FuturaPTMedium",
+  },
+  containerCards: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: "space-around",
+    marginLeft: 23,
+    marginTop: 30
+  },
+  containerCards2: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: "space-around",
+    marginLeft: 23,
+    marginTop: 8,
+    marginBottom: 30
+  },
+  noNotifications: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 40,
+  },
+  noNotificationsText: {
+    fontFamily: "FuturaPTDemi",
+    fontSize: 18,
+    color:'#474545'
+  },
 });
 
 

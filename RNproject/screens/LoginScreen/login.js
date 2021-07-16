@@ -73,7 +73,7 @@ function Login({ navigation }) {
     console.log(email,password)
     console.log(firebase.auth().currentUser);
     
-    firebase.auth().signInWithEmailAndPassword('tony@mail.com','Passqw')
+    firebase.auth().signInWithEmailAndPassword(email, password)
       .then(() => {
         hasApartment().then((result) => {
           if (result.data.text === "yes") {

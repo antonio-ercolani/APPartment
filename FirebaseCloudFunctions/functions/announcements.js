@@ -13,9 +13,7 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
       member: currentUserUid,
       announcement: announcement,
       timestamp: Date.now()
-    })
-    addHomeNotification(announcement, 'Announcements', context.auth.uid, apartmentName);
-  
+    })  
   });
 
   
@@ -28,10 +26,22 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
 
   })
 
-  const MAX_HOME_NOTIFICATIONS = 8;
+  const MAX_HOME_NOTIFICATIONS = 12;
 
-  function addHomeNotification(description, type, currentUser, apartmentName) {
-    admin.database().ref('/app/homeNotifications/' + apartmentName).orderByChild('timestamp').once('value')
+  exports.addHomeNotification = functions.database.ref('/app/announcements/{apartment}/{announcement}')
+  .onCreate((snapshot, context) => {
+
+    const announcement = snapshot.val();
+    const apartment = context.params.apartment;
+
+    const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
+    ref.set({
+      description: announcement.announcement,
+      member: announcement.member,
+      type: "Announcements",
+      timestamp: announcement.timestamp
+    }).then(() => {
+      admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
       .then((result) => {
         console.log(Object.keys(result.val()).length)
         if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
@@ -41,23 +51,17 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
           var first = true;
           result.forEach((child) => {
             if (first === true) {
-              admin.database().ref('/app/homeNotifications/' + apartmentName + '/' + child.key).remove();
+              admin.database().ref('/app/homeNotifications/' + apartment + '/' + child.key).remove();
               first = false;
             } else {
               first = false;
             }
-          })
-  
+          });
         }
-      }).then(() => {
-  
-        const ref = admin.database().ref('/app/homeNotifications/' + apartmentName).push();
-        ref.set({
-          description: description,
-          member: currentUser,
-          type: type,
-          timestamp: Date.now()
-        })
       })
+    });
+  });
   
-  }
+  
+ 
+  

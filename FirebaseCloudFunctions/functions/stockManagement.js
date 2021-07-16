@@ -25,3 +25,16 @@ exports.removeItems = functions.https.onCall  ((data, context) => {
   })
 
 })
+
+exports.numberMissingItems = functions.https.onCall((data, context) => {
+  var apartment = data.apartment;
+
+  admin.database().ref("/app/stockManagement/" + apartment + "/items/").get()
+  .then((snapshot) => {
+    return {text: 'OK'}
+    /*res = {};
+    if (!snapshot.exists()) return JSON.stringify(res);
+    res = snapshot.val();
+    return JSON.stringify(res);*/
+  });
+})
