@@ -242,3 +242,22 @@ exports.getEvents = functions.https.onCall((data, context) => {
   });
 
 });
+
+exports.getDayEvents = functions.https.onCall((data, context) => {
+  var apartment = data.apartment;
+  var date = data.date;
+  var res = {}
+
+
+  return admin.database()
+  .ref("/app/events/" + apartment + '/' + date.year + '/' + date.month + '/' + date.day).get()
+  .then(function (snapshot) {
+
+    if (snapshot.exists()) {
+      res = Object.keys(snapshot.val()).length;
+    }
+
+    return JSON.stringify(res);
+  });
+
+});

@@ -1,10 +1,10 @@
 import React, { useState, PureComponent } from "react";
-import { View, Modal, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import firebase from "firebase/app";
 require('firebase/auth')
 import { Agenda } from 'react-native-calendars';
 import { connect } from 'react-redux';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Avatar, Button, Card, Paragraph } from 'react-native-paper';
 
 
 function CalendarScreen(props) {
@@ -19,9 +19,9 @@ function CalendarScreen(props) {
   const currentDay = '2021-03-20';
   const nextDay = '2021-03-21';
 
-  const mine = { key: 'vacation', color: '#39e648', selectedDotColor: '#39e648' };
-  const other = { key: 'massage', color: '#0741f0', selectedDotColor: '#0741f0' };
-  const single = { key: 'workout', color: 'red', selectedDotColor: 'red' };
+  const mine = { key: 'mine', color: '#39e648', selectedDotColor: '#39e648' };
+  const other = { key: 'other', color: '#0741f0', selectedDotColor: '#0741f0' };
+  const single = { key: 'single', color: 'red', selectedDotColor: 'red' };
 
   var getTimetables = firebase.functions().httpsCallable('timetables-getEvents');
 

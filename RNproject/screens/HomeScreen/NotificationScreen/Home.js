@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
-import { Avatar, Button, IconButton, Card, Title } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import HomeCard from './HomeCard.js'
 
@@ -47,9 +46,13 @@ function Home(props) {
   const [modalVisible, setModalVisible] = useState(true);
   const [noItems, setNoItems] = useState(false);
   const [balance, setBalance] = useState("Balance");
+  const [missingItems, setMissingItems] = useState("Missing Items");
+  const [dayEvents, setDayEvents] = useState("Events today");
+
 
   const navigation = useNavigation();
   var findDebts = firebase.functions().httpsCallable('payments-findDebts');
+  var findEvents = firebase.functions().httpsCallable('timetables-getDayEvents');
   var findMissingItems = firebase.functions().httpsCallable('stockManagement-numberMissingItems');
 
 
@@ -68,12 +71,28 @@ function Home(props) {
     })
   };
 
+  function getEvents(apartment) {
+
+    var date = new Date();
+    var dateObj = {
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      day: date.getDate()
+    }
+
+    findEvents({apartment: apartment, date: dateObj}).then((result) => {
+      let res = JSON.parse(result.data);
+      setDayEvents(res + " Events today");
+    });
+  };
+
   function getMissingItems(apartment) {
+
     findMissingItems({apartment: apartment}).then((result) => {
-      console.log(result)
       let res = JSON.parse(result.data);
       console.log(res);
     })
+    
   }
 
   useEffect(() => {
@@ -105,6 +124,7 @@ function Home(props) {
                   props.initialize(initial_state);
                   getBalance(initial_state.apartment.name);
                   getMissingItems(initial_state.apartment.name);
+                  getEvents(initial_state.apartment.name);
                   firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
                     .then(result => {
                       navigation.setOptions({ title: initial_state.apartment.name });
@@ -165,10 +185,10 @@ function Home(props) {
       <ScrollView>
         <View style={styles.containerCards}>
           <HomeCard title={balance} icon="cash-usd-outline"/>
-          <HomeCard title="0 Missing items" icon="basket"/>
+          <HomeCard title={missingItems} icon="basket"/>
         </View>
         <View style={styles.containerCards2}>
-          <HomeCard title="3 Events today" icon="calendar-text"/>
+          <HomeCard title={dayEvents} icon="calendar-text"/>
           <HomeCard title="Apartment members" icon="account-group"/>
         </View>
         <Modal
