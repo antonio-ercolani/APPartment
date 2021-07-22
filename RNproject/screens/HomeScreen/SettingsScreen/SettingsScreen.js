@@ -64,6 +64,12 @@ function SettingsScreen(props) {
             onPress={() => navigation.navigate('Access code')}
           />
           <List.Item
+            title="Members"
+            titleStyle={{fontSize:fSize}}
+            left={props => <List.Icon icon="account-group" />}
+            onPress={() => navigation.navigate('Members')}
+          />
+          <List.Item
             title="Logout"
             titleStyle={{fontSize:fSize}}
             left={props => <List.Icon icon="logout" />}

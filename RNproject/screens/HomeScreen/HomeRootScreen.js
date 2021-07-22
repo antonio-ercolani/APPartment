@@ -23,7 +23,7 @@ import RemoveItemsScreen from './StockManagementScreen/RemoveItemsScreen';
 import AnnouncementsScreen from './AnnouncementsScreen/AnnouncementsScreen';
 import NewAnnouncementScreen from './AnnouncementsScreen/NewAnnouncementScreen';
 import CreateSingleEvent from './TimetablesScreen/CreateSingleEvent';
-
+import MembersScreen from './SettingsScreen/MembersScreen';
 const store = createStore(reducer);
 
 const HomeStack = createStackNavigator();
@@ -68,6 +68,7 @@ function SettingsStackScreen() {
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="Access code" component={AccessCodeScreen} options={{ title: 'Settings' }} />
       <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} options={{ title: 'Settings' }} />
+      <SettingsStack.Screen name="Members" component={MembersScreen} options={{ title: 'Members' }} />
     </SettingsStack.Navigator>
   );
 }
