@@ -27,18 +27,16 @@ exports.removeItems = functions.https.onCall  ((data, context) => {
 })
 
 exports.numberMissingItems = functions.https.onCall((data, context) => {
-
   var apartment = data.apartment;
-  var res = {};
+  return admin.database().ref("/app/stockManagement/" + apartment + "/items/").get()
+    .then(function (snapshot) {
 
-  admin.database().ref("/app/stockManagement/" + apartment + "/items/").get()
-  .then(function(snapshot) {
-    
-    if (snapshot.exists()) {
-      res = snapshot.val();
-    }
-    console.log(res);
-    return JSON.stringify(res);
-
-  });
+      if (snapshot.exists()) {
+        let counter = 0;
+        snapshot.forEach(() => {
+          counter++;
+        })
+        return { number: counter }
+      }
+    });
 })

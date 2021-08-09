@@ -87,12 +87,10 @@ function Home(props) {
   };
 
   function getMissingItems(apartment) {
-
     findMissingItems({apartment: apartment}).then((result) => {
-      let res = JSON.parse(result.data);
-      console.log(res);
+      var res = result.data.number;
+      setMissingItems("Missing items: " + res);
     })
-    
   }
 
   useEffect(() => {
