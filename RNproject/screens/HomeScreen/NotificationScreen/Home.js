@@ -182,12 +182,12 @@ function Home(props) {
     <PaperProvider theme={theme}>
       <ScrollView>
         <View style={styles.containerCards}>
-          <HomeCard title={balance} icon="cash-usd-outline"/>
-          <HomeCard title={missingItems} icon="basket"/>
+          <HomeCard title={balance} icon="cash-usd-outline" nav="payments"/>
+          <HomeCard title={missingItems} icon="basket" nav="stockManagement"/>
         </View>
         <View style={styles.containerCards2}>
-          <HomeCard title={dayEvents} icon="calendar-text"/>
-          <HomeCard title="Apartment members" icon="account-group"/>
+          <HomeCard title={dayEvents} icon="calendar-text" nav="calendar"/>
+          <HomeCard title="Apartment members" icon="account-group" nav="members"/>
         </View>
         <Modal
           animationType='none'

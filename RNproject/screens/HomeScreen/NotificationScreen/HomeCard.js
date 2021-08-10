@@ -2,13 +2,33 @@ import React from "react";
 import { Modal, View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
 import { Avatar, Button, IconButton, Card, Title } from 'react-native-paper';
-import { useLinkProps, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 
 function HomeCard(props) {
+  
+  const navigation = useNavigation();
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={()=> {
+        switch (props.nav) {
+          case 'payments':
+            navigation.navigate("Payments");
+            break;
+          case 'calendar':
+            navigation.navigate("Calendar");
+            break;
+          case 'members':
+            navigation.navigate("Members");
+            break;
+          case 'stockManagement':
+              navigation.navigate("StockManagement");
+              break;
+          }
+        }
+      }
+    >
       <Card.Title
         style={styles.card}
         title={props.title}

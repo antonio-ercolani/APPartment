@@ -45,6 +45,10 @@ function HomeStackScreen({ navigation }) {
         headerLeft: null
       }}>
       <HomeStack.Screen name="Home" navigation={navigation} component={Home} options={{ title: '' }}/>
+      <HomeStack.Screen name="Payments" navigation={navigation} component={PaymentsStackScreen} options={{ headerShown: false }} />
+      <HomeStack.Screen name="Members" navigation={navigation} component={MembersScreen} />
+      <HomeStack.Screen name="Calendar" navigation={navigation} component={CalendarScreen} options={{ headerShown: false }} />
+      <HomeStack.Screen name="StockManagement" navigation={navigation} component={StockManagementStackScreen} options={{ headerShown: false }} />
     </HomeStack.Navigator>
   );
 }
