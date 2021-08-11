@@ -89,6 +89,40 @@ exports.newPayment = functions.https.onCall((data, context) => {
   
   
   });
+
+  exports.addHomeNotification = functions.database.ref('/app/payments/{apartment}/payments/{payment}')
+  .onCreate((snapshot, context) => {
+
+    const payment = snapshot.val();
+    const apartment = context.params.apartment;
+
+    const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
+    ref.set({
+      description: payment.description + "+" + payment.amount,
+      member: payment.member,
+      type: "Payment",
+      timestamp: payment.timestamp
+    }).then(() => {
+      admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+      .then((result) => {
+        console.log(Object.keys(result.val()).length)
+        if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
+          //non ho trovato altro modo di eliminare il primo elemento 
+          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
+          //e non esiste un break per il for each
+          var first = true;
+          result.forEach((child) => {
+            if (first === true) {
+              admin.database().ref('/app/homeNotifications/' + apartment + '/' + child.key).remove();
+              first = false;
+            } else {
+              first = false;
+            }
+          });
+        }
+      })
+    });
+  });
   
   //update debts following a pay off 
   //TODO ERROR HANDLING 
@@ -148,3 +182,37 @@ exports.newPayment = functions.https.onCall((data, context) => {
     })
   });
   
+
+  exports.addHomeNotificationPayOff = functions.database.ref('/app/payments/{apartment}/payOffs/{payment}')
+  .onCreate((snapshot, context) => {
+
+    const payoff = snapshot.val();
+    const apartment = context.params.apartment;
+
+    const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
+    ref.set({
+      description: payoff.description + "+" + payoff.amount,
+      member: payoff.from + '+' + payoff.to,
+      type: "PayOff",
+      timestamp: payoff.timestamp
+    }).then(() => {
+      admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+      .then((result) => {
+        console.log(Object.keys(result.val()).length)
+        if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
+          //non ho trovato altro modo di eliminare il primo elemento 
+          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
+          //e non esiste un break per il for each
+          var first = true;
+          result.forEach((child) => {
+            if (first === true) {
+              admin.database().ref('/app/homeNotifications/' + apartment + '/' + child.key).remove();
+              first = false;
+            } else {
+              first = false;
+            }
+          });
+        }
+      })
+    });
+  });

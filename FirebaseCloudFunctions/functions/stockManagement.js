@@ -39,4 +39,38 @@ exports.numberMissingItems = functions.https.onCall((data, context) => {
         return { number: counter }
       }
     });
-})
+});
+
+exports.addHomeNotification = functions.database.ref('/app/stockManagement/{apartment}/items/{item}')
+  .onCreate((snapshot, context) => {
+
+    const missingItem = snapshot.val();
+    const apartment = context.params.apartment;
+
+    const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
+    ref.set({
+      description: missingItem.name,
+      member: missingItem.member,
+      type: "MissingItem",
+      timestamp: missingItem.timestamp
+    }).then(() => {
+      admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+      .then((result) => {
+        console.log(Object.keys(result.val()).length)
+        if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
+          //non ho trovato altro modo di eliminare il primo elemento 
+          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
+          //e non esiste un break per il for each
+          var first = true;
+          result.forEach((child) => {
+            if (first === true) {
+              admin.database().ref('/app/homeNotifications/' + apartment + '/' + child.key).remove();
+              first = false;
+            } else {
+              first = false;
+            }
+          });
+        }
+      })
+    });
+  });

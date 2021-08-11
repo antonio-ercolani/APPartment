@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { initialize } from '../Redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
+import { configureFonts, DefaultTheme, Provider as PaperProvider, List } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
 import { useNavigation } from '@react-navigation/native';
@@ -13,8 +13,8 @@ import HomeCard from './HomeCard.js'
 //PER IL REFRESH 
 //https://reactnative.dev/docs/refreshcontrol
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
 ];
 
 const font = 'FuturaPTDemi';
@@ -158,19 +158,105 @@ function Home(props) {
       */
       var dateDayMonth = day + ' ' + monthNames[month];
 
-      items.push(
-        <List.Item
-          key={i}
-          titleStyle={styles.announcement}
-          descriptionStyle={styles.announcementDescription}
-          title={notification.description}
-          titleNumberOfLines={10}
-          description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
-          right={props =>
-            <Text style={styles.date}>{dateDayMonth}</Text>
-          }
-        />
-      )
+      switch (notification.type) {
+        case 'MissingItem':
+          items.push(
+            <List.Item
+              key={i}
+              titleStyle={styles.announcement}
+              descriptionStyle={styles.announcementDescription}
+              title={notification.description + ' is missing'}
+              titleNumberOfLines={10}
+              description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
+              right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
+              left={props => <List.Icon {...props} icon="close-octagon-outline" />}
+            />
+          );
+          break;
+
+        case 'Payment':
+          var title = notification.description.split('+');
+
+          items.push(
+            <List.Item
+              key={i}
+              titleStyle={styles.announcement}
+              descriptionStyle={styles.announcementDescription}
+              title={title[1] + '€ paid for ' + title[0]}
+              titleNumberOfLines={10}
+              description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
+              right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
+              left={props => <List.Icon {...props} icon="cash-usd-outline" />}
+            />
+          );
+          break;
+
+        case 'Announcements':
+          items.push(
+            <List.Item
+              key={i}
+              titleStyle={styles.announcement}
+              descriptionStyle={styles.announcementDescription}
+              title={notification.description}
+              titleNumberOfLines={10}
+              description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
+              right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
+              left={props => <List.Icon {...props} icon="message-alert-outline" />}
+            />
+          );
+          break;
+
+        case 'Timetable':
+          items.push(
+            <List.Item
+              key={i}
+              titleStyle={styles.announcement}
+              descriptionStyle={styles.announcementDescription}
+              title={'Timetable \''+ notification.description+'\' created'}
+              titleNumberOfLines={2}
+              description={'Members: '+notification.member}
+              descriptionNumberOfLines={2}
+              right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
+              left={props => <List.Icon {...props} icon="calendar-month-outline" />}
+            />
+          );
+          break;
+
+          case 'Event':
+          items.push(
+            <List.Item
+              key={i}
+              titleStyle={styles.announcement}
+              descriptionStyle={styles.announcementDescription}
+              title={'Event \''+ notification.description+'\' created'}
+              titleNumberOfLines={2}
+              description={'Inserted by '+notification.member}
+              descriptionNumberOfLines={2}
+              right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
+              left={props => <List.Icon {...props} icon="calendar-month" />}
+            />
+          );
+          break;
+
+          case 'PayOff':
+
+          var members = notification.member.split('+');
+          var infos = notification.description.split('+');
+
+          items.push(
+            <List.Item
+              key={i}
+              titleStyle={styles.announcement}
+              descriptionStyle={styles.announcementDescription}
+              title={props.red.apartment.members[members[0]]+ ' paid ' + infos[1] + '€ to ' + props.red.apartment.members[members[1]]}
+              titleNumberOfLines={2}
+              right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
+              left={props => <List.Icon {...props} icon="cash-refund" />}
+            />
+          );
+          break;
+      }
+      
       i++;
     })
 

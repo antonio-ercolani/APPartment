@@ -75,7 +75,6 @@ exports.createEvents = functions.database.ref('/app/timetables/{apartment}/{time
         var i = 0;
         var currDate = new Date(startDate.getTime());
         while (currDate < endDate) {
-          console.log("Inside while loop")
           const date = {
             year : currDate.getFullYear(),
             month : currDate.getMonth(),
@@ -172,20 +171,22 @@ exports.createTimetable = functions.https.onCall((data, context) => {
   var timetableKey = admin.database()
     .ref('/app/timetables/' + apartment).push().key;
   
+  const memb = {};
+  
+  for (const key of members) {
+    memb[key] = {isIncluded: true};
+  }
+  
   admin.database().ref('/app/timetables/' + apartment + '/' + timetableKey).
     set({
       description: input.description,
       startDate: input.startDate,
+      members: memb,
       endDate: input.endDate,
       period: input.period
     });
 
-    for (i = 0; i<members.length; i++) {
-      admin.database().ref('/app/timetables/' + apartment + '/' + timetableKey
-        + '/members/' + members[i]).set({
-          isIncluded: true
-        })
-    }
+    
   return { text: "OK"}
 
 });
@@ -255,9 +256,84 @@ exports.getDayEvents = functions.https.onCall((data, context) => {
 
     if (snapshot.exists()) {
       res = Object.keys(snapshot.val()).length;
+    } else {
+      res = 0;
     }
 
     return JSON.stringify(res);
   });
-
 });
+
+function stringifyArray(array) {
+  
+  var stringified = "";
+  array.forEach((element) => {
+    stringified = stringified + ", " + element;
+  });
+
+  return stringified.slice(2);
+}
+
+exports.addHomeNotification = functions.database.ref('/app/timetables/{apartment}/{timetable}')
+  .onCreate((snapshot, context) => {
+
+    const timetable = snapshot.val();
+    const apartment = context.params.apartment;
+    const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
+    ref.set({
+      description: timetable.description,
+      member: stringifyArray(Object.keys(timetable.members)),
+      type: "Timetable",
+      timestamp: Date.now()
+    }).then(() => {
+      admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+      .then((result) => {
+        if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
+          //non ho trovato altro modo di eliminare il primo elemento 
+          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
+          //e non esiste un break per il for each
+          var first = true;
+          result.forEach((child) => {
+            if (first === true) {
+              admin.database().ref('/app/homeNotifications/' + apartment + '/' + child.key).remove();
+              first = false;
+            } else {
+              first = false;
+            }
+          });
+        }
+      })
+    });
+  });
+
+  exports.addHomeNotificationEvent = functions.database.ref('/app/singleEvents/{apartment}/{timetable}')
+  .onCreate((snapshot, context) => {
+
+    const event = snapshot.val();
+    const apartment = context.params.apartment;
+    const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
+    ref.set({
+      description: event.description,
+      member: event.author,
+      type: "Event",
+      timestamp: Date.now()
+    }).then(() => {
+      admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+      .then((result) => {
+        if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
+          //non ho trovato altro modo di eliminare il primo elemento 
+          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
+          //e non esiste un break per il for each
+          var first = true;
+          result.forEach((child) => {
+            if (first === true) {
+              admin.database().ref('/app/homeNotifications/' + apartment + '/' + child.key).remove();
+              first = false;
+            } else {
+              first = false;
+            }
+          });
+        }
+      })
+    });
+  });
