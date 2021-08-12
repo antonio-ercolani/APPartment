@@ -64,9 +64,9 @@ function Home(props) {
       let res = JSON.parse(result.data);
       var amount = res[res.length-1].amount;
       if (amount >= 0) {
-        setBalance("Balance +"+amount+"$");
+        setBalance("Balance +"+amount+"€");
       } else {
-        setBalance("Balance "+amount+"$");
+        setBalance("Balance "+amount+"€");
       }
     })
   };
@@ -120,7 +120,7 @@ function Home(props) {
                     var username = element.username;
                     initial_state.apartment.members[uid] = username;
                   })
-                  props.initialize(w);
+                  props.initialize(initial_state);
                   getBalance(initial_state.apartment.name);
                   getMissingItems(initial_state.apartment.name);
                   getEvents(initial_state.apartment.name);

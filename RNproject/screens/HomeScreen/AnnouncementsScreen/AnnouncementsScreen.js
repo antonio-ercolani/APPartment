@@ -43,18 +43,23 @@ function AnnouncementsScreen(props) {
 
   //set announcements 
   useEffect(() => {
+    renderScreen();
+  }, []);
+
+  function renderScreen(){
     firebase.database().ref('/app/announcements/' + apartmentName).orderByChild('timestamp').once('value')
       .then(result => {
         if (result.exists()) {
           setAnnouncements(result);
           setLoading(false);
         } else {
+          setAnnouncements([]);
           setNoAnnouncements(true);
           setLoading(false);
         }
 
       })
-  }, []);
+  }
 
   useEffect(() => {
     var i = 0;
@@ -102,7 +107,8 @@ function AnnouncementsScreen(props) {
     var removeAnnouncement = firebase.functions().httpsCallable('announcements-removeAnnouncement');
     removeAnnouncement({ apartment: props.red.apartment.name, removedAnnouncement: key })
       .then((result) => {
-        //error handling
+        setLoading(true);
+        renderScreen();
       })
   }
 
