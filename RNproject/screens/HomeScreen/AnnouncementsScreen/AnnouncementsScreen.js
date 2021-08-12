@@ -27,10 +27,9 @@ const theme = {
   fonts: configureFonts(fontConfig)
 };
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
 ];
-
 
 function AnnouncementsScreen(props) {
   const navigation = useNavigation();
@@ -80,7 +79,7 @@ function AnnouncementsScreen(props) {
           titleStyle={styles.announcement}
           descriptionStyle={styles.announcementDescription}
           title={announcement.announcement}
-          titleNumberOfLines={10}
+          titleNumberOfLines={6}
           description={'Inserted by' + ' ' + props.red.apartment.members[announcement.member]}
           right={props =>
             <Text style={styles.date}>{dateDayMonth}</Text>
@@ -165,11 +164,13 @@ const styles = StyleSheet.create({
     marginLeft: '1%',
     marginRight: '1%',
   },
-  date: {
+  date:{
     fontSize: 15,
     marginRight: 20,
+    fontWeight: "bold",
     marginTop: 15,
-    fontFamily: 'FuturaPTBold'
+    fontFamily: "sans-serif-light",
+
   },
   separator: {
     width: 200,
@@ -205,7 +206,9 @@ const styles = StyleSheet.create({
     fontFamily: "FuturaPTBold",
   },
   announcement: {
-    fontSize: 17
+    marginRight: 20,
+    fontFamily: "FuturaPTMedium",
+    fontSize:19
   },
   announcementDescription: {
     fontSize: 12,

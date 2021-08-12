@@ -89,7 +89,7 @@ function StockManagementScreen(props) {
       date = day + '/' + month + '/' + year;
 
       items.push(
-        <DataTable.Row key={key}>
+        <DataTable.Row key={key} >
           <DataTable.Cell>{name}</DataTable.Cell>
           <DataTable.Cell numeric>{member}</DataTable.Cell>
           <DataTable.Cell numeric>{date}</DataTable.Cell>

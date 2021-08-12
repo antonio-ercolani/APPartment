@@ -102,6 +102,7 @@ function NewPaymentScreen(props) {
             style={styles.input}
             label="Description"
             multiline= {true}
+            
             mode='flat'
             value={description}
             onChangeText={description => setDescription(description)}
@@ -109,6 +110,7 @@ function NewPaymentScreen(props) {
           />
           <TextInput
             label="Amount"
+            style={{fontSize:17}}
             mode='flat'
             value={amount}
             onChangeText={amount => setAmount(amount)}
@@ -136,7 +138,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   input: {
-    marginVertical: 20
+    marginVertical: 20,
+    fontSize: 17
   },
   container: {
     flex: 1,

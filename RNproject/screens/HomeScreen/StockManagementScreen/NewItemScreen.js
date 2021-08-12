@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   input: {
-    marginVertical: 0
+    fontSize: 17
   },
   container: {
     flex: 1,

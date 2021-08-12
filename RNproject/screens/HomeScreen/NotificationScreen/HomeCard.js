@@ -44,7 +44,7 @@ function HomeCard(props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#f4511e',
-    width: '87.6%',
+    width: 190,
     height: 105,
     borderRadius: 8,
     justifyContent: "center",

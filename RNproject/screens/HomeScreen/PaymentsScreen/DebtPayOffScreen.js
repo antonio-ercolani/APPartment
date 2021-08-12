@@ -117,6 +117,7 @@ function DebtPayOffScreen(props) {
           <TextInput
             label="Paid off amount"
             mode='flat'
+            style={{fontSize:17}}
             value={amount}
             onChangeText={amount => setAmount(amount)}
             left={<TextInput.Icon name="cash" />}
@@ -143,7 +144,8 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   input: {
-    marginVertical: 20
+    marginVertical: 20,
+    fontSize: 17
   },
   container: {
     flex: 1,

@@ -94,6 +94,7 @@ function Home(props) {
   }
 
   useEffect(() => {
+    console.log("ciao")
     var initial_state = {
       username: "",
       apartment: ""
@@ -119,7 +120,7 @@ function Home(props) {
                     var username = element.username;
                     initial_state.apartment.members[uid] = username;
                   })
-                  props.initialize(initial_state);
+                  props.initialize(w);
                   getBalance(initial_state.apartment.name);
                   getMissingItems(initial_state.apartment.name);
                   getEvents(initial_state.apartment.name);
@@ -166,7 +167,7 @@ function Home(props) {
               titleStyle={styles.announcement}
               descriptionStyle={styles.announcementDescription}
               title={notification.description + ' is missing'}
-              titleNumberOfLines={10}
+              titleNumberOfLines={2}
               description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
               right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
               left={props => <List.Icon {...props} icon="close-octagon-outline" />}
@@ -183,7 +184,7 @@ function Home(props) {
               titleStyle={styles.announcement}
               descriptionStyle={styles.announcementDescription}
               title={title[1] + '€ paid for ' + title[0]}
-              titleNumberOfLines={10}
+              titleNumberOfLines={2}
               description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
               right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
               left={props => <List.Icon {...props} icon="cash-usd-outline" />}
@@ -198,7 +199,7 @@ function Home(props) {
               titleStyle={styles.announcement}
               descriptionStyle={styles.announcementDescription}
               title={notification.description}
-              titleNumberOfLines={10}
+              titleNumberOfLines={2}
               description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
               right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
               left={props => <List.Icon {...props} icon="message-alert-outline" />}
@@ -233,7 +234,7 @@ function Home(props) {
               description={'Inserted by '+notification.member}
               descriptionNumberOfLines={2}
               right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
-              left={props => <List.Icon {...props} icon="calendar-month" />}
+              left={props => <List.Icon {...props} icon="calendar" />}
             />
           );
           break;
@@ -327,17 +328,17 @@ const styles = StyleSheet.create({
     fontFamily: "FuturaPTMedium",
   },
   containerCards: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-around",
-    marginLeft: 23,
-    marginTop: 30
+    justifyContent: "space-between",
+    marginTop: 30,
+    alignSelf: 'center',
+    width: 390
   },
   containerCards2: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-around",
-    marginLeft: 23,
+    justifyContent: "space-between",
+    alignSelf: 'center',
+    width: 390,
     marginTop: 8,
     marginBottom: 30
   },

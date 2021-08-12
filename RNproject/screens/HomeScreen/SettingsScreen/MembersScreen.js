@@ -80,7 +80,7 @@ function MembersScreen(props) {
 
 const styles = StyleSheet.create({
   list: {
-    fontSize: 17
+    fontSize: 21
   },
   switch: {
     marginRight: 15

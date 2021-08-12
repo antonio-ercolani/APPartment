@@ -77,8 +77,10 @@ function PaymentsScreen(props) {
         items.push(
           <List.Item
             key={i}
+            descriptionStyle={styles.memberD}
             title={props.red.apartment.members[debt.uid]}
             left={props => <List.Icon color="#c92626" icon="arrow-down-thick" />}
+            titleStyle={styles.member}
             description={"You are in debt of " + Math.abs(amount) + "€"}
             right={props =>
               <Text style={[styles.amount, { color: "#c92626" }]} >{amount} €</Text>
@@ -89,6 +91,8 @@ function PaymentsScreen(props) {
         items.push(
           <List.Item
             key={i}
+            titleStyle={styles.member}
+            descriptionStyle={styles.memberD}
             title={props.red.apartment.members[debt.uid]}
             left={props => <List.Icon color="#188547" icon="arrow-up-thick" />}
             right={props => <Text style={[styles.amount, { color: "#188547" }]}>{amount} €</Text>}
@@ -100,6 +104,8 @@ function PaymentsScreen(props) {
         items.push(
           <List.Item
             key={i}
+            titleStyle={styles.member}
+            descriptionStyle={styles.memberD}
             title={props.red.apartment.members[debt.uid]}
             left={props => <List.Icon icon="check-bold" />}
             right={props => <Text style={styles.amount}>OK</Text>}
@@ -167,7 +173,7 @@ const styles = StyleSheet.create({
     marginRight: '4%',
   },
   amount: {
-    fontSize: 20,
+    fontSize: 22,
     marginRight: 20,
     marginTop: 15,
     color: "#636363",
@@ -224,7 +230,16 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginBottom: 10,
     color: "#f4511e"
-  }
+  },
+  member: {
+    fontSize: 20
+  },
+  memberD: {
+    fontSize: 15
+  },
+  title: {
+    fontSize: 19
+  },
 });
 
 

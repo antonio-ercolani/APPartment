@@ -6,7 +6,7 @@ import firebase from "firebase/app";
 require('firebase/auth')
 import { connect } from 'react-redux';
 import { useLinkProps, useNavigation, useRoute } from '@react-navigation/native';
-
+import { StackActions, NavigationActions } from 'react-navigation';
 
 const font = 'FuturaPTMedium';
 const fontConfig = {

@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   input: {
-    marginVertical: 20
+    marginVertical: 20,
+    fontSize: 17
   },
   container: {
     flex: 1,

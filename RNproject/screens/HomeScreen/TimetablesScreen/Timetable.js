@@ -98,30 +98,32 @@ function Timetable(props) {
         res.push(
           <List.Accordion
             key={getKey()}
-            titleNumberOfLines={10}
+            titleNumberOfLines={1}
+            titleStyle={{fontSize:19 ,fontFamily:"FuturaPTMedium"}}
             title={item.description}
             left={props => <List.Icon {...props} icon="calendar-month" />}>
-            <List.Item key={getKey()} title={"Start date:  " + item.startDate}
+            <List.Item key={getKey()} titleStyle={styles.listFont} title={"Start date:  " + item.startDate}
               left={props => <View style={{ paddingLeft: 56 }}></View>}
               right={props => <TouchableOpacity onPress={() => removeEvent(item.key)}><List.Icon {...props} icon="trash-can-outline" /></TouchableOpacity>}
             />
-            <List.Item key={getKey()} title={"End date:  " + item.endDate} />
-            <List.Item key={getKey()} title={"Period:  " + item.period + " days"} />
-            <List.Item key={getKey()} title={"Members:  " + getNames(item.members)} />
+            <List.Item key={getKey()} titleStyle={styles.listFont} title={"End date:  " + item.endDate} />
+            <List.Item key={getKey()} titleStyle={styles.listFont} title={"Period:  " + item.period + " days"} />
+            <List.Item key={getKey()} titleStyle={styles.listFont} title={"Members:  " + getNames(item.members)} />
           </List.Accordion>
         );
       } else {
         res.push(
           <List.Accordion
             key={getKey()}
-            titleNumberOfLines={10}
+            titleNumberOfLines={1}
+            titleStyle={{fontSize:19 ,fontFamily:"FuturaPTMedium"}}
             title={item.description}
             left={props => <List.Icon {...props} icon="calendar" />}>
-            <List.Item key={getKey()} title={"Date:  " + item.date}
+            <List.Item key={getKey()} titleStyle={styles.listFont} title={"Date:  " + item.date}
               left={props => <View style={{ paddingLeft: 56 }}></View>}
               right={props => <TouchableOpacity onPress={() => removeEvent(item.key)}><List.Icon {...props} icon="trash-can-outline" /></TouchableOpacity>}
             />
-            <List.Item key={getKey()} title={"Author:  " + item.author} />
+            <List.Item key={getKey()} titleStyle={styles.listFont} title={"Author:  " + item.author} />
           </List.Accordion>
         );
       }
@@ -171,7 +173,7 @@ function Timetable(props) {
             <TouchableOpacity
               style={styles.button}
               onPress={() => goToCreateSingleEvent()}>
-              <Text style={styles.buttonText}>CREATE EVENT</Text>
+              <Text style={styles.buttonText2}>CREATE EVENT</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -248,8 +250,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 2
   },
+  listFont:{
+    fontSize:17,
+    fontFamily:'FuturaPTMedium'
+  },
   separator: {
-    width: 270,
+    width: 300,
     alignSelf: 'center',
     height: 2,
     marginTop: 10,
@@ -262,18 +268,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#f4511e',
-    width: '40%',
+    width: 140,
     height: 70,
     borderRadius: 10,
     justifyContent: "center",
-
   },
   containerButton: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-around",
-    marginLeft: 30,
-    marginRight: 30,
+    justifyContent: "space-between",
+    alignSelf: 'center',
+    width: 300,
     marginTop: 30
   },
   noAnnouncements: {
@@ -293,6 +297,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 12
   },
+  buttonText2: {
+    alignSelf: "flex-start",
+    fontSize: 18,
+    color: "white",
+    fontFamily: "sans-serif",
+    fontWeight: "bold",
+    marginLeft: 12,
+    marginRight:12
+  }
 });
 
 
