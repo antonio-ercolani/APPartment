@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { RefreshControl, StyleSheet, View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
@@ -38,17 +38,22 @@ function PaymentsScreen(props) {
   const items = [];
   const [renderList, setRenderList] = useState([]);
   let apartmentName = props.red.apartment.name;
+  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
   var findDebts = firebase.functions().httpsCallable('payments-findDebts');
 
-  useEffect(() => {
+  function callGetDebts() {
     findDebts({ apartment: apartmentName })
-      .then((result) => {
-        var res = JSON.parse(result.data);
-        setDebts(res);
-        setLoading(false);
-      })
+    .then((result) => {
+      var res = JSON.parse(result.data);
+      setDebts(res);
+      setLoading(false);
+    });
+  }
+
+  useEffect(() => {
+    callGetDebts();
   }, []);
 
   useEffect(() => {
@@ -140,7 +145,14 @@ function PaymentsScreen(props) {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+    refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={callGetDebts}
+    />
+    }
+    >
       <View style={styles.main}>
         <PaperProvider theme={theme}>
 

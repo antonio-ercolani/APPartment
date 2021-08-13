@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-  import { Modal, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+  import { Modal, RefreshControl, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { initialize } from '../Redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -45,6 +45,7 @@ function Home(props) {
   const [renderList, setRenderList] = useState([]);
   const [modalVisible, setModalVisible] = useState(true);
   const [noItems, setNoItems] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [balance, setBalance] = useState("Balance");
   const [missingItems, setMissingItems] = useState("Missing Items");
   const [dayEvents, setDayEvents] = useState("Events today");
@@ -93,8 +94,27 @@ function Home(props) {
     })
   }
 
+  function getAnnouncements(apartment) {
+    firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
+    .then(result => {
+      setModalVisible(false);
+      if (result.exists()) {
+        setNotifications(result);
+        setNoItems(false);
+      } else {
+        setNoItems(true);
+      }
+    });
+  }
+
+  function onRefresh() {
+    getAnnouncements(props.red.apartment.name);
+    getMissingItems(props.red.apartment.name);
+    getBalance(props.red.apartment.name);
+    getEvents(props.red.apartment.name);
+  }
+
   useEffect(() => {
-    console.log("ciao")
     var initial_state = {
       username: "",
       apartment: ""
@@ -121,20 +141,11 @@ function Home(props) {
                     initial_state.apartment.members[uid] = username;
                   })
                   props.initialize(initial_state);
+                  navigation.setOptions({ title: initial_state.apartment.name });
                   getBalance(initial_state.apartment.name);
                   getMissingItems(initial_state.apartment.name);
                   getEvents(initial_state.apartment.name);
-                  firebase.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
-                    .then(result => {
-                      navigation.setOptions({ title: initial_state.apartment.name });
-                      setModalVisible(false);
-                      if (result.exists()) {
-                        setNotifications(result);
-                        setNoItems(false);
-                      } else {
-                        setNoItems(true);
-                      }
-                    })
+                  getAnnouncements(initial_state.apartment.name);
                 })
               }
             })
@@ -267,7 +278,14 @@ function Home(props) {
 
   return (
     <PaperProvider theme={theme}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+        }
+      >
         <View style={styles.containerCards}>
           <HomeCard title={balance} icon="cash-usd-outline" nav="payments"/>
           <HomeCard title={missingItems} icon="basket" nav="stockManagement"/>

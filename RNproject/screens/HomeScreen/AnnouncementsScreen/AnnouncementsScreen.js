@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { StyleSheet, RefreshControl, View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
@@ -39,14 +39,16 @@ function AnnouncementsScreen(props) {
   items.push();
   let apartmentName = props.red.apartment.name;
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [noAnnouncements, setNoAnnouncements] = useState(false);
 
   //set announcements 
   useEffect(() => {
-    renderScreen();
+    callGetAnnouncements();
   }, []);
+  
 
-  function renderScreen(){
+  function callGetAnnouncements(){
     firebase.database().ref('/app/announcements/' + apartmentName).orderByChild('timestamp').once('value')
       .then(result => {
         if (result.exists()) {
@@ -108,7 +110,7 @@ function AnnouncementsScreen(props) {
     removeAnnouncement({ apartment: props.red.apartment.name, removedAnnouncement: key })
       .then((result) => {
         setLoading(true);
-        renderScreen();
+        callGetAnnouncements();
       })
   }
 
@@ -140,7 +142,14 @@ function AnnouncementsScreen(props) {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+    refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={callGetAnnouncements}
+    />
+    }
+    >
       <View style={styles.main}>
         <PaperProvider theme={theme}>
           <View>

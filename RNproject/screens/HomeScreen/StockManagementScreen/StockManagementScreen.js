@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import { connect } from 'react-redux';
-import { ActivityIndicator, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { RefreshControl, ActivityIndicator, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
@@ -39,6 +39,7 @@ function StockManagementScreen(props) {
   const [renderList, setRenderList] = useState([]);
   const [missingItems, setMissingItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [noItems, setNoItems] = useState(false);
 
   const members = props.red.apartment.members;
@@ -47,7 +48,7 @@ function StockManagementScreen(props) {
   let date;
   let timestamp, day, month, year;
 
-  useEffect(() => {
+  function callGetMissingItems() {
     firebase.database().ref('/app/stockManagement/' + props.red.apartment.name + '/items/').get()
       .then((result) => {
         if (result.val() != null) {
@@ -57,7 +58,11 @@ function StockManagementScreen(props) {
           setNoItems(true);
           setLoading(false);
         }
-      })
+      });
+  }
+
+  useEffect(() => {
+    callGetMissingItems();
   }, []);
 
   useEffect(() => {
@@ -121,7 +126,14 @@ function StockManagementScreen(props) {
 
   return (
     
-    <ScrollView>
+    <ScrollView
+    refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={callGetMissingItems}
+    />
+    }
+    >
       <PaperProvider theme={theme}>
         <View style={styles.container}>
           <TouchableOpacity

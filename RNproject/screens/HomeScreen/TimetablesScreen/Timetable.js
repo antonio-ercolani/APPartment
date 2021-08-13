@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Alert, Modal, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, RefreshControl, Alert, Modal, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Text } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -34,6 +34,7 @@ function Timetable(props) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [noItems, setNoItems] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
 
@@ -161,7 +162,14 @@ function Timetable(props) {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+    refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={callGetTimetables}
+    />
+    }
+    >
       <PaperProvider theme={theme}>
         <View>
           <View style={styles.containerButton}>
