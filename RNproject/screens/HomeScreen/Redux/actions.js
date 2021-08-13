@@ -5,3 +5,10 @@ export const initialize = state => (
     state: state,
   }
 );
+
+export const update = state => (
+  {
+    type: 'UPDATE',
+    state: state,
+  }
+);

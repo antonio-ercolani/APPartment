@@ -162,6 +162,7 @@ function creationHandler() {
     boxes[index] = !boxes[index]
 
     if (boxes[index] === true) {
+      let i;
       for (i = 1; i < boxes.length; i++) {
         boxes[i] = false;
       }

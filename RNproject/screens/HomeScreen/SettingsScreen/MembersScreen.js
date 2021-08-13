@@ -1,5 +1,7 @@
 import React, { Component, useEffect, useState } from "react";
 import { connect } from 'react-redux';
+import { update } from '../Redux/actions';
+import { bindActionCreators } from 'redux';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider, Switch } from 'react-native-paper';
@@ -30,11 +32,15 @@ function MembersScreen(props) {
   const items = [];
 
   //handles lock apartment switch
-  const [isSwitchOn, setIsSwitchOn] = React.useState(props.red.apartment.locked);
+  const [isSwitchOn, setIsSwitchOn] = useState(props.red.apartment.locked);
+
   const onToggleSwitch = () => {
     firebase.database().ref('/app/apartments/' + props.red.apartment.name).update({
      locked:!isSwitchOn
     });
+    let new_state = {...props.red};
+    new_state.apartment.locked = !isSwitchOn;
+    props.update(new_state);
     setIsSwitchOn(!isSwitchOn);
   }
 
@@ -93,9 +99,16 @@ const styles = StyleSheet.create({
   }
 })
 
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    update,
+  }, dispatch)
+);
+
 const mapStateToProps = (state) => {
   const { red } = state
   return { red }
 };
 
-export default connect(mapStateToProps)(MembersScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(MembersScreen);
