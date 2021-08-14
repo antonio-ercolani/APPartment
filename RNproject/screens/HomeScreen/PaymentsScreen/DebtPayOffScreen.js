@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
@@ -37,6 +37,7 @@ function DebtPayOffScreen(props) {
   const [amount, setAmount] = useState('');
 
   const [selectedMember, setSelectedMember] = useState("select");
+  const [loading, setLoading] = useState(false);
 
   const items = [];
   let members = props.red.apartment.members;
@@ -70,6 +71,7 @@ function DebtPayOffScreen(props) {
   }
 
   function sendPayOff() {
+    setLoading(true);
     var newPayOff = firebase.functions().httpsCallable('payments-newPayOff');
     newPayOff({
       description: description,
@@ -77,20 +79,23 @@ function DebtPayOffScreen(props) {
       apartment: props.red.apartment.name,
       member: selectedMember
     }).then((result) => {
-      //error handling 
-    })
-    navigation.dispatch(state => {
-      // Remove old stock management screen
-      const routes = state.routes.filter(r => r.name !== 'Payments');
-
-      //reset navigation state
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
+      navigation.dispatch(state => {
+        // Remove old stock management screen
+        const routes = state.routes.filter(r => r.name !== 'Payments');
+  
+        //reset navigation state
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        });
       });
-    });
-    navigation.navigate("Payments");
+      navigation.navigate("Payments");
+      setLoading(false);
+      setDescription('');
+      setAmount(0);
+    })
+    
   }
 
   return (
@@ -131,6 +136,7 @@ function DebtPayOffScreen(props) {
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
           </View>
+          {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
         </View>
       </PaperProvider>
     </ScrollView>

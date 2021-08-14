@@ -39,7 +39,7 @@ exports.findDebts = functions.https.onCall  ((data, context) => {
 //TODO ERROR HANDLING 
 exports.newPayment = functions.https.onCall((data, context) => {
     var description = data.description;
-    var amount = data.amount;
+    var amount = (data.amount)/4;
     var currentUserUid = context.auth.uid;
     var apartmentName = data.apartment;
   

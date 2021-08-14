@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
@@ -35,9 +35,10 @@ function NewPaymentScreen(props) {
 
   //used by the stock management when you add a payment in items removal 
   const defaultDescription = route.params.defaultDescription;
-  
+
   const [description, setDescription] = useState(defaultDescription);
   const [amount, setAmount] = useState('');
+  const [loading, setLoading] = useState(false);
 
 
   function checkForm() {
@@ -60,38 +61,35 @@ function NewPaymentScreen(props) {
   }
 
   function sendPayment() {
+    setLoading(true);
     var newPayment = firebase.functions().httpsCallable('payments-newPayment');
     newPayment({ description: description, amount: parseInt(amount, 10), apartment: props.red.apartment.name })
       .then((result) => {
-        //error handling 
-        //FORSE È MEGLIO METTERE QUI DENTRO LA NAVIGATION COSÌ SIAMO SICURI CHE 
-        //QUANDO RICARICHIAMO IL BALANCE IL PAGAMENTO È GIÀ STATO AGGIUNTO
-        //[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
-        //[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
-        //[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+        //if you come from stock management we have to 
+        //return to the stock management screen
+        let nextScreen = '';
+        if (defaultDescription === '') {
+          nextScreen = 'Payments';
+        } else {
+          nextScreen = 'StockManagement';
+        }
+
+        navigation.dispatch(state => {
+          // Remove old stock management screen
+          const routes = state.routes.filter(r => r.name !== nextScreen);
+
+          //reset navigation state
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          });
+        });
+        navigation.navigate(nextScreen);
+        setLoading(false);
       })
 
-    //if you come from stock management we have to 
-    //return to the stock management screen
-    let nextScreen = '';
-    if (defaultDescription === '') {
-      nextScreen = 'Payments';
-    } else {
-      nextScreen = 'StockManagement';
-    }
 
-    navigation.dispatch(state => {
-      // Remove old stock management screen
-      const routes = state.routes.filter(r => r.name !== nextScreen);
-
-      //reset navigation state
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      });
-    });
-    navigation.navigate(nextScreen);
   }
 
   return (
@@ -101,8 +99,8 @@ function NewPaymentScreen(props) {
           <TextInput
             style={styles.input}
             label="Description"
-            multiline= {true}
-            
+            multiline={true}
+
             mode='flat'
             value={description}
             onChangeText={description => setDescription(description)}
@@ -110,7 +108,7 @@ function NewPaymentScreen(props) {
           />
           <TextInput
             label="Amount"
-            style={{fontSize:17}}
+            style={{ fontSize: 17 }}
             mode='flat'
             value={amount}
             onChangeText={amount => setAmount(amount)}
@@ -125,6 +123,7 @@ function NewPaymentScreen(props) {
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
           </View>
+          {loading && <ActivityIndicator size="large" color="#f4511e" style={{ marginTop: 30 }} />}
         </View>
       </PaperProvider>
     </ScrollView>
