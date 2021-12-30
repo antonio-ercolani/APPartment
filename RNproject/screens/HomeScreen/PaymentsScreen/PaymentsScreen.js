@@ -124,7 +124,7 @@ function PaymentsScreen(props) {
           <View style={styles.separator1}></View>
           <List.Item
             key={i}
-            title="OVERALL BALANCE"
+            title="BALANCE"
             titleStyle={styles.title}
             left={props => <List.Icon icon="scale-balance" />}
             right={props => <Text style={[styles.amount, { color: balanceColor }]}>{totalDebt} €</Text>}

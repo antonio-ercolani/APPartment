@@ -80,12 +80,8 @@ function SettingsScreen(props) {
                     text: "CONFIRM",
                     onPress: () => {
                       firebase.auth().signOut().then(() => {
-                        const resetAction = StackActions.reset({
-                          index: 0,
-                          actions: [NavigationActions.navigate({routeName: 'Login'})],
-                          key: null,
-                        });
-                        navigation.dispatch(resetAction);
+                        navigation.popToTop()
+                        navigation.navigate({routeName: 'Login'})
                       }).catch((error) => {
                         //logout error
                       });

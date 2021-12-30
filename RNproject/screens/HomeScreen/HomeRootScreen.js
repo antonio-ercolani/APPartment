@@ -69,7 +69,7 @@ function SettingsStackScreen() {
           fontFamily: 'FuturaPTBold'
         },
       }}>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} options={{headerLeft:null}}/>
       <SettingsStack.Screen name="Access code" component={AccessCodeScreen} options={{ title: 'Settings' }} />
       <SettingsStack.Screen name="Edit credentials" component={EditCredentialsScreen} options={{ title: 'Settings' }} />
       <SettingsStack.Screen name="Members" component={MembersScreen} options={{ title: 'Members' }} />
