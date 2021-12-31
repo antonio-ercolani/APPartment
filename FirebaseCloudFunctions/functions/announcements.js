@@ -4,9 +4,12 @@ const functions = require("firebase-functions");
 //adds a new announcement
 //TODO ERROR HANDLING 
 exports.newAnnouncement = functions.https.onCall((data, context) => {
+
     var announcement = data.announcement;
     var currentUserUid = context.auth.uid;
     var apartmentName = data.apartment;
+
+    if (!verifyInputAnnouncement(data.announcement, data.apartment)) return false;
   
     const ref = admin.database().ref('/app/announcements/' + apartmentName).push();
     ref.set({
@@ -33,6 +36,8 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
 
     const announcement = snapshot.val();
     const apartment = context.params.apartment;
+
+    if (!verifyInputAnnouncement(announcement)) return;
 
     const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
     ref.set({
@@ -61,6 +66,32 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
       })
     });
   });
+
+  exports.verifyInputAnnouncementTrigger = function(announcement) { 
+
+    if (announcement.announcement === undefined || announcement.announcement === null) return false;
+    if (announcement.member === undefined || announcement.member === null) return false;
+    if (announcement.timestamp === undefined || announcement.timestamp === null) return false;
+
+    const timestamp = new RegExp('^[0-9]+$');
+
+    if (!timestamp.test(announcement.timestamp)) return false;
+
+    return true;
+    
+  };
+
+  exports.verifyInputAnnouncement = function(announcement, apartment) { 
+    
+    if (announcement === undefined || announcement === null || announcement === "") return false;
+    if (apartment === undefined || apartment === null || apartment === "") return false;
+    
+    if (!(typeof announcement === 'string' || announcement instanceof String)) return false;
+    if (!(typeof apartment === 'string' || apartment instanceof String)) return false;
+
+    return true;
+    
+  };
   
   
  
