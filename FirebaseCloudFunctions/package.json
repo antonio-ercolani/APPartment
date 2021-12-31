@@ -4,11 +4,11 @@
   "description": "APPartment backend functions",
   "main": "index.js",
   "dependencies": {
+    "APPartment": "file:../RNproject",
     "firebase-admin": "^9.5.0",
     "firebase-functions": "^3.14.1",
     "jest": "^27.4.5"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "jest"
   },

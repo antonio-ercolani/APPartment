@@ -15,6 +15,8 @@ exports.findDebts = functions.https.onCall  ((data, context) => {
       this.amount = amount;
     }
   
+    if (!this.verifyApartment(apartment)) return;
+
     return admin.database()
       .ref('/app/payments/' + apartment + '/debts/' + context.auth.uid).get().then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -38,10 +40,13 @@ exports.findDebts = functions.https.onCall  ((data, context) => {
 //updates the debt of the user that adds the payment
 //TODO ERROR HANDLING 
 exports.newPayment = functions.https.onCall((data, context) => {
+
     var description = data.description;
     var amount = (data.amount)/4;
     var currentUserUid = context.auth.uid;
     var apartmentName = data.apartment;
+
+    if (!this.verifyPaymentInput(data)) return;
   
     //update debts
     admin.database()
@@ -135,6 +140,8 @@ exports.newPayment = functions.https.onCall((data, context) => {
     var memberUid = data.member;
     var previousDebt;
     var newDebt;
+
+    if (!this.verifyPayOffInput(data)) return;
   
     //update debts
     admin.database()
@@ -216,3 +223,51 @@ exports.newPayment = functions.https.onCall((data, context) => {
       })
     });
   });
+
+  exports.verifyApartment = function(apartment) { 
+    
+    if (apartment === undefined || apartment === null || apartment === "") return false;
+    
+    if (!(typeof apartment === 'string' || apartment instanceof String)) return false;
+
+    return true;
+    
+  };
+
+  exports.verifyPaymentInput = function(payment) { 
+    
+    if (payment === undefined || payment === null) return false;
+    if (payment.amount === undefined || payment.amount === null) return false;
+    if (payment.description === undefined || payment.description === null || payment.description === "") return false;
+    if (payment.apartment === undefined || payment.description === null || payment.description === "") return false;
+
+    if (!(typeof payment.description === 'string' || payment.description instanceof String)) return false;
+    if (!(typeof payment.apartment === 'string' || payment.apartment instanceof String)) return false;
+
+    const checkNumber = new RegExp('^[0-9]+$');
+
+    if (!checkNumber.test(payment.amount)) return false;
+
+    return true;
+    
+  };
+
+  exports.verifyPayOffInput = function(payment) { 
+    
+    if (payment === undefined || payment === null) return false;
+    if (payment.amount === undefined || payment.amount === null) return false;
+    if (payment.member === undefined || payment.member === null) return false;
+    if (payment.description === undefined || payment.description === null || payment.description === "") return false;
+    if (payment.apartment === undefined || payment.description === null || payment.description === "") return false;
+
+    if (!(typeof payment.description === 'string' || payment.description instanceof String)) return false;
+    if (!(typeof payment.apartment === 'string' || payment.apartment instanceof String)) return false;
+    if (!(typeof payment.member === 'string' || payment.member instanceof String)) return false;
+
+    const checkNumber = new RegExp('^[0-9]+$');
+
+    if (!checkNumber.test(payment.amount)) return false;
+
+    return true;
+    
+  };
