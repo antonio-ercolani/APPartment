@@ -60,10 +60,20 @@ function NewPaymentScreen(props) {
     }
   }
 
+  function countMembers() {
+    var counter = 0;
+    var members = props.red.apartment.members;
+    for (var key in members) {
+      counter++;
+    }
+    return counter;
+  }
+
   function sendPayment() {
+    membersNum = countMembers();
     setLoading(true);
     var newPayment = firebase.functions().httpsCallable('payments-newPayment');
-    newPayment({ description: description, amount: parseInt(amount, 10), apartment: props.red.apartment.name })
+    newPayment({ description: description, amount: parseInt(amount, 10), apartment: props.red.apartment.name, membersNum : membersNum })
       .then((result) => {
         //if you come from stock management we have to 
         //return to the stock management screen
