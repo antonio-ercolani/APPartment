@@ -9,14 +9,14 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
     var currentUserUid = context.auth.uid;
     var apartmentName = data.apartment;
 
-    if (!verifyInputAnnouncement(data.announcement, data.apartment)) return false;
+    if (!this.verifyInputAnnouncement(announcement, apartmentName)) return false;
   
     const ref = admin.database().ref('/app/announcements/' + apartmentName).push();
     ref.set({
       member: currentUserUid,
       announcement: announcement,
       timestamp: Date.now()
-    })  
+    })
   });
 
   
@@ -37,7 +37,7 @@ exports.newAnnouncement = functions.https.onCall((data, context) => {
     const announcement = snapshot.val();
     const apartment = context.params.apartment;
 
-    if (!verifyInputAnnouncement(announcement)) return;
+    if (!this.verifyInputAnnouncement(announcement)) return;
 
     const ref = admin.database().ref('/app/homeNotifications/' + apartment).push();
     ref.set({

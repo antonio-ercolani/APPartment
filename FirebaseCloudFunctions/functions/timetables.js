@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const functions = require("firebase-functions");
-const { ref } = require('firebase-functions/lib/providers/database');
 
 exports.deleteEvents = functions.database.ref('/app/timetables/{apartment}/{timetable}')
 .onDelete((snapshot, context) => {
@@ -139,7 +138,7 @@ exports.newSingleEvent =  functions.https.onCall((data, context) => {
   var input = data.input;
   var apartment = data.apartment;
 
-  if (input.author == undefined || input.description == undefined || input.date == undefined) return;
+  if (!this.verifyInputSingleEvent(input, apartment)) return;
 
   var eventKey = admin.database()
   .ref('/app/singleEvents/' + apartment).push().key;
@@ -164,9 +163,7 @@ exports.createTimetable = functions.https.onCall((data, context) => {
   var members = data.input.members;
 
     //sanitization of input
-  if (input.description === undefined || input.startDate === undefined ||
-    input.endDate === undefined || input.period === undefined || members === undefined) 
-    return; //TODO handle errors
+  if (!this.verifyInputTimetable(input, apartment)) return;
 
   var timetableKey = admin.database()
     .ref('/app/timetables/' + apartment).push().key;
@@ -337,3 +334,28 @@ exports.addHomeNotification = functions.database.ref('/app/timetables/{apartment
       })
     });
   });
+
+  exports.verifyInputSingleEvent = function(data, apartment) {
+    if (apartment === undefined || apartment === null || apartment === "") return false;
+    if (!(typeof apartment === 'string' || apartment instanceof String)) return false;
+
+    if (data === undefined || data === null | data.author === undefined 
+      || data.description === undefined || data.date === undefined) return false;
+
+    return true;
+  }
+  
+  exports.verifyInputTimetable = function(data, apartment) {
+    if (apartment === undefined || apartment === null || apartment === "") return false;
+
+    if (!(typeof apartment === 'string' || apartment instanceof String)) return false;
+
+    if (data.description === undefined || data.startDate === undefined ||
+      data.endDate === undefined || data.period === undefined || data.members === undefined) return false;
+
+    const isANumber = new RegExp('^[0-9]+$');
+
+    if (!isANumber.test(data.period)) return false;
+
+    return true;
+  }

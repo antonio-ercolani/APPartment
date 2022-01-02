@@ -1,10 +1,34 @@
 const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 
+exports.newMissingItem= functions.https.onCall((data, context) => {
+
+  var currentUserUid = context.auth.uid;
+  var apartment = data.apartment;
+  var itemName = data.item;
+
+  if (!(this.verifyInputItem(itemName, apartment))) return;
+
+  var eventKey = admin.database()
+  .ref('/app/stockManagement/' + apartment + "/items/").push().key;
+
+  admin.database().ref('/app/stockManagement/' + apartment + '/items/' + eventKey).
+  set({
+    member: currentUserUid,
+    name: itemName,
+    timestamp: Date.now()
+  }).then(() => {
+    return {text: "ok"}
+  })
+});
+
+
 exports.removeItems = functions.https.onCall  ((data, context) => {
   var apartment = data.apartment;
   var removedItems = data.removedItems;
   const names = [];
+
+  if (!(this.verifyInputItem(removedItems, apartment))) return;
 
   removedItems.forEach((element) => {
     names.push(element.name);  
@@ -23,7 +47,6 @@ exports.removeItems = functions.https.onCall  ((data, context) => {
     items: names.join(', '),
     timestamp: Date.now()
   })
-
 })
 
 exports.numberMissingItems = functions.https.onCall((data, context) => {
@@ -74,3 +97,15 @@ exports.addHomeNotification = functions.database.ref('/app/stockManagement/{apar
       })
     });
   });
+
+  exports.verifyInputItem = function(item, apartment) { 
+    
+    if (item === undefined || item === null || item === "") return false;
+    if (apartment === undefined || apartment === null || apartment === "") return false;
+    
+    if (!(typeof item === 'string' || item instanceof String)) return false;
+    if (!(typeof apartment === 'string' || apartment instanceof String)) return false;
+
+    return true;
+    
+  };
