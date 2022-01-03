@@ -141,6 +141,7 @@ function Home(props) {
                     initial_state.apartment.members[uid] = username;
                   })
                   props.initialize(initial_state);
+                  console.log(initial_state)
                   navigation.setOptions({ title: initial_state.apartment.name });
                   getBalance(initial_state.apartment.name);
                   getMissingItems(initial_state.apartment.name);

@@ -142,8 +142,6 @@ function creationHandler() {
 
   }
 
-  
-
   //Toggles the boolean value indicating the checkbox state at the
   // indicated index
   const toggle = (index) => {

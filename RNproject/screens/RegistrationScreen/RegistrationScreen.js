@@ -3,18 +3,19 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-nati
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import "firebase/database";
+import {API_KEY, AUTH_DOMAIN, DB_URL, PROJ_ID, STORAGE_BUCKET, SEND_ID, APP_ID} from "@env"
 
 require('firebase/auth')
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBMqZAgePy_40-jXRQMpcHvK76HqPmZUxU",
-  authDomain: "dima-52e16.firebaseapp.com",
-  databaseURL: "https://dima-52e16.firebaseio.com",
-  projectId: "dima-52e16",
-  storageBucket: "dima-52e16.appspot.com",
-  messagingSenderId: "330401771086",
-  appId: "1:330401771086:web:447a4b8a9f8bb157175d1f"
-}; 
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DB_URL,
+  projectId: PROJ_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: SEND_ID,
+  appId: APP_ID
+};
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);

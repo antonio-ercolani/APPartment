@@ -65,10 +65,10 @@ function NewAnnouncementScreen(props) {
         navigation.navigate("Announcements");
         setAnnouncement('');
         setLoading(false);
-      })
-      
-      
-  }
+      }).catch((err) => {
+        console.log(err)
+      });
+    }
 
   return (
     <ScrollView>
