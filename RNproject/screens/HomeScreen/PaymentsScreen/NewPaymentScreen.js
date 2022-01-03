@@ -6,6 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
 import { CommonActions } from '@react-navigation/native';
+const paymentsFormUtils = require("./paymentsFormUtils")
 
 
 const font = 'FuturaPTDemi';
@@ -41,9 +42,9 @@ function NewPaymentScreen(props) {
   const [loading, setLoading] = useState(false);
 
 
-  function checkForm() {
-    if ((description !== "") && (amount !== "")) {
-      if ((!isNaN(amount)) && (parseInt(amount, 10) > 0)) {
+  function createPayment() {
+    if (paymentsFormUtils.checkMissingValuesPayment(description, amount)) {
+      if (paymentsFormUtils.checkAmountCorrectness(amount)) {
         //the form is ok
         sendPayment();
       } else {
@@ -129,7 +130,7 @@ function NewPaymentScreen(props) {
             <View style={styles.rectFiller}></View>
             <TouchableOpacity
               style={styles.rect}
-              onPress={() => checkForm()}>
+              onPress={() => createPayment()}>
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
           </View>

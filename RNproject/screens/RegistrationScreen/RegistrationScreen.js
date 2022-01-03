@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import "firebase/database";
 import {API_KEY, AUTH_DOMAIN, DB_URL, PROJ_ID, STORAGE_BUCKET, SEND_ID, APP_ID} from "@env"
-
+const formUtils = require('./registrationFormUtils.js')
 require('firebase/auth')
 
 var firebaseConfig = {
@@ -20,7 +20,6 @@ var firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-var database = firebase.database();
 
 const font = 'FuturaPTDemi';
 const fontConfig = {
@@ -51,7 +50,7 @@ function RegistrationScreen({navigation}) {
   let [errorMessage, setErrorMessage] = useState('');
 
   function createUser() {
-    if (checkForm()) {
+    if (formUtils.checkForm(username, email, password, repeatPassword, setErrorMessage)) {
      firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(() => {
         firebase.database()
@@ -68,24 +67,6 @@ function RegistrationScreen({navigation}) {
         setErrorMessage(errorMessage);
       });
     } 
-  }
-
-  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/
-
-  function checkForm() {
-    if (username === '' || email === '' || password === '' || repeatPassword === "") {
-      setErrorMessage('Please complete all fields to continue');
-      return false;
-    } else if (!re.test(email)){   
-      setErrorMessage('Please insert a valid email');
-      return false;
-    } else if (password !== repeatPassword) {
-      setErrorMessage('Those passwords didn\'t match, try again');
-      return false;
-    } else if (password.length < 6) {
-      setErrorMessage('Your password must lenght at least 6 characters');
-      return false;
-    } else return true;
   }
 
   return (

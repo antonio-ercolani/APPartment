@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
 function JoinCreateScreen({ navigation }) {

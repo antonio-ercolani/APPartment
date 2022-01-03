@@ -7,6 +7,7 @@ import { TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native
 import firebase from "firebase/app";
 import DatePicker from 'react-native-datepicker';
 import { CommonActions } from '@react-navigation/native';
+import { checkFormSingleEvent } from "./timetableFormUtils";
 
 
 const theme = {
@@ -30,8 +31,8 @@ function CreateSingleEvent(props) {
   const [modalVisible, setModalVisible] = useState(false);
 
 
-  function checkForm() {
-    if ((eventDescription !== "") && (selectedDate !== "")) {
+  function createSingleEvent() {
+    if (checkFormSingleEvent(eventDescription, selectedDate)) {
       newSingleEvent();
     } else {
       Alert.alert('Alert', 'Please complete the form',
@@ -112,7 +113,7 @@ function CreateSingleEvent(props) {
             <View style={styles.rectFiller}></View>
             <TouchableOpacity
               style={styles.rect}
-              onPress={() => checkForm()}>
+              onPress={() => createSingleEvent()}>
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
             <Modal

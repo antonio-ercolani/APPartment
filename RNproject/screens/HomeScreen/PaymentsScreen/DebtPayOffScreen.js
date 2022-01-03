@@ -7,6 +7,7 @@ import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } fr
 import firebase from "firebase/app";
 import { Picker } from '@react-native-picker/picker';
 import { CommonActions } from '@react-navigation/native';
+const paymentsFormUtils = require("./paymentsFormUtils")
 
 
 const font = 'FuturaPTDemi';
@@ -51,8 +52,8 @@ function DebtPayOffScreen(props) {
 
 
   function checkForm() {
-    if ((description !== "") && (amount !== "") && (selectedMember !== "select")) {
-      if ((!isNaN(amount)) && (parseInt(amount, 10) > 0)) {
+    if (paymentsFormUtils.checkMissingValuesPayOff(description, amount, selectedMember)) {
+      if (paymentsFormUtils.checkAmountCorrectness(amount)) {
         //the form is ok
         sendPayOff();
       } else {

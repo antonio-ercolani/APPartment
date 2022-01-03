@@ -6,6 +6,7 @@ import { useNavigation} from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
 import { CommonActions } from '@react-navigation/native';
+const announcementFormUtils = require('./announcementFormUtils')
 
 const font = 'FuturaPTDemi';
 const fontConfig = {
@@ -34,8 +35,8 @@ function NewAnnouncementScreen(props) {
   const [loading, setLoading] = useState(false);
 
 
-  function checkForm() {
-    if ((announcement !== "")) {
+  function createAnnouncement() {
+    if (announcementFormUtils.checkForm(announcement)) {
       setLoading(true);
       sendNewAnnouncement();
   } else {
@@ -87,7 +88,7 @@ function NewAnnouncementScreen(props) {
             <View style={styles.rectFiller}></View>
             <TouchableOpacity
               style={styles.rect}
-              onPress={() => checkForm()}>
+              onPress={() => createAnnouncement()}>
               <Text style={styles.text}>CONFIRM</Text>
             </TouchableOpacity>
           </View>

@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, RefreshControl, View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";

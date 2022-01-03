@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import InputSpinner from "react-native-input-spinner";
 import CupertinoButtonInfo from "../../LoginScreen/Components/CupertinoButtonInfo";
 import { CommonActions } from '@react-navigation/native';
+import { checkFormTimetable } from "./timetableFormUtils";
 
 
 const firebase = require("firebase");
@@ -86,32 +87,10 @@ function creationHandler() {
       }
         
     }
-    let valid = true;
-    let message;
-    //Input validity checks
-    if (startDate === undefined || endDate === undefined || period === undefined || 
-      description === undefined) { 
-        valid = false;
-        message = 'Please complete all the fields'
-      }
-    if (valid && (period <= 0 || period > 30)) { 
-      valid = false;
-      message = 'Please insert a valid period'
-    }
-    if (valid && (description.length > 50)) {
-      valid = false;
-      message = 'Please insert a description of less that 50 characters'
-    }
-
-    var stDate = new Date();
-    stDate.setTime(Date.parse(timetable.startDate));
-    var eDate = new Date();
-    eDate.setTime(Date.parse(timetable.endDate));
-    if (valid && (endDate <= startDate)) {
-      valid = false;
-      message = 'The ending date cannot precede the starting date'
-    }
-
+    let checkInputResult = checkFormTimetable(startDate, endDate, period, description);
+    let valid = checkInputResult[0];;
+    let message = checkInputResult[1];
+    
     if (!valid) {
       Alert.alert('Attention', message,
         [{text: "Ok"}],
@@ -119,6 +98,7 @@ function creationHandler() {
       )
       return;
     }
+
     setModalVisible(true);
     createTimetablecall({ input: timetable, apartment: props.red.apartment.name })
       //TODO handle server side errors

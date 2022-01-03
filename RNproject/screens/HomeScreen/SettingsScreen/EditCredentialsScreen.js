@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-nati
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import "firebase/database";
-
+const settingFormUtils = require('./settingFormUtils')
 require('firebase/auth')
 
 const font = 'FuturaPTDemi';
@@ -34,7 +34,7 @@ function EditCredentialsScreen({navigation}) {
 
 
   function resetCredentials() {
-    if (checkForm()) {
+    if (settingFormUtils.checkForm(email, password, repeatPassword)) {
       var user = firebase.auth().currentUser;
       user.updateEmail(email).then(function () {
       }).catch(function (error) {
@@ -47,24 +47,6 @@ function EditCredentialsScreen({navigation}) {
       });
       navigation.navigate('Settings');
     }
-  }
-
-  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/
-
-  function checkForm() {
-    if ( email === '' || password === '' || repeatPassword === "") {
-      setErrorMessage('Please complete all fields to continue');
-      return false;
-    } else if (!re.test(email)){   
-      setErrorMessage('Please insert a valid email');
-      return false;
-    } else if (password !== repeatPassword) {
-      setErrorMessage('Those passwords didn\'t match, try again');
-      return false;
-    } else if (password.length < 6) {
-      setErrorMessage('Your password must lenght at least 6 characters');
-      return false;
-    } else return true;
   }
 
   return (
