@@ -33,7 +33,7 @@ exports.hasApartment = functions.https.onCall((data, context) => {
 //called by create apartment
 //TODO CAMBIARE IL NOME 
 //SE NON C'È NESSUN APPARTAMENTO FA CASINO CONTROLLARE 
-exports.functionProva = functions.https.onCall((data, context) => {
+exports.createApartment = functions.https.onCall((data, context) => {
   var insertedName = data.text;
   var isUnique = true;
   var uid = context.auth.uid;
@@ -62,7 +62,6 @@ exports.functionProva = functions.https.onCall((data, context) => {
           }
         });
         if (isUnique === true) {
-
           //add the new apartment
           admin.database()
             .ref('/app/apartments/' + insertedName)
