@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Modal, ActivityIndicator, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import "firebase/database";
@@ -48,11 +48,14 @@ function RegistrationScreen({navigation}) {
   let [password, setPassword] = useState('');
   let [repeatPassword, setRepeatPassword] = useState('');
   let [errorMessage, setErrorMessage] = useState('');
+  let [modalVisible, setModalVisible] = useState(false);
 
   function createUser() {
     if (formUtils.checkForm(username, email, password, repeatPassword, setErrorMessage)) {
+      setModalVisible(true);
      firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(() => {
+        setModalVisible(false)
         firebase.database()
         .ref('/app/users/' + firebase.auth().currentUser.uid)
         .set({
@@ -62,6 +65,7 @@ function RegistrationScreen({navigation}) {
         navigation.navigate('JoinCreateScreen');
       })
       .catch((error) => {
+        setModalVisible(false)
         var errorMessage = error.message;
         console.log(errorMessage);
         setErrorMessage(errorMessage);
@@ -117,7 +121,16 @@ function RegistrationScreen({navigation}) {
                 <Text style={styles.buttonText}>REGISTER</Text>
               </TouchableOpacity>
             </View>
-
+            <Modal
+              animationType="none"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <ActivityIndicator size="large" color="#afafaf" style={{ marginTop: 340 }}/>
+            </Modal>
           </View>
         </PaperProvider>
       </ScrollView>

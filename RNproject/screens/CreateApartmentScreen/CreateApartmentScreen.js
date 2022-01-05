@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Modal, ActivityIndicator, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import {API_KEY, AUTH_DOMAIN, DB_URL, PROJ_ID, STORAGE_BUCKET, SEND_ID, APP_ID} from "@env"
@@ -48,11 +48,14 @@ const theme = {
 export default function CreateApartmentScreen({ navigation }) {
   let [apartmentName, setApartmentName] = useState('');
   let [errorMessage, setErrorMessage] = useState('');
+  let [modalVisible, setModalVisible] = useState(false);
 
   var call = firebase.functions().httpsCallable('createApartment');
 
   function createApartment() {
+    setModalVisible(true)
     call({ text: apartmentName }).then((result) => {
+      setModalVisible(false)
       var receivedMessage = result.data.text;
       if (receivedMessage === 'ok') {
         navigation.navigate('HomeScreen');
@@ -85,7 +88,16 @@ export default function CreateApartmentScreen({ navigation }) {
                 <Text style={styles.buttonText}>CREATE APARTMENT</Text>
               </TouchableOpacity>
             </View>
-
+            <Modal
+              animationType="none"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <ActivityIndicator size="large" color="#afafaf" style={{ marginTop: 450 }}/>
+            </Modal>
           </View>
         </PaperProvider>
       </ScrollView>

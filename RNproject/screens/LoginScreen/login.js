@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Modal, Text, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
-import {API_KEY, AUTH_DOMAIN, DB_URL, PROJ_ID, STORAGE_BUCKET, SEND_ID, APP_ID} from "@env"
+import { API_KEY, AUTH_DOMAIN, DB_URL, PROJ_ID, STORAGE_BUCKET, SEND_ID, APP_ID } from "@env"
 
 const font = 'FuturaPTDemi';
 const fontConfig = {
@@ -48,6 +48,7 @@ function Login({ navigation }) {
   let [email, setEmail] = useState('')
   let [password, setPassword] = useState('')
   let [errorMessage, setErrorMessage] = useState('');
+  let [modalVisible, setModalVisible] = useState(false);
 
   var hasApartment = firebase.functions().httpsCallable('hasApartment');
 
@@ -70,24 +71,27 @@ function Login({ navigation }) {
 
 
   function login() {
-    
+    setModalVisible(true)
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(() => {
+        setModalVisible(false)
         hasApartment().then((result) => {
           if (result.data.text === "yes") {
             navigation.navigate('HomeScreen')
           } else if (result.data.text === "no") {
             navigation.navigate('JoinCreateScreen');
           } else {
+            setModalVisible(false);
             console.log('error, hasApartment returned neither yer nor no');
           }
         });
       })
       .catch((error) => {
+        setModalVisible(false);
         setErrorMessage(error.message);
         console.log(errorMessage);
       });
-      
+
   }
 
   function register() {
@@ -133,8 +137,16 @@ function Login({ navigation }) {
                 </TouchableOpacity>
               </View>
             </View>
-
-
+            <Modal
+              animationType="none"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <ActivityIndicator size="large" color="#afafaf" style={{ marginTop: 330 }}/>
+            </Modal>
           </View>
         </PaperProvider>
       </ScrollView>
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 10,
     justifyContent: "center",
-    
+
   },
   buttonText: {
     alignSelf: "flex-start",
