@@ -36,16 +36,13 @@ function EditCredentialsScreen({navigation}) {
   function resetCredentials() {
     if (settingFormUtils.checkForm(email, password, repeatPassword)) {
       var user = firebase.auth().currentUser;
-      user.updateEmail(email).then(function () {
-      }).catch(function (error) {
-        //handle error
-      });
-    
+  
       user.updatePassword(password).then(function() {
+        navigation.navigate('Settings');
       }).catch(function(error) {
         //handle error
       });
-      navigation.navigate('Settings');
+      
     }
   }
 

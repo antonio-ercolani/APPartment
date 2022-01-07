@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-
+import firebase from "firebase/app";
+require('firebase/auth')
 function JoinCreateScreen({ navigation }) {
 
   function navigate(to) {
@@ -9,7 +10,6 @@ function JoinCreateScreen({ navigation }) {
   }
   return (
     <View style={styles.main}>
-
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}

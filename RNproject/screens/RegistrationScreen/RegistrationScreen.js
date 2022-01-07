@@ -62,7 +62,7 @@ function RegistrationScreen({navigation}) {
         username : username,
         apartment : false
         })
-        navigation.navigate('JoinCreateScreen');
+        navigation.replace('JoinCreateScreen');
       })
       .catch((error) => {
         setModalVisible(false)

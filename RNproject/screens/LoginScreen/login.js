@@ -79,7 +79,7 @@ function Login({ navigation }) {
           if (result.data.text === "yes") {
             navigation.navigate('HomeScreen')
           } else if (result.data.text === "no") {
-            navigation.navigate('JoinCreateScreen');
+            navigation.replace('JoinCreateScreen');
           } else {
             setModalVisible(false);
             console.log('error, hasApartment returned neither yer nor no');
