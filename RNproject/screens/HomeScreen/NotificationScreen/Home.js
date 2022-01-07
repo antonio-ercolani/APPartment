@@ -91,7 +91,7 @@ function Home(props) {
     findMissingItems({apartment: apartment}).then((result) => {
       var res = result.data.number;
       setMissingItems("Missing items: " + res);
-    })
+    }).catch((err) => {console.log(err)})
   }
 
   function getAnnouncements(apartment) {
@@ -162,8 +162,7 @@ function Home(props) {
       var notification = child.val();
       var timestamp = new Date(notification.timestamp);
       var day = timestamp.getDate();
-      var month = timestamp.getMonth() + 1;
-      var year = timestamp.getFullYear();
+      var month = timestamp.getMonth();
 
       /* Nel caso serva prendere ora e minuti dal timestamp
       var hour = timestamp.getHours();
@@ -293,7 +292,7 @@ function Home(props) {
         </View>
         <View style={styles.containerCards2}>
           <HomeCard title={dayEvents} icon="calendar-text" nav="calendar"/>
-          <HomeCard title="Apartment members" icon="account-group" nav="members"/>
+          <HomeCard title="Members" icon="account-group" nav="members"/>
         </View>
         <Modal
           animationType='none'
@@ -347,17 +346,17 @@ const styles = StyleSheet.create({
     fontFamily: "FuturaPTMedium",
   },
   containerCards: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-between",
-    marginTop: 30,
-    alignSelf: 'center',
-    width: 390
+    justifyContent: "space-around",
+    marginLeft: 23,
+    marginTop: 20
   },
   containerCards2: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: "space-between",
-    alignSelf: 'center',
-    width: 390,
+    justifyContent: "space-around",
+    marginLeft: 23,
     marginTop: 8,
     marginBottom: 30
   },

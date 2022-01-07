@@ -17,7 +17,6 @@ function JoinCreateScreen({ navigation }) {
         <Text style={styles.buttonText}>{'NEW'}</Text>
         <Text style={styles.buttonText1}>{'APARTMENT'}</Text>
       </TouchableOpacity>
-      <View style={styles.separator}></View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigate('join')}>
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'column',
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     height: '50%',
     alignSelf: "center",
   },
