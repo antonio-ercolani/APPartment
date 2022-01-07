@@ -53,14 +53,13 @@ exports.numberMissingItems = functions.https.onCall((data, context) => {
   var apartment = data.apartment;
   return admin.database().ref("/app/stockManagement/" + apartment + "/items/").get()
     .then(function (snapshot) {
-
+      let counter = 0;
       if (snapshot.exists()) {
-        let counter = 0;
         snapshot.forEach(() => {
           counter++;
         })
-        return { number: counter }
       }
+      return { number: counter }
     });
 });
 
