@@ -8,7 +8,7 @@ exports.checkMissingValuesPayment = function(description, amount) {
 exports.checkMissingValuesPayOff = function(description, amount, selectedMember) {
   if (description === undefined || description === null || description === "") return false;
   if (amount === undefined || amount === null || amount === "") return false;
-  if (selectedMember !== "select") return false;
+  if (selectedMember === "") return false;
 
   return true;
 }

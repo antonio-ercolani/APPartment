@@ -23,7 +23,7 @@ exports.checkFormTimetable = function(startDate, endDate, period, description) {
 
 exports.checkFormSingleEvent = function(description, selectedDate) {
   if (description === undefined || selectedDate === undefined) return false;
-  if (description !== "" && selectedDate !== "") return false;
+  if (description === "" || selectedDate === "") return false;
 
   return true;
 }

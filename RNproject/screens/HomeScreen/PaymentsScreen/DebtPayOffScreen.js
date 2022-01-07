@@ -36,7 +36,7 @@ function DebtPayOffScreen(props) {
 
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [selectedMember, setSelectedMember] = useState("select");
+  const [selectedMember, setSelectedMember] = useState("");
   const [loading, setLoading] = useState(false);
 
   const items = [];
