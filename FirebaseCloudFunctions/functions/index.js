@@ -112,34 +112,33 @@ exports.searchApartment = functions.https.onCall((data, context) => {
     });
 });
 
-//TODO quanto appartemento è locked non accetto utenti
-//nanno commenta cosa fa la roba plis 
 //add the user to the apartment 
 //called when a user join an apartment 
 exports.checkCode = functions.https.onCall((data, context) => {
   var code = data.code;
   var apartment = data.apartment;
 
-  return admin.database().ref('/app/apartments/' + apartment + '/code').get()
+  return admin.database().ref('/app/apartments/' + apartment).get()
     .then(function (snapshot) {
       if (snapshot.exists()) {
-        if (snapshot.val() === code) {
+        if (snapshot.val().code === code) {
+          if (snapshot.val().locked === false) {
+            admin.database()
+              .ref('/app/apartments/' + apartment + '/members/' + context.auth.uid)
+              .set({
+                isAdmin: false
+              });
 
-          admin.database()
-            .ref('/app/apartments/' + apartment + '/members/' + context.auth.uid)
-            .set({
-              isAdmin: false
-            });
+            admin.database()
+              .ref('/app/users/' + context.auth.uid)
+              .update({
+                apartment: apartment
+              });
 
-          admin.database()
-            .ref('/app/users/' + context.auth.uid)
-            .update({
-              apartment: apartment
-            });
+            initializePayments(apartment, context.auth.uid);
 
-          initializePayments(apartment, context.auth.uid);
-
-          return { text: "ok" }
+            return { text: "ok" }
+          }
         }
       }
       return { text: "ko" }
@@ -180,7 +179,7 @@ function initializePayments(apartmentName, currentUserUid) {
 
 
 //gets an hashMap uid - usernames 
-exports.getHashMap = functions.https.onCall  (async (data, context) => {
+exports.getHashMap = functions.https.onCall(async (data, context) => {
   var apartment = data.apartment;
   var name;
   var res = [];
@@ -194,7 +193,7 @@ exports.getHashMap = functions.https.onCall  (async (data, context) => {
     .ref('/app/apartments/' + apartment + '/members/').get();
 
   return admin.database()
-    .ref('/app/users/').get().then( (usernames) => {
+    .ref('/app/users/').get().then((usernames) => {
 
       members.forEach((childMember) => {
         usernames.forEach((childUsername) => {
@@ -202,10 +201,12 @@ exports.getHashMap = functions.https.onCall  (async (data, context) => {
             name = childUsername.val().username;
             user = new User(childUsername.key, name);
             console.log(User);
-            res.push(user);          }
+            res.push(user);
+          }
         })
       })
-      return JSON.stringify(res);}
+      return JSON.stringify(res);
+    }
     )
 });
 
@@ -226,7 +227,7 @@ function usernameFromUid(uid) {
     })
 }
 
-  
+
 
 
 
