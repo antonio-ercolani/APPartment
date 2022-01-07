@@ -64,11 +64,11 @@ const styles = StyleSheet.create({
   text: {
     top: 22,
     left: 0,
-    position: "absolute",
+    alignSelf: "center",
     fontFamily: "FuturaPTBold",
     color: "#121212",
     height: 67,
-    width: 225,
+    width: 280,
     textAlign: "center",
     fontSize: 55,
   },
