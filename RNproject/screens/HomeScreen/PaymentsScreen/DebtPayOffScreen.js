@@ -79,17 +79,7 @@ function DebtPayOffScreen(props) {
       apartment: props.red.apartment.name,
       member: selectedMember
     }).then((result) => {
-      navigation.dispatch(state => {
-        // Remove old stock management screen
-        const routes = state.routes.filter(r => r.name !== 'Payments');
-  
-        //reset navigation state
-        return CommonActions.reset({
-          ...state,
-          routes,
-          index: routes.length - 1,
-        });
-      });
+      navigation.pop(1);
       navigation.navigate("Payments");
       setLoading(false);
       setDescription('');

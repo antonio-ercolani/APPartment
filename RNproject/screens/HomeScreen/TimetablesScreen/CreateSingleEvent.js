@@ -54,17 +54,7 @@ function CreateSingleEvent(props) {
     send({ apartment : apartment, input: input })
       .then((result) => {
         setModalVisible(false)
-        navigation.dispatch(state => {
-          // Remove old stock management screen
-          const routes = state.routes.filter(r => r.name !== 'Timetable');
-    
-          //reset navigation state
-          return CommonActions.reset({
-            ...state,
-            routes,
-            index: routes.length - 1,
-          });
-        });
+        navigation.pop(1);
         navigation.navigate("Timetable");
       })
   }

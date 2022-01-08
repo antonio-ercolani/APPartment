@@ -52,17 +52,7 @@ function NewAnnouncementScreen(props) {
     newAnnouncement({ announcement: announcement, apartment: props.red.apartment.name })
       .then((result) => {
         //error handling 
-        navigation.dispatch(state => {
-          // Remove old stock management screen
-          const routes = state.routes.filter(r => r.name !== 'Announcements');
-    
-          //reset navigation state
-          return CommonActions.reset({
-            ...state,
-            routes,
-            index: routes.length - 1,
-          });
-        });
+        navigation.pop(1);
         navigation.navigate("Announcements");
         setAnnouncement('');
         setLoading(false);

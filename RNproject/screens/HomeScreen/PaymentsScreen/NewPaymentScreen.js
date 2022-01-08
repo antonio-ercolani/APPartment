@@ -84,7 +84,7 @@ function NewPaymentScreen(props) {
         } else {
           nextScreen = 'StockManagement';
         }
-
+        /* TOLTO DOPO AVER AGGIUNTO navigation.pop(1)
         navigation.dispatch(state => {
           // Remove old stock management screen
           const routes = state.routes.filter(r => r.name !== nextScreen);
@@ -96,7 +96,10 @@ function NewPaymentScreen(props) {
             index: routes.length - 1,
           });
         });
+        */
+        navigation.pop(1)
         navigation.navigate(nextScreen);
+        
         setLoading(false);
       })
 
