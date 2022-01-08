@@ -26,8 +26,6 @@ function CalendarScreen(props) {
   var getTimetables = firebase.functions().httpsCallable('timetables-getEvents');
 
 
-
-
   function callBack(result, actualMonth, month) {
 
     var events = JSON.parse(result.data);
@@ -41,7 +39,7 @@ function CalendarScreen(props) {
       for (let i = -15; i < 85; i++) {
         const time = month.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = timeToString(time);
-        if (!item[strTime]) {
+        if (!item[strTime] && !items[strTime]) {
           item[strTime] = [];
         }
       }
@@ -51,13 +49,14 @@ function CalendarScreen(props) {
       return;
     }
 
+    if (events == undefined || events == null) return;
+
     var days;
     days = Object.keys(events);
-    console.log(days);
 
     //copy of items in newItems
     const item = JSON.parse(JSON.stringify(itemz))
-    console.log(itemz);
+    //console.log(itemz);
 
     var eventObj;
     var dots;
@@ -97,14 +96,13 @@ function CalendarScreen(props) {
       item[days[index]] = evArray;
       markdDates[days[index]] = { dots: dots }
 
-
     });
 
     //create an empty array for each day without events
     for (let i = -15; i < 85; i++) {
       const time = month.timestamp + i * 24 * 60 * 60 * 1000;
       const strTime = timeToString(time);
-      if (!item[strTime] || (item[strTime] != [] && !days.includes(strTime) && isSameMonth(strTime, days[0]))) {
+      if ((!item[strTime] && !items[strTime]) || (item[strTime] != [] && items[strTime] != [] && !days.includes(strTime) && isSameMonth(strTime, days[0]))) {
         item[strTime] = [];
       }
     }
@@ -125,9 +123,6 @@ function CalendarScreen(props) {
 
     return (d1.getMonth() == d2.getMonth())
   }
-
-
-
 
 
 
@@ -162,21 +157,12 @@ function CalendarScreen(props) {
       let m = date.month + 1;
       if (m < 10) m = '0' + m;
       actualMonth.month = m;
-
-      console.log("first call, " ,d.getMonth()," ", d.getFullYear());
     }
     
-
-
     getTimetables({ apartment: apartment, date: date }).then((result) => {
       callBack(result, actualMonth, month);
     });
   }
-
-
-
-
-
 
 
 
@@ -194,11 +180,6 @@ function CalendarScreen(props) {
     const actualMonth = {
       month: m
     }
-
-
-
-
-
 
     getTimetables({ apartment: apartment, date: date }).then((result) => {
       callBack(result, actualMonth, month);
