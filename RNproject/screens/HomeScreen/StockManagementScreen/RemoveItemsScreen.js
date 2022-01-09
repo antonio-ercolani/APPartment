@@ -115,18 +115,7 @@ function RemoveItemsScreen(props) {
       .then((result) => {
         setChecked([]);
         if (origin === "justRemove") {
-          navigation.dispatch(state => {
-            
-            // Remove old stock management screen
-            const routes = state.routes.filter(r => r.name !== 'StockManagement');
-
-            //reset navigation state
-            return CommonActions.reset({
-              ...state,
-              routes,
-              index: routes.length - 1,
-            });
-          });
+          navigation.pop(1);
           navigation.navigate("StockManagement");
           setLoading(false);
         }

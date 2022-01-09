@@ -105,17 +105,7 @@ function creationHandler() {
       .then((result) => {
         //var res = result.data.text;
         setModalVisible(false)
-        navigation.dispatch(state => {
-          // Remove old stock management screen
-          const routes = state.routes.filter(r => r.name !== 'Timetable');
-    
-          //reset navigation state
-          return CommonActions.reset({
-            ...state,
-            routes,
-            index: routes.length - 1,
-          });
-        });
+        navigation.pop(1);
         navigation.navigate("Timetable");
       })
 

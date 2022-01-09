@@ -50,7 +50,7 @@ function NewItemScreen(props) {
       )
     }
   }
-
+/* TROVATA QUESTA FUNZIONE CHE ESISTE GIÀ, QUELLA GIUSTA È DOPO
   function addItem() {
     let currentUser = firebase.auth().currentUser.uid;
     const ref = firebase.database().ref('/app/stockManagement/' + props.red.apartment.name + '/items').push();
@@ -74,7 +74,7 @@ function NewItemScreen(props) {
     });
     navigation.navigate("StockManagement");
   }
-
+*/
   function addItem() {
     setLoading(true);
     var newMissingItem = firebase.functions().httpsCallable('stockManagement-newMissingItem');
@@ -83,17 +83,7 @@ function NewItemScreen(props) {
       apartment: props.red.apartment.name,
     }).then((result) => {
       setItemName('');
-      navigation.dispatch(state => {
-        // Remove old stock management screen
-        const routes = state.routes.filter(r => r.name !== 'StockManagement');
-
-        //reset navigation state
-        return CommonActions.reset({
-          ...state,
-          routes,
-          index: routes.length - 1,
-        });
-      });
+      navigation.pop(1);
       setLoading(false);
       navigation.navigate("StockManagement");
     });
