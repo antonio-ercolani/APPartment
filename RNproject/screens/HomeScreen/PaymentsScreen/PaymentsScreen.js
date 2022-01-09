@@ -86,9 +86,9 @@ function PaymentsScreen(props) {
             title={props.red.apartment.members[debt.uid]}
             left={props => <List.Icon color="#c92626" icon="arrow-down-thick" />}
             titleStyle={styles.member}
-            description={"You are in debt of " + Math.abs(amount) + "€"}
+            description={"You are in debt of " + Math.abs(parseFloat(amount).toFixed(2)) + "€"}
             right={props =>
-              <Text style={[styles.amount, { color: "#c92626" }]} >{amount} €</Text>
+              <Text style={[styles.amount, { color: "#c92626" }]} >{Math.abs(parseFloat(amount).toFixed(2))} €</Text>
             }
           ></List.Item>);
 
@@ -100,8 +100,8 @@ function PaymentsScreen(props) {
             descriptionStyle={styles.memberD}
             title={props.red.apartment.members[debt.uid]}
             left={props => <List.Icon color="#188547" icon="arrow-up-thick" />}
-            right={props => <Text style={[styles.amount, { color: "#188547" }]}>{amount} €</Text>}
-            description={"You have to receive " + Math.abs(amount) + "€"}
+            right={props => <Text style={[styles.amount, { color: "#188547" }]}>{Math.abs(parseFloat(amount).toFixed(2))} €</Text>}
+            description={"You have to receive " + Math.abs(parseFloat(amount).toFixed(2)) + "€"}
           ></List.Item>);
 
       } else {
@@ -127,7 +127,7 @@ function PaymentsScreen(props) {
             title="BALANCE"
             titleStyle={styles.title}
             left={props => <List.Icon icon="scale-balance" />}
-            right={props => <Text style={[styles.amount, { color: balanceColor }]}>{totalDebt} €</Text>}
+            right={props => <Text style={[styles.amount, { color: balanceColor }]}>{Math.abs(parseFloat(totalDebt).toFixed(2))} €</Text>}
           ></List.Item>
         </View>
       )

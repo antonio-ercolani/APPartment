@@ -65,9 +65,9 @@ function Home(props) {
       let res = JSON.parse(result.data);
       var amount = res[res.length-1].amount;
       if (amount >= 0) {
-        setBalance("Balance +"+amount+"€");
+        setBalance("Balance +"+Math.abs(parseFloat(amount).toFixed(2))+"€");
       } else {
-        setBalance("Balance "+amount+"€");
+        setBalance("Balance "+Math.abs(parseFloat(amount).toFixed(2))+"€");
       }
     })
   };
