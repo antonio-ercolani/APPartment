@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { List } from 'react-native-paper';
-import { View, Alert, TouchableOpacity, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, Alert, StyleSheet, ScrollView } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import firebase from "firebase/app";
 require('firebase/auth')
 import { connect } from 'react-redux';
-import { useLinkProps, useNavigation, useRoute } from '@react-navigation/native';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 
 const font = 'FuturaPTMedium';
 const fontConfig = {
@@ -83,12 +82,11 @@ function SettingsScreen(props) {
                         navigation.popToTop()
                         navigation.navigate({routeName: 'Login'})
                       }).catch((error) => {
-                        //logout error
+                        console.log(error);
                       });
                     }
                   },
                   {
-                    //non fa niente
                     text: "CANCEL",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"

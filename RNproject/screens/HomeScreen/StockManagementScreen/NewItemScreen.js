@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 require('firebase/auth')
@@ -7,7 +7,6 @@ import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } fr
 import firebase from "firebase/app";
 import "firebase/database";
 require('firebase/auth')
-import { CommonActions } from '@react-navigation/native';
 
 
 const font = 'FuturaPTDemi';
@@ -50,31 +49,7 @@ function NewItemScreen(props) {
       )
     }
   }
-/* TROVATA QUESTA FUNZIONE CHE ESISTE GIÀ, QUELLA GIUSTA È DOPO
-  function addItem() {
-    let currentUser = firebase.auth().currentUser.uid;
-    const ref = firebase.database().ref('/app/stockManagement/' + props.red.apartment.name + '/items').push();
-    ref.set({
-      member: currentUser,
-      name: itemName,
-      timestamp: Date.now()
-    });
 
-    setItemName('');
-    navigation.dispatch(state => {
-      // Remove old stock management screen
-      const routes = state.routes.filter(r => r.name !== 'StockManagement');
-
-      //reset navigation state
-      return CommonActions.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      });
-    });
-    navigation.navigate("StockManagement");
-  }
-*/
   function addItem() {
     setLoading(true);
     var newMissingItem = firebase.functions().httpsCallable('stockManagement-newMissingItem');

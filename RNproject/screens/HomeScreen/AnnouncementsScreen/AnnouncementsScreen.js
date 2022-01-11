@@ -4,8 +4,7 @@ import { StyleSheet, RefreshControl, View, Text, ScrollView, TouchableOpacity, A
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
-import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
-
+import { configureFonts, DefaultTheme, Provider as PaperProvider, List } from 'react-native-paper';
 
 const font = 'FuturaPTDemi';
 const fontConfig = {
@@ -73,10 +72,6 @@ function AnnouncementsScreen(props) {
       var month = timestamp.getMonth();
       var year = timestamp.getFullYear();
 
-      /* Nel caso serva prendere ora e minuti dal timestamp
-      var hour = timestamp.getHours();
-      var minutes = timestamp.getMinutes();
-      */
       var dateDayMonth = day + ' ' + monthNames[month];
       var dateYear = year;
 
@@ -92,7 +87,6 @@ function AnnouncementsScreen(props) {
             <Text style={styles.date}>{dateDayMonth}</Text>
           }
           onPress={() => removeAnnouncement(
-            //The logged user owns the announcement?
             props.red.apartment.members[announcement.member] === props.red.username, child.key)}
         />
       )

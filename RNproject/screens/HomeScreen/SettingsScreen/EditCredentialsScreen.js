@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
@@ -40,7 +40,7 @@ function EditCredentialsScreen({navigation}) {
       user.updatePassword(password).then(function() {
         navigation.navigate('Settings');
       }).catch(function(error) {
-        //handle error
+        console.log(error);
       });
       
     }

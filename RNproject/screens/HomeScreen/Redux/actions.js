@@ -1,4 +1,3 @@
-
 export const initialize = state => (
   {
     type: 'INITIALIZE',

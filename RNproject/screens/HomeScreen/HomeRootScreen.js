@@ -210,10 +210,6 @@ function CoreScreen() {
 
             if (route.name === 'Home') {
               iconName = 'home'
-
-              //lo tengo qui per questo focused magari servirà in futuro
-              //iconName = focused ? 'md-browsers' : 'md-browsers';
-
             } else if (route.name === 'Settings') {
               iconName = 'settings';
             } else if (route.name === 'Services') {
@@ -221,8 +217,6 @@ function CoreScreen() {
             } else if (route.name === 'Calendar') {
               iconName = 'calendar';
             }
-
-            // You can return any component that you like here!
             return <Icon name={iconName} size={size} color={color} />;
           },
         })}

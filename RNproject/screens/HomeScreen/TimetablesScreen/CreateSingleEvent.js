@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import firebase from "firebase/app";
 import DatePicker from 'react-native-datepicker';
-import { CommonActions } from '@react-navigation/native';
 import { checkFormSingleEvent } from "./timetableFormUtils";
 
 
@@ -16,8 +15,6 @@ const theme = {
     ...DefaultTheme.colors,
     primary: '#f4511e',
   },
-  //fonts: configureFonts(fontConfig),
-
 };
 
 function CreateSingleEvent(props) {

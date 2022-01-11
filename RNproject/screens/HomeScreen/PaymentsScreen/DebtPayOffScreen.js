@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
 import { Picker } from '@react-native-picker/picker';
-import { CommonActions } from '@react-navigation/native';
 const paymentsFormUtils = require("./paymentsFormUtils")
 
 

@@ -1,7 +1,6 @@
 import React from "react";
-import { Modal, View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
-import { Avatar, Button, IconButton, Card, Title } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Avatar, Card } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 

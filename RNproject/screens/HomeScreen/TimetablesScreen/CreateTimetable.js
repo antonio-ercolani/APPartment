@@ -1,13 +1,12 @@
-import React, { useState, Component } from "react";
+import React, { useState } from "react";
 import { View, Alert, Modal, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
-import {TextInput, configureFonts, DefaultTheme, Provider as PaperProvider, ToggleButton } from 'react-native-paper';
+import {TextInput, configureFonts, DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import { List, Checkbox } from 'react-native-paper';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
 import { useNavigation } from '@react-navigation/native';
 import InputSpinner from "react-native-input-spinner";
 import CupertinoButtonInfo from "../../LoginScreen/Components/CupertinoButtonInfo";
-import { CommonActions } from '@react-navigation/native';
 import { checkFormTimetable } from "./timetableFormUtils";
 
 
@@ -101,9 +100,7 @@ function creationHandler() {
 
     setModalVisible(true);
     createTimetablecall({ input: timetable, apartment: props.red.apartment.name })
-      //TODO handle server side errors
       .then((result) => {
-        //var res = result.data.text;
         setModalVisible(false)
         navigation.pop(1);
         navigation.navigate("Timetable");

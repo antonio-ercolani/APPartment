@@ -1,14 +1,13 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts, Checkbox, ToggleButton } from 'react-native-paper';
+import {  DefaultTheme, Provider as PaperProvider, configureFonts, Checkbox } from 'react-native-paper';
 import firebase from "firebase/app";
 import "firebase/database";
 require('firebase/auth')
 import { DataTable } from 'react-native-paper';
-import { CommonActions } from '@react-navigation/native';
 
 
 const font = 'FuturaPTDemi';

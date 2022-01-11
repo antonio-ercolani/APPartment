@@ -23,14 +23,11 @@ exports.deleteEvents = functions.database.ref('/app/timetables/{apartment}/{time
         });
       });
     });
-
   });
-
 });
 
 exports.deleteSingleEvent = functions.database.ref('/app/singleEvents/{apartment}/{event}')
 .onDelete((snapshot, context) => { 
-
 
   const apartment = context.params.apartment;
   const eventId = context.params.event;
@@ -286,9 +283,6 @@ exports.addHomeNotification = functions.database.ref('/app/timetables/{apartment
       admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
       .then((result) => {
         if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
-          //non ho trovato altro modo di eliminare il primo elemento 
-          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
-          //e non esiste un break per il for each
           var first = true;
           result.forEach((child) => {
             if (first === true) {
@@ -318,9 +312,6 @@ exports.addHomeNotification = functions.database.ref('/app/timetables/{apartment
       admin.database().ref('/app/homeNotifications/' + apartment).orderByChild('timestamp').once('value')
       .then((result) => {
         if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
-          //non ho trovato altro modo di eliminare il primo elemento 
-          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
-          //e non esiste un break per il for each
           var first = true;
           result.forEach((child) => {
             if (first === true) {

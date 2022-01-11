@@ -1,10 +1,10 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { RefreshControl, StyleSheet, View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
-import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
+import { configureFonts, DefaultTheme, Provider as PaperProvider, List } from 'react-native-paper';
 
 
 

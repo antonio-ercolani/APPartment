@@ -1,11 +1,10 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
-import { CommonActions } from '@react-navigation/native';
 const paymentsFormUtils = require("./paymentsFormUtils")
 
 
@@ -84,22 +83,8 @@ function NewPaymentScreen(props) {
         } else {
           nextScreen = 'StockManagement';
         }
-        /* TOLTO DOPO AVER AGGIUNTO navigation.pop(1)
-        navigation.dispatch(state => {
-          // Remove old stock management screen
-          const routes = state.routes.filter(r => r.name !== nextScreen);
-
-          //reset navigation state
-          return CommonActions.reset({
-            ...state,
-            routes,
-            index: routes.length - 1,
-          });
-        });
-        */
         navigation.pop(1)
         navigation.navigate(nextScreen);
-        
         setLoading(false);
       })
 

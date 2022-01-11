@@ -31,8 +31,6 @@ exports.hasApartment = functions.https.onCall((data, context) => {
 });
 
 //called by create apartment
-//TODO CAMBIARE IL NOME 
-//SE NON C'È NESSUN APPARTAMENTO FA CASINO CONTROLLARE 
 exports.createApartment = functions.https.onCall((data, context) => {
   var insertedName = data.text;
   var isUnique = true;
