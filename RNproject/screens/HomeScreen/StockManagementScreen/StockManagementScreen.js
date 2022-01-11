@@ -1,10 +1,10 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import { RefreshControl, ActivityIndicator, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
 require('firebase/auth')
 import { useNavigation } from '@react-navigation/native';
-import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider } from 'react-native-paper';
+import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import "firebase/database";
 import { DataTable } from 'react-native-paper';
 

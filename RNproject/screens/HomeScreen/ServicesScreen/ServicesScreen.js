@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { List } from 'react-native-paper';
-import { View, Alert,TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import firebase from "firebase/app";
 require('firebase/auth')
 
 const font = 'FuturaPTMedium';
@@ -63,9 +62,3 @@ export default function ServicesScreen({ navigation }) {
   );
 
 }
-
-const styles = StyleSheet.create({
-    
-  
-
-});

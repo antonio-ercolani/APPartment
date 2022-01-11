@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 
 function MaterialStackedLabelTextbox(props) {

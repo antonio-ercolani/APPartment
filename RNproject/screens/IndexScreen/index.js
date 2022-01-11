@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import firebase from "firebase/app";
-import { DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
+import { DefaultTheme, configureFonts } from 'react-native-paper';
 import {API_KEY, AUTH_DOMAIN, DB_URL, PROJ_ID, STORAGE_BUCKET, SEND_ID, APP_ID} from "@env"
 
 const font = 'FuturaPTDemi';

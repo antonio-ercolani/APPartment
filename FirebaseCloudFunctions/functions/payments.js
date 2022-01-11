@@ -38,7 +38,6 @@ exports.findDebts = functions.https.onCall  ((data, context) => {
 
 //adds a new payment
 //updates the debt of the user that adds the payment
-//TODO ERROR HANDLING 
 exports.newPayment = functions.https.onCall((data, context) => {
 
     var description = data.description;
@@ -52,7 +51,7 @@ exports.newPayment = functions.https.onCall((data, context) => {
     admin.database()
       .ref('/app/payments/' + apartmentName + '/debts/').get().then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
-          //aggiorno i debiti dellutente che ha inserito il payment
+          //aggiorno i debiti dell'utente che ha inserito il payment
           if(childSnapshot.key === currentUserUid) {
             childSnapshot.forEach((child_ChildSnapshot) => {
               previousDebt = child_ChildSnapshot.val().amount;
@@ -112,9 +111,6 @@ exports.newPayment = functions.https.onCall((data, context) => {
       .then((result) => {
         console.log(Object.keys(result.val()).length)
         if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
-          //non ho trovato altro modo di eliminare il primo elemento 
-          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
-          //e non esiste un break per il for each
           var first = true;
           result.forEach((child) => {
             if (first === true) {
@@ -130,7 +126,6 @@ exports.newPayment = functions.https.onCall((data, context) => {
   });
   
   //update debts following a pay off 
-  //TODO ERROR HANDLING 
   exports.newPayOff = functions.https.onCall((data, context) => {
     var description = data.description;
     var amount = data.amount;
@@ -207,9 +202,6 @@ exports.newPayment = functions.https.onCall((data, context) => {
       .then((result) => {
         console.log(Object.keys(result.val()).length)
         if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
-          //non ho trovato altro modo di eliminare il primo elemento 
-          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
-          //e non esiste un break per il for each
           var first = true;
           result.forEach((child) => {
             if (first === true) {

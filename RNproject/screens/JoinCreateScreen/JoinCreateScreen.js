@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import firebase from "firebase/app";
 require('firebase/auth')
 function JoinCreateScreen({ navigation }) {
 

@@ -1,10 +1,10 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
 import { update } from '../Redux/actions';
 import { bindActionCreators } from 'redux';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 require('firebase/auth')
-import { configureFonts, DefaultTheme, Provider as PaperProvider, List, ThemeProvider, Switch } from 'react-native-paper';
+import { configureFonts, DefaultTheme, Provider as PaperProvider, List, Switch } from 'react-native-paper';
 import firebase from "firebase/app";
 
 const font = 'FuturaPTDemi';

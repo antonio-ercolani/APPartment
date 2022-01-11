@@ -1,11 +1,10 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 require('firebase/auth')
 import { useNavigation} from '@react-navigation/native';
 import { TextInput, DefaultTheme, Provider as PaperProvider, configureFonts } from 'react-native-paper';
 import firebase from "firebase/app";
-import { CommonActions } from '@react-navigation/native';
 const announcementFormUtils = require('./announcementFormUtils')
 
 const font = 'FuturaPTDemi';
@@ -51,7 +50,6 @@ function NewAnnouncementScreen(props) {
     var newAnnouncement = firebase.functions().httpsCallable('announcements-newAnnouncement');
     newAnnouncement({ announcement: announcement, apartment: props.red.apartment.name })
       .then((result) => {
-        //error handling 
         navigation.pop(1);
         navigation.navigate("Announcements");
         setAnnouncement('');

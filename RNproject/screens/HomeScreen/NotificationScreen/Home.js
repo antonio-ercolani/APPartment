@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-  import { Modal, RefreshControl, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+  import { Modal, RefreshControl, View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { initialize } from '../Redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -8,10 +8,6 @@ import firebase from "firebase/app";
 import "firebase/database";
 import { useNavigation } from '@react-navigation/native';
 import HomeCard from './HomeCard.js'
-
-
-//PER IL REFRESH 
-//https://reactnative.dev/docs/refreshcontrol
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
@@ -164,10 +160,6 @@ function Home(props) {
       var day = timestamp.getDate();
       var month = timestamp.getMonth();
 
-      /* Nel caso serva prendere ora e minuti dal timestamp
-      var hour = timestamp.getHours();
-      var minutes = timestamp.getMinutes();
-      */
       var dateDayMonth = day + ' ' + monthNames[month];
 
       switch (notification.type) {

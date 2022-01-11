@@ -1,8 +1,7 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 function AccessCodeScreen(props) {
   let[code, setCode] = useState(props.red.apartment.code);

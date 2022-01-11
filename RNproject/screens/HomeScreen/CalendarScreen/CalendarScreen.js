@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 require('firebase/auth')
 import { Agenda } from 'react-native-calendars';
 import { connect } from 'react-redux';
-import { Avatar, Button, Card, Paragraph } from 'react-native-paper';
+import { Avatar, Card } from 'react-native-paper';
 
 
 function CalendarScreen(props) {
@@ -56,7 +56,6 @@ function CalendarScreen(props) {
 
     //copy of items in newItems
     const item = JSON.parse(JSON.stringify(itemz))
-    //console.log(itemz);
 
     var eventObj;
     var dots;
@@ -92,7 +91,6 @@ function CalendarScreen(props) {
         }
       })
 
-      //console.log(day, " ha eventi: ", evArray);
       item[days[index]] = evArray;
       markdDates[days[index]] = { dots: dots }
 
@@ -112,20 +110,12 @@ function CalendarScreen(props) {
     setMarkedDates(markdDates);
   }
 
-
-
-
-
-
   function isSameMonth(m1, m2) {
     let d1 = new Date(Date.parse(m1));
     let d2 = new Date(Date.parse(m2));
 
     return (d1.getMonth() == d2.getMonth())
   }
-
-
-
 
   function loadItems(month) {
 
@@ -164,8 +154,6 @@ function CalendarScreen(props) {
     });
   }
 
-
-
   function loadMonthOnPress(month) {
     let mm = month.month - 1;
     const date = {
@@ -185,9 +173,7 @@ function CalendarScreen(props) {
       callBack(result, actualMonth, month);
     });
 
-
   }
-
 
   function renderItem(item) {
     var color;

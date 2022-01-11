@@ -36,11 +36,6 @@ exports.removeItems = functions.https.onCall  ((data, context) => {
     .ref('/app/stockManagement/' + apartment + '/items/' + element.id).remove();
   })
 
-  //register the removals (inglese?)
-  //TODO 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //MI SA CHE QUESTA COSA NON SERVE A NIENTE GUARDARCI
-  //QUANDO SISTEMO COSE PER LA HOME NOTIFICATIONS 
   const ref = admin.database().ref('/app/stockManagement/' + apartment + '/removals').push();
   ref.set({
     member: context.auth.uid,
@@ -80,9 +75,6 @@ exports.addHomeNotification = functions.database.ref('/app/stockManagement/{apar
       .then((result) => {
         console.log(Object.keys(result.val()).length)
         if (Object.keys(result.val()).length === MAX_HOME_NOTIFICATIONS) {
-          //non ho trovato altro modo di eliminare il primo elemento 
-          // soltanto il forEach mantiene l'ordinamento dell'orderbychild
-          //e non esiste un break per il for each
           var first = true;
           result.forEach((child) => {
             if (first === true) {
