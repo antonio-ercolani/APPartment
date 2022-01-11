@@ -94,10 +94,10 @@ function StockManagementScreen(props) {
       date = day + '/' + month + '/' + year;
 
       items.push(
-        <DataTable.Row key={key} >
-          <DataTable.Cell>{name}</DataTable.Cell>
-          <DataTable.Cell numeric>{member}</DataTable.Cell>
-          <DataTable.Cell numeric>{date}</DataTable.Cell>
+        <DataTable.Row  key={key} >
+          <DataTable.Cell><Text style={styles.missingItemsListName}>{name}</Text></DataTable.Cell>
+          <DataTable.Cell numeric><Text style={styles.missingItemsList}>{member}</Text></DataTable.Cell>
+          <DataTable.Cell numeric><Text style={styles.missingItemsList}>{date}</Text></DataTable.Cell>
         </DataTable.Row>)
     }
 
@@ -219,6 +219,11 @@ const styles = StyleSheet.create({
   noAnnouncementsText: {
     fontFamily: "FuturaPTDemi",
     fontSize: 20
+  }, 
+  missingItemsListName: {
+    fontSize: 16
+  }, missingItemsList: {
+    fontSize: 15
   }
 });
 
