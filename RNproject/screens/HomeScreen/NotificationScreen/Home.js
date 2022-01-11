@@ -194,7 +194,7 @@ function Home(props) {
               key={i}
               titleStyle={styles.announcement}
               descriptionStyle={styles.announcementDescription}
-              title={title[1] + '€ paid for ' + title[0]}
+              title={Math.abs(parseFloat(title[1]).toFixed(2)) + '€ paid for ' + title[0]}
               titleNumberOfLines={2}
               description={'Inserted by' + ' ' + props.red.apartment.members[notification.member]}
               right={props => <Text style={styles.date}>{dateDayMonth}</Text>}
